@@ -22,11 +22,11 @@ import com.iris.bootstrap.guice.AbstractIrisModule;
 
 public class BillingModule extends AbstractIrisModule {
 
-   @Inject
+   @Inject(optional = true)
    @Named(value = "billing.api.key")
    private String recurlyAPIKey;
 
-   @Inject
+   @Inject(optional = true)
    @Named(value = "billing.url")
    private String recurlyURL;
 
