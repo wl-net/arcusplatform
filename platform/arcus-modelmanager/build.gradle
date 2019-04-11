@@ -56,6 +56,7 @@ distDocker {
    defaultCommand(["-H", "/${project.applicationName}-${project.version}/", "-P", "dev", "-a"])
 }
 
+# note: ./gradlew runDocker doesn't like this target. need to investigate further.
 task runDocker(type: Exec) {
    dependsOn 'distDocker', ':platform:arcus-khakis:startPlatform'
    def List<String> cLine = new ArrayList<String>()
