@@ -21,6 +21,7 @@
     <brand name="Halo Smart Labs"/>
     <brand name="HomePro"/>
     <brand name="Honeywell"/>
+    <brand name="Insteon"/>
     <brand name="Iris"/>
     <brand name="Ivee"/>
     <brand name="Keen Home"/>
@@ -74,6 +75,25 @@
     <category name="Voice Assistant"/>
   </categories>
   <products>
+   <product id="0c9a67" name="SwitchLink Dimmer" shortname="SwitchLink Dimmer" screen="Switch" description="" manufacturer="Insteon" installManualUrl="" vendor="Insteon" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Insteon, indoor, module, control, outlet, switch, energy, 120, volt, 15, amp, power, insteon" ota="No" protofamily="Insteon" added="2019-04-12T19:56:50-0600" lastchanged="2019-04-12T19:56:50-0600">
+      <categories>
+        <category name="Lights &amp; Switches"/>
+      </categories>
+      <pair>
+        <step1 type="text" img="" text="TODO" showInstallManual="true"/>
+      </pair>
+      <removal>
+        <step0 type="text" img="" text="TODO"/>
+      </removal>
+      <reset>
+        <step1 type="text" img="" text="TODO"/>
+      </reset>
+      <populations>
+        <population name="general"/>
+        <population name="qa"/>
+        <population name="beta"/>
+      </populations>
+    </product>
     <product id="0c9a66" name="Plug-In Switch (12719 Z-Wave)" shortname="Plug-In Switch" screen="Switch" description="" manufacturer="Jasco" installManualUrl="https://byjasco.com/sites/default/files/product/manuals/12719%20EnFrSp%20QStart%20V1%20081814.pdf" vendor="GE" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/NNOZR9qrmpQ" keywords="GE, Jasco, indoor, module, control, outlet, plug, switch, energy, 120, volt, 15, amp, power, zwave, 12719" ota="No" protofamily="Z-Wave" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600">
       <categories>
         <category name="Lights &amp; Switches"/>
