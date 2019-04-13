@@ -16,6 +16,7 @@
 package com.iris.platform.subsystem.incident;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -43,7 +44,7 @@ public class AlarmIncidentServiceImpl extends AbstractPlatformService {
    @Inject
    public AlarmIncidentServiceImpl(
          PlatformMessageBus platformBus,
-         @Named(NAME_EXECUTOR_POOL) ExecutorService executor,
+         ForkJoinPool executor,
          SubsystemExecutorResolver subsystemExecutorResolver,
          PlatformDispatcherFactory dispatcherFactory,
          GetAttributesHandler getAttributesHandler,
