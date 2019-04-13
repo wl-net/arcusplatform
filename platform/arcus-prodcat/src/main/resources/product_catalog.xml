@@ -75,7 +75,7 @@
     <category name="Voice Assistant"/>
   </categories>
   <products>
-   <product id="0c9a67" name="SwitchLink Dimmer" shortname="SwitchLink Dimmer" screen="Switch" description="" manufacturer="Insteon" installManualUrl="" vendor="Insteon" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Insteon, indoor, module, control, outlet, switch, energy, 120, volt, 15, amp, power, insteon" ota="No" protofamily="Insteon" added="2019-04-12T19:56:50-0600" lastchanged="2019-04-12T19:56:50-0600">
+   <product id="0c9a67" name="SwitchLink Dimmer" shortname="SwitchLink Dimmer" screen="Switch" description="" manufacturer="Insteon" installManualUrl="" vendor="Insteon" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Insteon, indoor, module, control, outlet, switch, energy, 120, volt, 15, amp, power, insteon" ota="No" protofamily="Insteon" hubrequired="false" added="2019-04-12T19:56:50-0600" lastchanged="2019-04-12T19:56:50-0600">
       <categories>
         <category name="Lights &amp; Switches"/>
       </categories>
