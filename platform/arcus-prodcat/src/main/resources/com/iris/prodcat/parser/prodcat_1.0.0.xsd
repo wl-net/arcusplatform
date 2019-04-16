@@ -274,6 +274,7 @@
       <xs:enumeration value="Utilitech"/>
       <xs:enumeration value="Everspring"/>
       <xs:enumeration value="Iris"/>
+      <xs:enumeration value="Insteon"/>
       <xs:enumeration value="Halo Smart Labs"/>
       <xs:enumeration value="First Alert"/>
       <xs:enumeration value="Honeywell"/>
