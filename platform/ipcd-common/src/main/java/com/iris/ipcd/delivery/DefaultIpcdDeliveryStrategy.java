@@ -21,22 +21,25 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.iris.bridge.metrics.BridgeMetrics;
 import com.iris.bridge.server.session.ClientToken;
-import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.bridge.server.session.SessionUtil;
 import com.iris.core.dao.PlaceDAO;
 import com.iris.ipcd.session.IpcdSession;
+import com.iris.ipcd.session.IpcdSessionRegistry;
 import com.iris.protocol.ipcd.message.IpcdMessage;
 import com.iris.protocol.ipcd.message.model.FactoryResetCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class DefaultIpcdDeliveryStrategy implements IpcdDeliveryStrategy {
+   private final static Logger logger = LoggerFactory.getLogger(DefaultIpcdDeliveryStrategy.class);
 
-   private final SessionRegistry sessionRegistry;
+   private final IpcdSessionRegistry sessionRegistry;
    private final BridgeMetrics metrics;
    private final PlaceDAO placeDao;
 
    @Inject
-   public DefaultIpcdDeliveryStrategy(SessionRegistry sessionRegistry, BridgeMetrics metrics, PlaceDAO placeDao) {
+   public DefaultIpcdDeliveryStrategy(IpcdSessionRegistry sessionRegistry, BridgeMetrics metrics, PlaceDAO placeDao) {
       this.sessionRegistry = sessionRegistry;
       this.metrics = metrics;
       this.placeDao = placeDao;
@@ -47,6 +50,7 @@ public class DefaultIpcdDeliveryStrategy implements IpcdDeliveryStrategy {
       // intential no op
    }
 
+   // server -> device message
    @Override
    public boolean deliverToDevice(ClientToken ct, String msgPlace, IpcdMessage message) {
       IpcdSession session = (IpcdSession) sessionRegistry.getSession(ct);
@@ -55,7 +59,8 @@ public class DefaultIpcdDeliveryStrategy implements IpcdDeliveryStrategy {
       }
       boolean isFactoryReset = message instanceof FactoryResetCommand;
       updateActivePlaceIf(session, msgPlace, isFactoryReset);
-      session.sendMessage(message);
+      logger.debug("sending message [" + message + "] to device " + message.getDevice());
+      session.sendMessage(message, ct);
       handleFactoryResetIf(session, isFactoryReset);
       metrics.incProtocolMsgSentCounter();
       return true;
