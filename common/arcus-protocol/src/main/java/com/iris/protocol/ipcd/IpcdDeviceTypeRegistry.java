@@ -35,6 +35,7 @@ public enum IpcdDeviceTypeRegistry {
    public static final String DEVICE_TYPE_SWANN_WIFI_BATTERY_CAMERA = "SwannWifiBatteryCamera";
    public static final String DEVICE_TYPE_GREATSTAR_INDOOR_WIFI_PLUG = "GreatStarIndoorPlug";
    public static final String DEVICE_TYPE_GREATSTAR_OUTDOOR_WIFI_PLUG = "GreatStarOutdoorPlug";
+   public static final String DEVICE_TYPE_INSTEON_SWITCH = "InsteonSwitchLinc";
    public static final String DEVICE_TYPE_OTHER = "Other";
 
    public static final IpcdDeviceType GENIE = createDeviceType("Genie", "Aladdin");
@@ -43,11 +44,13 @@ public enum IpcdDeviceTypeRegistry {
    public static final IpcdDeviceType ECOWATER = createDeviceType("EcoWater", "WHESCS5");
    public static final IpcdDeviceType SWANN_WIFI_PLUG = createDeviceType("Swann", "IrisWifiPlug");
    public static final IpcdDeviceType SWANN_WIFI_BATTERY_CAMERA = createDeviceType("Swann", "SWWHD-INTCAM-US");
+   public static final IpcdDeviceType INSTEON_SWITCHLINC = createDeviceType("Insteon", "SwitchLinc");
    public static final IpcdDeviceType GREATSTAR_INDOOR_PLUG = createDeviceType("GreatStar", "plug_indoor" );
    public static final IpcdDeviceType GREATSTAR_OUTDOOR_PLUG = createDeviceType("GreatStar", "plug_outdoor" );
    
 
    private static final Map<String, List<IpcdDeviceType>> V1_TYPES = ImmutableMap.<String, List<IpcdDeviceType>>builder()
+      .put(DEVICE_TYPE_INSTEON_SWITCH.toLowerCase(), ImmutableList.of(INSTEON_SWITCHLINC))
       .put(DEVICE_TYPE_GENIE_GDO.toLowerCase(), ImmutableList.of(GENIE))
       .put(DEVICE_TYPE_AOSMITH_WATER_HEATER.toLowerCase(), ImmutableList.of(AOSMITH1, AOSMITH2))
       .put(DEVICE_TYPE_ECOWATER_SOFTENER.toLowerCase(), ImmutableList.of(ECOWATER))
