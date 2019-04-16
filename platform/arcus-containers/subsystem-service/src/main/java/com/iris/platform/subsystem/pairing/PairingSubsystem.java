@@ -165,6 +165,7 @@ public class PairingSubsystem extends BaseSubsystem<PairingSubsystemModel> {
 			Errors.assertValidRequest(product.isPresent(), "Invalid productAddress");
 		}
 		form = Optional.ofNullable( form ).orElse( ImmutableMap.of() );
+		context.logger().debug("starting search for {}", productAddress);
 		return PairingStateMachine.get( context ).search( request, product, form );
 	}
 	
