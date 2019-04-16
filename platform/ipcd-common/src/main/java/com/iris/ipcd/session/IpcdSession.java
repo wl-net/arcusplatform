@@ -47,6 +47,7 @@ import com.iris.protocol.ipcd.IpcdProtocol;
 import com.iris.protocol.ipcd.message.IpcdMessage;
 import com.iris.protocol.ipcd.message.model.Device;
 import com.iris.protocol.ipcd.message.model.DeviceInfo;
+import com.iris.bridge.server.session.ClientToken;
 
 import io.netty.channel.Channel;
 
@@ -86,6 +87,7 @@ public abstract class IpcdSession extends DefaultSessionImpl implements Partitio
       this.partitioner = partitioner;
       this.populationCacheMgr = populationCacheMgr;
    }
+   public abstract void sendMessage(IpcdMessage msg, ClientToken ct);
 
    public abstract void sendMessage(IpcdMessage msg);
 
@@ -141,7 +143,7 @@ public abstract class IpcdSession extends DefaultSessionImpl implements Partitio
    	SessionUtil.clearPlace(this);
    }
 
-   private void reportOnline(Device device) {
+   public void reportOnline(Device device) { // TODO: change visibility
       if(getActivePlace() != null) {
          ProtocolMessage onlineMsg = ProtocolMessage.builder()
                .broadcast()

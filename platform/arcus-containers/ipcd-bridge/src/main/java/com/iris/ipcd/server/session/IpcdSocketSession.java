@@ -17,12 +17,15 @@ package com.iris.ipcd.server.session;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.iris.bridge.bus.ProtocolBusService;
 import com.iris.bridge.metrics.BridgeMetrics;
+import com.iris.bridge.server.session.ClientToken;
 import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.core.dao.DeviceDAO;
 import com.iris.core.dao.PlaceDAO;
@@ -46,6 +49,11 @@ public class IpcdSocketSession extends IpcdSession {
    private final static IpcdSerDe ipcdSerializer = new IpcdSerDe();
    private final Set<String> txnids = new HashSet<>();
 
+   /**
+    * Whether or not this session supports multiple devices over a single connection.
+    */
+   private boolean isMultiDevice = false;
+
    public IpcdSocketSession(
          SessionRegistry parent,
          IpcdDeviceDao ipcdDeviceDao,
@@ -61,6 +69,26 @@ public class IpcdSocketSession extends IpcdSession {
       super(parent, ipcdDeviceDao, deviceDao, placeDao,
          channel, platformBus, protocolBusService,
          partitioner, bridgeMetrics, populationCacheMgr);
+   }
+
+   /**
+    * This is a bit of a hack. Basically, if the client token doesn't match the one currently associated with the session
+    * at the last moment (*after* the command is serialized), we tack on an extra field "device" with the serial number of the device
+    * we want to control. This isn't especially efficent (since we have to lookup the device sn), but it works!
+    * @param msg
+    * @param ct
+    */
+   public void sendMessage(IpcdMessage msg, ClientToken ct) {
+      Gson gson = new Gson();
+      Map<String, Object> json = gson.fromJson(ipcdSerializer.toJson(msg), Map.class);
+      logger.debug("sending message to {}", msg.getDevice());
+      if (ct != this.getClientToken()) {
+         logger.debug("Message is for sub-device within this socket");
+         String sn = ipcdDeviceDao.findByProtocolAddress(ct.getRepresentation()).getSn();
+
+         json.put("device", sn);
+      }
+      sendMessage(gson.toJson(json));
    }
 
    public void sendMessage(IpcdMessage msg) {
@@ -89,9 +117,11 @@ public class IpcdSocketSession extends IpcdSession {
 
    private void handleGetDeviceInfoResponse(GetDeviceInfoResponse response) {
       IpcdDevice ipcdDevice = ipcdDeviceDao.findByProtocolAddress(getClientToken().getRepresentation());
+      logger.debug("got device information for {}", response.getDevice());
       if (ipcdDevice.updateWithDevice(response.getDevice())) {
          ipcdDevice.updateWithDeviceInfo(response.getResponse());
          ipcdDeviceDao.save(ipcdDevice);
+         logger.debug("updated/added new device with sn {}", ipcdDevice.getSn());
       } else {
          logger.error("Device with SN {} expected but got SN {} instead", ipcdDevice.getSn(), response.getDevice().getSn());
          throw new IllegalStateException("Device with SN " + ipcdDevice.getSn() + " expected, but got SN " + response.getDevice().getSn() + " instead.");

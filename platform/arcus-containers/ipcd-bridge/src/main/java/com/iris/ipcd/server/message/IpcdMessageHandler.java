@@ -17,6 +17,7 @@ package com.iris.ipcd.server.message;
 
 import java.io.StringReader;
 
+import com.iris.ipcd.session.IpcdClientToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +31,16 @@ import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.ipcd.delivery.IpcdDeliveryStrategy;
 import com.iris.ipcd.delivery.IpcdDeliveryStrategyRegistry;
 import com.iris.ipcd.server.session.IpcdSocketSession;
+import com.iris.ipcd.session.IpcdSessionRegistry;
 import com.iris.messages.address.Address;
 import com.iris.population.PlacePopulationCacheManager;
 import com.iris.protocol.ProtocolMessage;
 import com.iris.protocol.ipcd.IpcdProtocol;
 import com.iris.protocol.ipcd.message.IpcdMessage;
+import com.iris.protocol.ipcd.message.model.Device;
 import com.iris.protocol.ipcd.message.model.IpcdResponse;
 import com.iris.protocol.ipcd.message.model.MessageType;
+
 import com.iris.protocol.ipcd.message.serialize.IpcdSerDe;
 
 @Singleton
@@ -44,14 +48,14 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
    private static final Logger logger = LoggerFactory.getLogger(IpcdMessageHandler.class);
    private final IpcdSerDe serializer = new IpcdSerDe();
    private final ProtocolBusService protocolBusService;
-   private final SessionRegistry sessionRegistry;
+   private final IpcdSessionRegistry sessionRegistry;
    private final IpcdDeliveryStrategyRegistry strategyRegistry;
    private final BridgeMetrics metrics;
    private final PlacePopulationCacheManager populationCacheMgr;
 
    @Inject
    public IpcdMessageHandler(ProtocolBusService protocolBusService,
-      SessionRegistry sessionRegistry,
+      IpcdSessionRegistry sessionRegistry,
       IpcdDeliveryStrategyRegistry strategyRegistry,
       BridgeMetrics metrics,
       PlacePopulationCacheManager populationCacheMgr
@@ -69,9 +73,12 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
          logger.debug("Message from Device [{}]", json);
          logger.debug("With session [{}]", socketSession);
          IpcdMessage msg = serializer.parse(new StringReader(json));
+
+         logger.debug("message type: " + msg.getMessageType());
          if (msg == null) throw new IllegalArgumentException("Invalid JSON for IPCD Message: [" + json + "]" );
          if (!msg.getMessageType().isClient()) throw new IllegalArgumentException("IPCD Message is illegal for client: " + json);
          IpcdSocketSession ipcdSession = (IpcdSocketSession)socketSession;
+
          if (!ipcdSession.isInitialized()) {
             initializeSession(ipcdSession, msg);
          }
@@ -79,10 +86,21 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
          if (isResponseHandledBySession(ipcdSession, msg)) {
             return null;
          }
+
+         if (IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())) != ipcdSession.getClientToken()) {
+            logger.warn("ALERT! potential device spoofing from [" + msg.getDevice() + "] against [" + ipcdSession.getClientToken() + "]");
+
+            // ok, handle this as a hub.
+            sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
+            ipcdSession.reportOnline(msg.getDevice());
+         }
+
          if(ipcdSession.getActivePlace() != null) {
             // Protocol Message Sent Here
+            Device device = msg.getDevice();
+            logger.debug("Sending message from [" + IpcdProtocol.ipcdAddress(device) + "] to message bus");
             ProtocolMessage protocolMessage = ProtocolMessage.builder()
-                  .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
+                  .from(IpcdProtocol.ipcdAddress(device)) // XXX: does this mean there's device spoofing?
                   .to(Address.broadcastAddress())
                   .withPayload(IpcdProtocol.INSTANCE,msg)
                   .withPlaceId(ipcdSession.getActivePlace())
@@ -114,7 +132,7 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
       return false;
    }
 
-   private void initializeSession(IpcdSocketSession socketSession, IpcdMessage ipcdMessage) {   	
+   private void initializeSession(IpcdSocketSession socketSession, IpcdMessage ipcdMessage) {
       socketSession.initializeSession(ipcdMessage.getDevice());
       sessionRegistry.putSession(socketSession);
    }

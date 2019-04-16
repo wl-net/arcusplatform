@@ -37,7 +37,7 @@ public class DefaultSessionRegistryImpl implements SessionRegistry  {
 
    private final Set<SessionListener> listeners;
    private final ClientFactory clientFactory;
-   private Map<ClientToken, Session> sessionMap = new ConcurrentHashMap<ClientToken, Session>();
+   protected Map<ClientToken, Session> sessionMap = new ConcurrentHashMap<ClientToken, Session>();
    // unmodifiable view of the values in the sessionMap
    // also concurrent because sessionMap is concurrent
    private Iterable<Session> sessions = Collections.unmodifiableCollection(sessionMap.values());         
