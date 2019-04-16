@@ -75,12 +75,15 @@
     <category name="Voice Assistant"/>
   </categories>
   <products>
-   <product id="0c9a67" name="SwitchLink Dimmer" shortname="SwitchLink Dimmer" screen="Switch" description="" manufacturer="Insteon" installManualUrl="" vendor="Insteon" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Insteon, indoor, module, control, outlet, switch, energy, 120, volt, 15, amp, power, insteon" ota="No" protofamily="Insteon" hubrequired="false" added="2019-04-12T19:56:50-0600" lastchanged="2019-04-12T19:56:50-0600">
+   <product id="0c9a67" name="SwitchLinc Dimmer" shortname="Light Switch" screen="Switch" description="" manufacturer="Insteon" installManualUrl="" vendor="Insteon" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Insteon, indoor, outlet, switch, energy, 120, volt, 15, amp, power, insteon" ota="No" protofamily="IPCD" pairingMode="IPCD" hubrequired="false" added="2019-04-12T19:56:50-0600" lastchanged="2019-04-12T19:56:50-0600">
       <categories>
         <category name="Lights &amp; Switches"/>
       </categories>
       <pair>
-        <step1 type="text" img="" text="TODO" showInstallManual="true"/>
+        <step1 type="text" img="" text="Enter the Insteon Device ID" target="BRDG::IPCD" message="bridgesvc:RegisterDevice">
+          <input type="text" label="6-Digit Code" name="IPCD:sn" minlen="6" maxlen="6" required="true"/>
+          <input type="hidden" name="IPCD:v1devicetype" value="InsteonSwitchLinc"/>
+        </step1>
       </pair>
       <removal>
         <step0 type="text" img="" text="TODO"/>
