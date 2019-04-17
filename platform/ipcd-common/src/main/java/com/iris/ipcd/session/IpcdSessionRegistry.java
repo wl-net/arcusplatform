@@ -27,6 +27,7 @@ public class IpcdSessionRegistry extends DefaultSessionRegistryImpl {
      */
     public void putSession(ClientToken ct, Session session) {
         if (ct == session.getClientToken()) {
+            logger.debug("putSession(ClientToken, Session) is intended to be used with a sub-device");
             // TODO: throw an exception, this is only used for special cases, and is not intended to be used normally.
         }
         // more than one client per session, so this isn't a new session, and isn't in the metrics.
