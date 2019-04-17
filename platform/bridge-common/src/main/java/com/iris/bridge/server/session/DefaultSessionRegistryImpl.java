@@ -60,6 +60,7 @@ public class DefaultSessionRegistryImpl implements SessionRegistry  {
 
    @Override
    public Session getSession(ClientToken ct) {
+      logger.debug("get n={}", sessionMap.size());
       return sessionMap.get(ct);
    }
 
@@ -69,6 +70,25 @@ public class DefaultSessionRegistryImpl implements SessionRegistry  {
       SessionMetrics.incrementSessions();
       sessionMap.put(ct, session);
       logger.debug("Session registered [{}]", ct);
+      logger.debug("put n={}", sessionMap.size());
+
+   }
+   /***
+    * Register a client other than the default against with this session.
+    * This is useful when an IPCD device would like to host act as a hub and provide additional devices.
+    * @param ct
+    * @param session
+    */
+   public void putSession(ClientToken ct, Session session) {
+      logger.info("setting up additional client token [{}] for session", ct);
+      if (ct == session.getClientToken()) {
+         logger.debug("putSession(ClientToken, Session) is intended to be used with a sub-device");
+         // TODO: throw an exception, this is only used for special cases, and is not intended to be used normally.
+      }
+      // more than one client per session, so this isn't a new session, and isn't in the metrics.
+      sessionMap.put(ct, session);
+      logger.debug("put n={}", sessionMap.size());
+      logger.debug("Registered alternative session for [" + session.getClientToken() + "]. Now operating in 'hub' mode");
    }
 
    @Override
