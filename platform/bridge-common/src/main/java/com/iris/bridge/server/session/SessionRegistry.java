@@ -28,7 +28,7 @@ public interface SessionRegistry {
    Session getSession(ClientToken ct);
    
    void putSession(Session session);
-   
+   void putSession(ClientToken ct, Session session);
    void destroySession(Session session);
 
    ClientFactory getClientFactory();

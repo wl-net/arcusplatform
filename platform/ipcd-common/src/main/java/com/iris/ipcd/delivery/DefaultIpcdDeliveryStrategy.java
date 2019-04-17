@@ -22,9 +22,9 @@ import com.google.inject.Singleton;
 import com.iris.bridge.metrics.BridgeMetrics;
 import com.iris.bridge.server.session.ClientToken;
 import com.iris.bridge.server.session.SessionUtil;
+import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.core.dao.PlaceDAO;
 import com.iris.ipcd.session.IpcdSession;
-import com.iris.ipcd.session.IpcdSessionRegistry;
 import com.iris.protocol.ipcd.message.IpcdMessage;
 import com.iris.protocol.ipcd.message.model.FactoryResetCommand;
 import org.slf4j.Logger;
@@ -34,12 +34,12 @@ import org.slf4j.LoggerFactory;
 public class DefaultIpcdDeliveryStrategy implements IpcdDeliveryStrategy {
    private final static Logger logger = LoggerFactory.getLogger(DefaultIpcdDeliveryStrategy.class);
 
-   private final IpcdSessionRegistry sessionRegistry;
+   private final SessionRegistry sessionRegistry;
    private final BridgeMetrics metrics;
    private final PlaceDAO placeDao;
 
    @Inject
-   public DefaultIpcdDeliveryStrategy(IpcdSessionRegistry sessionRegistry, BridgeMetrics metrics, PlaceDAO placeDao) {
+   public DefaultIpcdDeliveryStrategy(SessionRegistry sessionRegistry, BridgeMetrics metrics, PlaceDAO placeDao) {
       this.sessionRegistry = sessionRegistry;
       this.metrics = metrics;
       this.placeDao = placeDao;
@@ -54,7 +54,8 @@ public class DefaultIpcdDeliveryStrategy implements IpcdDeliveryStrategy {
    @Override
    public boolean deliverToDevice(ClientToken ct, String msgPlace, IpcdMessage message) {
       IpcdSession session = (IpcdSession) sessionRegistry.getSession(ct);
-      if(session == null) {
+      if (session == null) {
+         logger.debug("Couldn't find session for message for [{}]", ct);
          return false;
       }
       boolean isFactoryReset = message instanceof FactoryResetCommand;

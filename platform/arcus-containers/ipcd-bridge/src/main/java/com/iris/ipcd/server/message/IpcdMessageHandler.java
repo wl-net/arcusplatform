@@ -48,14 +48,14 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
    private static final Logger logger = LoggerFactory.getLogger(IpcdMessageHandler.class);
    private final IpcdSerDe serializer = new IpcdSerDe();
    private final ProtocolBusService protocolBusService;
-   private final IpcdSessionRegistry sessionRegistry;
+   private final SessionRegistry sessionRegistry;
    private final IpcdDeliveryStrategyRegistry strategyRegistry;
    private final BridgeMetrics metrics;
    private final PlacePopulationCacheManager populationCacheMgr;
 
    @Inject
    public IpcdMessageHandler(ProtocolBusService protocolBusService,
-      IpcdSessionRegistry sessionRegistry,
+      SessionRegistry sessionRegistry,
       IpcdDeliveryStrategyRegistry strategyRegistry,
       BridgeMetrics metrics,
       PlacePopulationCacheManager populationCacheMgr
@@ -87,10 +87,11 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
             return null;
          }
 
-         if (IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())) != ipcdSession.getClientToken()) {
+         if (!IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())).equals(ipcdSession.getClientToken())) {
             logger.warn("ALERT! potential device spoofing from [" + msg.getDevice() + "] against [" + ipcdSession.getClientToken() + "]");
 
             // ok, handle this as a hub.
+            logger.debug("new ct= {}", IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())));
             sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
             ipcdSession.reportOnline(msg.getDevice());
          }
