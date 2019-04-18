@@ -36,7 +36,6 @@ import com.iris.bridge.server.netty.Authenticator;
 import com.iris.bridge.server.netty.Bridge10ChannelInitializer;
 import com.iris.bridge.server.netty.Text10WebSocketServerHandlerProvider;
 import com.iris.bridge.server.noauth.NoopAuthenticator;
-import com.iris.bridge.server.session.DefaultSessionRegistryImpl;
 import com.iris.bridge.server.session.SessionListener;
 import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.bridge.server.ssl.BridgeServerTlsContext;
@@ -52,6 +51,7 @@ import com.iris.ipcd.delivery.DefaultIpcdDeliveryStrategy;
 import com.iris.ipcd.delivery.IpcdDeliveryStrategy;
 import com.iris.ipcd.session.IpcdClientFactory;
 import com.iris.ipcd.session.SessionHeartBeater;
+import com.iris.ipcd.session.IpcdSessionRegistry;
 
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelInitializer;
@@ -76,7 +76,7 @@ public abstract class AbstractIpcdServerModule extends AbstractIrisModule {
       bind(new TypeLiteral<ChannelInitializer<SocketChannel>>(){}).to(Bridge10ChannelInitializer.class);
       bind(ChannelInboundHandler.class).toProvider(Text10WebSocketServerHandlerProvider.class);
       bindSessionFactory();
-      bind(SessionRegistry.class).to(DefaultSessionRegistryImpl.class);
+      bind(SessionRegistry.class).to(IpcdSessionRegistry.class);
       bindSessionSupplier();
       bind(SessionHeartBeater.class);
 

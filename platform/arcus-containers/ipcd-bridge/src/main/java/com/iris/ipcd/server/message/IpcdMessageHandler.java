@@ -27,7 +27,6 @@ import com.iris.bridge.bus.ProtocolBusService;
 import com.iris.bridge.metrics.BridgeMetrics;
 import com.iris.bridge.server.message.DeviceMessageHandler;
 import com.iris.bridge.server.session.Session;
-import com.iris.bridge.server.session.SessionRegistry;
 import com.iris.ipcd.delivery.IpcdDeliveryStrategy;
 import com.iris.ipcd.delivery.IpcdDeliveryStrategyRegistry;
 import com.iris.ipcd.server.session.IpcdSocketSession;
@@ -48,14 +47,14 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
    private static final Logger logger = LoggerFactory.getLogger(IpcdMessageHandler.class);
    private final IpcdSerDe serializer = new IpcdSerDe();
    private final ProtocolBusService protocolBusService;
-   private final SessionRegistry sessionRegistry;
+   private final IpcdSessionRegistry sessionRegistry;
    private final IpcdDeliveryStrategyRegistry strategyRegistry;
    private final BridgeMetrics metrics;
    private final PlacePopulationCacheManager populationCacheMgr;
 
    @Inject
    public IpcdMessageHandler(ProtocolBusService protocolBusService,
-      SessionRegistry sessionRegistry,
+      IpcdSessionRegistry sessionRegistry,
       IpcdDeliveryStrategyRegistry strategyRegistry,
       BridgeMetrics metrics,
       PlacePopulationCacheManager populationCacheMgr
