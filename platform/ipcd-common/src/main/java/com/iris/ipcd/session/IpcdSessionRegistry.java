@@ -1,6 +1,7 @@
 package com.iris.ipcd.session;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.iris.bridge.server.client.ClientFactory;
 import com.iris.bridge.server.session.ClientToken;
 import com.iris.bridge.server.session.DefaultSessionRegistryImpl;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
+@Singleton
 public class IpcdSessionRegistry extends DefaultSessionRegistryImpl {
     private static final Logger logger = LoggerFactory.getLogger(IpcdSessionRegistry.class);
 
