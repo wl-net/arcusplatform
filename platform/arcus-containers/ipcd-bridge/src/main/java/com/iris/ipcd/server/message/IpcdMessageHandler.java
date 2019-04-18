@@ -73,7 +73,6 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
          logger.debug("With session [{}]", socketSession);
          IpcdMessage msg = serializer.parse(new StringReader(json));
 
-         logger.debug("message type: " + msg.getMessageType());
          if (msg == null) throw new IllegalArgumentException("Invalid JSON for IPCD Message: [" + json + "]" );
          if (!msg.getMessageType().isClient()) throw new IllegalArgumentException("IPCD Message is illegal for client: " + json);
          IpcdSocketSession ipcdSession = (IpcdSocketSession)socketSession;
@@ -90,9 +89,9 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
             logger.warn("ALERT! potential device spoofing from [" + msg.getDevice() + "] against [" + ipcdSession.getClientToken() + "]");
 
             // ok, handle this as a hub.
-            logger.debug("new ct= {}", IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())));
+            ipcdSession.addToSession(msg.getDevice());
+            logger.debug("adding new session with ct=[{}], total=", IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())));
             sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
-            ipcdSession.reportOnline(msg.getDevice());
          }
 
          if(ipcdSession.getActivePlace() != null) {

@@ -109,6 +109,19 @@ public abstract class IpcdSession extends DefaultSessionImpl implements Partitio
       reportOnline(ipcdDevice.getDevice());
    }
 
+   /***
+    * Used for existing sessions
+    */
+   public void addToSession(Device device) {
+      if (this.getClientToken() == null) {
+         throw new IllegalStateException("Cannot add device to unestablished session");
+      }
+      Address protocolAddress = IpcdProtocol.ipcdAddress(device);
+      IpcdDevice ipcdDevice = getOrCreateIpcdDevice(protocolAddress.getRepresentation(), device, null);
+
+      reportOnline(ipcdDevice.getDevice());
+   }
+
    public IpcdDevice.RegistrationState getRegistrationState() {
       return registrationState;
    }
