@@ -16,8 +16,12 @@
 package com.iris.ipcd.server.message;
 
 import java.io.StringReader;
+import java.util.HashMap;
 
+import com.iris.bridge.bus.PlatformBusService;
 import com.iris.ipcd.session.IpcdClientToken;
+import com.iris.messages.PlatformMessage;
+import com.iris.messages.capability.PairingSubsystemCapability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +46,14 @@ import com.iris.protocol.ipcd.message.model.MessageType;
 
 import com.iris.protocol.ipcd.message.serialize.IpcdSerDe;
 
+import com.iris.util.IrisUUID;
+
 @Singleton
 public class IpcdMessageHandler implements DeviceMessageHandler<String> {
    private static final Logger logger = LoggerFactory.getLogger(IpcdMessageHandler.class);
    private final IpcdSerDe serializer = new IpcdSerDe();
    private final ProtocolBusService protocolBusService;
+   private final PlatformBusService platformBusService;
    private final IpcdSessionRegistry sessionRegistry;
    private final IpcdDeliveryStrategyRegistry strategyRegistry;
    private final BridgeMetrics metrics;
@@ -57,13 +64,15 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
       IpcdSessionRegistry sessionRegistry,
       IpcdDeliveryStrategyRegistry strategyRegistry,
       BridgeMetrics metrics,
-      PlacePopulationCacheManager populationCacheMgr
+      PlacePopulationCacheManager populationCacheMgr,
+      PlatformBusService platformBusService
    ) {
       this.protocolBusService = protocolBusService;
       this.sessionRegistry = sessionRegistry;
       this.strategyRegistry = strategyRegistry;
       this.metrics = metrics;
       this.populationCacheMgr = populationCacheMgr;
+      this.platformBusService = platformBusService;
    }
 
    @Override
@@ -90,7 +99,34 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
 
             // ok, handle this as a hub.
             ipcdSession.addToSession(msg.getDevice());
-            logger.debug("adding new session with ct=[{}], total=", IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())));
+
+            PlatformMessage startPairingMessage = PlatformMessage.builder()
+                    .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
+                    .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
+                    .withPayload(PairingSubsystemCapability.StartPairingRequest.builder().withProductAddress("SERV:product:0c9a67").build())
+                    .withPlaceId(ipcdSession.getActivePlace())
+                    .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
+                    .withCorrelationId(IrisUUID.randomUUID().toString())
+                    .isRequestMessage(true)
+                    .create();
+            platformBusService.placeMessageOnPlatformBus(startPairingMessage);
+
+            HashMap<String, String> kv = new HashMap<String,String>();
+            kv.put("IPCD:sn", msg.getDevice().getSn());
+            kv.put("IPCD:v1devicetype", "InsteonSwitchLinc");
+
+            PlatformMessage platformMessage = PlatformMessage.builder()
+                    .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
+                    .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
+                    .withPayload(PairingSubsystemCapability.SearchRequest.builder().withProductAddress("SERV:product:0c9a67").withForm(kv).build())
+                    .withPlaceId(ipcdSession.getActivePlace())
+                    .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
+                    .withCorrelationId(IrisUUID.randomUUID().toString())
+                    .isRequestMessage(true)
+                    .create();
+            platformBusService.placeMessageOnPlatformBus(platformMessage);
+
+            metrics.incProtocolMsgSentCounter();
             sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
          }
 
