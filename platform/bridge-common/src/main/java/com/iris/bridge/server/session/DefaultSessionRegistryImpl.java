@@ -60,7 +60,6 @@ public class DefaultSessionRegistryImpl implements SessionRegistry  {
 
    @Override
    public Session getSession(ClientToken ct) {
-      logger.debug("get n={}", sessionMap.size());
       return sessionMap.get(ct);
    }
 
