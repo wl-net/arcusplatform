@@ -295,7 +295,6 @@ public abstract class PairingState implements State<PairingSubsystemModel> {
 		boolean hubRequired = !product.isPresent() || Boolean.TRUE.equals(product.get().getHubRequired());
 		boolean mockPairing = PairingUtils.isMockPairing(context);
 
-		context.logger().debug("Using {} pairing mode", product.get().getPairingMode());
 		if (!product.isPresent() || product.get().getPairingMode().equals(ProductCatalogEntry.PairingMode.BRIDGED_DEVICE)) {
 			startPairingBridgeDevices(context, product);
 		}
