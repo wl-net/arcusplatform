@@ -38,7 +38,7 @@ def final VALUE_CHANGES = "valueChanges"
 ///////////////// Driver Lifecycle ////////////////
 
 onAdded {
-   log.debug "IPCD Insteon Switch1 Device Added."
+   log.debug "IPCD Insteon SwitchDimmer Device Added."
    
    DevicePower.sourcechanged        ((null != DeviceAdvanced.added.get()) ? DeviceAdvanced.added.get() : new Date())
    
