@@ -4,7 +4,7 @@
 
 * Docker
 * Java
-
+* New user with sudo (Not root)
 ### Docker
 It is recommended that you setup docker in direct lvm mode, see https://docs.docker.com/storage/storagedriver/device-mapper-driver/#configure-direct-lvm-mode-for-production
 
@@ -34,6 +34,8 @@ Make sure you can run basic commands like `docker ps` before continuing.
 I believe this is only used for gradle, so maybe the version doesn't matter too much. I had luck with `openjdk-8-jdk-headless` in Ubuntu 18.04.
 
 ```
+(Do not install as root)
+$ sudo apt install openjdk-8-jre-headless
 java -version
 openjdk version "1.8.0_191"
 OpenJDK Runtime Environment (build 1.8.0_191-8u191-b12-2ubuntu0.18.04.1-b12)
@@ -46,8 +48,8 @@ OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
 $ cd # go to your home dir
 $ git clone https://github.com/wl-net/arcusplatform.git
 $ cd arcusplatform
-$ ./gradlew :platform:arcus-khakis:startPlatform
-$ ./gradlew startService
+$ sudo ./gradlew :platform:arcus-khakis:startPlatform
+$ sudo ./gradlew startService
 ```
 
 Any known issues are documented as GitHub issues on https://github.com/arcus-smart-home/arcusplatform/issues
