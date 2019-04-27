@@ -35,7 +35,7 @@ I believe this is only used for gradle, so maybe the version doesn't matter too 
 
 ```
 (Do not install as root)
-$ sudo apt install openjdk-8-jre-headless
+$ sudo apt install openjdk-8-jdk-headless
 java -version
 openjdk version "1.8.0_191"
 OpenJDK Runtime Environment (build 1.8.0_191-8u191-b12-2ubuntu0.18.04.1-b12)
