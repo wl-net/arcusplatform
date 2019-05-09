@@ -100,6 +100,7 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
             // ok, handle this as a hub.
             ipcdSession.addToSession(msg.getDevice());
 
+            // Start pairing
             PlatformMessage startPairingMessage = PlatformMessage.builder()
                     .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
                     .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
@@ -113,8 +114,9 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
 
             HashMap<String, String> kv = new HashMap<String,String>();
             kv.put("IPCD:sn", msg.getDevice().getSn());
-            kv.put("IPCD:v1devicetype", "InsteonSwitchLinc");
+            kv.put("IPCD:v1devicetype", "InsteonSwitchLinc"); // XXX: hard coded
 
+            // Now claim the device
             PlatformMessage platformMessage = PlatformMessage.builder()
                     .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
                     .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
