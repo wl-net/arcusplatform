@@ -97,39 +97,43 @@ public class IpcdMessageHandler implements DeviceMessageHandler<String> {
          if (!IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())).equals(ipcdSession.getClientToken())) {
             logger.warn("ALERT! potential device spoofing from [" + msg.getDevice() + "] against [" + ipcdSession.getClientToken() + "]");
 
-            // ok, handle this as a hub.
-            ipcdSession.addToSession(msg.getDevice());
+            IpcdClientToken clientToken = IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice()));
+            if (!ipcdSession.devices.contains(clientToken)) {
+               ipcdSession.devices.add(clientToken);
+               // ok, handle this as a hub.
+               ipcdSession.addToSession(msg.getDevice());
 
-            // Start pairing
-            PlatformMessage startPairingMessage = PlatformMessage.builder()
-                    .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
-                    .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
-                    .withPayload(PairingSubsystemCapability.StartPairingRequest.builder().withProductAddress("SERV:product:0c9a67").build())
-                    .withPlaceId(ipcdSession.getActivePlace())
-                    .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
-                    .withCorrelationId(IrisUUID.randomUUID().toString())
-                    .isRequestMessage(true)
-                    .create();
-            platformBusService.placeMessageOnPlatformBus(startPairingMessage);
+               // Start pairing
+               PlatformMessage startPairingMessage = PlatformMessage.builder()
+                       .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
+                       .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
+                       .withPayload(PairingSubsystemCapability.StartPairingRequest.builder().withProductAddress("SERV:product:0c9a67").build())
+                       .withPlaceId(ipcdSession.getActivePlace())
+                       .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
+                       .withCorrelationId(IrisUUID.randomUUID().toString())
+                       .isRequestMessage(true)
+                       .create();
+               platformBusService.placeMessageOnPlatformBus(startPairingMessage);
 
-            HashMap<String, String> kv = new HashMap<String,String>();
-            kv.put("IPCD:sn", msg.getDevice().getSn());
-            kv.put("IPCD:v1devicetype", "InsteonSwitchLinc"); // XXX: hard coded
+               HashMap<String, String> kv = new HashMap<String, String>();
+               kv.put("IPCD:sn", msg.getDevice().getSn());
+               kv.put("IPCD:v1devicetype", "InsteonSwitchLinc"); // XXX: hard coded
 
-            // Now claim the device
-            PlatformMessage platformMessage = PlatformMessage.builder()
-                    .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
-                    .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
-                    .withPayload(PairingSubsystemCapability.SearchRequest.builder().withProductAddress("SERV:product:0c9a67").withForm(kv).build())
-                    .withPlaceId(ipcdSession.getActivePlace())
-                    .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
-                    .withCorrelationId(IrisUUID.randomUUID().toString())
-                    .isRequestMessage(true)
-                    .create();
-            platformBusService.placeMessageOnPlatformBus(platformMessage);
+               // Now claim the device
+               PlatformMessage platformMessage = PlatformMessage.builder()
+                       .from(IpcdProtocol.ipcdAddress(msg.getDevice()))
+                       .to(Address.platformService(ipcdSession.getActivePlace(), PairingSubsystemCapability.NAMESPACE))
+                       .withPayload(PairingSubsystemCapability.SearchRequest.builder().withProductAddress("SERV:product:0c9a67").withForm(kv).build())
+                       .withPlaceId(ipcdSession.getActivePlace())
+                       .withPopulation(populationCacheMgr.getPopulationByPlaceId(ipcdSession.getActivePlace()))
+                       .withCorrelationId(IrisUUID.randomUUID().toString())
+                       .isRequestMessage(true)
+                       .create();
+               platformBusService.placeMessageOnPlatformBus(platformMessage);
 
-            metrics.incProtocolMsgSentCounter();
-            sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
+               metrics.incProtocolMsgSentCounter();
+               sessionRegistry.putSession(IpcdClientToken.fromProtocolAddress(IpcdProtocol.ipcdAddress(msg.getDevice())), socketSession);
+            }
          }
 
          if(ipcdSession.getActivePlace() != null) {

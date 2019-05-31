@@ -16,6 +16,8 @@
 package com.iris.ipcd.session;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,8 @@ public abstract class IpcdSession extends DefaultSessionImpl implements Partitio
    public abstract void sendMessage(IpcdMessage msg, ClientToken ct);
 
    public abstract void sendMessage(IpcdMessage msg);
+
+   public Set<IpcdClientToken> devices = new HashSet<>();
 
    public void initializeSession(Device device) {
       initializeSession(device, null);
