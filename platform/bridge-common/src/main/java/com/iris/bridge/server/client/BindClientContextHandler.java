@@ -71,11 +71,6 @@ public class BindClientContextHandler extends ChannelInboundHandlerAdapter {
          logger.trace("Received HTTP request, determining context");
          try {
             String sessionId = extractSessionId((FullHttpRequest) msg);
-            if (sessionId == null) {
-               logger.trace("Turning down request with no session id");
-               requestAuthorizer.handleFailedAuth(ctx, (FullHttpRequest) msg);
-               return;
-            }
             logger.debug("Extracted Session Id in BindClientContext: {}", sessionId);
             Client.bind(ctx.channel(), registry.load(sessionId));
             BridgeMdcUtil.bindHttpContext(registry, ctx.channel(), (FullHttpRequest) msg);
