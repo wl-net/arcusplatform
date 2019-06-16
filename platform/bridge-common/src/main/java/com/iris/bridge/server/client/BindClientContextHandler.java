@@ -72,6 +72,8 @@ public class BindClientContextHandler extends ChannelInboundHandlerAdapter {
          try {
             String sessionId = extractSessionId((FullHttpRequest) msg);
             if (sessionId == null) {
+               logger.trace("Turning down request with no session id");
+               requestAuthorizer.handleFailedAuth(ctx, (FullHttpRequest) msg);
                return;
             }
             logger.debug("Extracted Session Id in BindClientContext: {}", sessionId);
