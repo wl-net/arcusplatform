@@ -71,6 +71,9 @@ public class BindClientContextHandler extends ChannelInboundHandlerAdapter {
          logger.trace("Received HTTP request, determining context");
          try {
             String sessionId = extractSessionId((FullHttpRequest) msg);
+            if (sessionId == null) {
+               return;
+            }
             logger.debug("Extracted Session Id in BindClientContext: {}", sessionId);
             Client.bind(ctx.channel(), registry.load(sessionId));
             BridgeMdcUtil.bindHttpContext(registry, ctx.channel(), (FullHttpRequest) msg);
@@ -120,7 +123,7 @@ public class BindClientContextHandler extends ChannelInboundHandlerAdapter {
    }
 
    private String extractFromAuthHeader(String authHeader) {
-      return StringUtils.isEmpty(authHeader) ? null : authHeader;
+      return (StringUtils.isEmpty(authHeader) || authHeader.startsWith("Bearer")) ? null : authHeader;
    }
 }
 
