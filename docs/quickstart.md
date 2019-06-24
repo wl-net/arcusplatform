@@ -1,11 +1,66 @@
 # Quickstart
 
+This page outlines some of the high-level compatibility for Arcus and how to get started with setting it up.
+
+## What's supported
+
+The following classes of devices are supported:
+
+A few examples of what works:
+
+* Iris first generation devices, including Contact Sensors, Motion Sensors, Range Extenders, and Smart Plugs
+* Iris second generation devices, including Keyfobs, Contact Sensors, Motion Sensors, and Smart Plugs
+* Iris third generation devices, including Contact Sensors, Motion Sensors, and Smart Plugs
+* Schlage door locks
+* Utilitech and Iris water leak sensors
+* Utilitech glass break sensors
+* Utilitech sirens
+* GE/Jasco Z-Wave Switches
+
+### Known to not work
+
+* Honeywell wifi thermostats
+* Phillips Hue
+* Nest
+
+### Needs confirmation
+
+* Alexa
+
 ## Pre-reqs
 
 * Docker
 * Java
+* 10GB of RAM, and 25GB of disk space.
+
+### Overall summary of services you need to get running
+
+#### Platform (khakis)
+Start by deploying the following:
+* eyeris/zookeeper - this is required by kafka.
+* eyeris/kafka - for getting messages between the bridges (e.g. hub-bridge and client-bridge) to the respective message processing services (e.g. subsystem-service).
+* eyeris/cassandra - used for persistent storage.
+
+
+#### Platform (services)
+The following services are critical to basic user functionality:
+
+* ui-service - shows the arcus web ui. Alternatively, you can run the nodejs server outside of a container.
+* client-bridge - hosts the main websocket server that users connect to (via web or mobile client)
+* platform-services - used to handle account registration and and other shared tasks
+* subsystem-service - used for a lot of functionality, including alarms, door locks, light switches, etc.
+* notification-services - (optional) used for sending notifications via APNS, GCM, Twilio, or SendGrid.
+* ivr-callback-server (optional) - used for saying a message to the user over the phone. If not configured, you'll get a phone call where the computer will say "an error occurred", and hang up.
+* driver-services - handles zigbee/zwave/etc between the bridge and other arcus systems.
+* rule-service - provides rules
+* scheduler-service - provides the ability to schedule services.
+
+If you do not deploy all of these services, the web ui will not be able to load since it ways to responses from all of these services.
 
 ### Docker
+
+If you are not familar with Docker, you should take some time to look up Docker basics first, even if it's just a 15 minute introduction or crash course.
+
 It is recommended that you setup docker in direct lvm mode, see https://docs.docker.com/storage/storagedriver/device-mapper-driver/#configure-direct-lvm-mode-for-production
 
 generally this is just a matter of creating a block device / partition for the system in question that is at least 10-20GB in size
@@ -44,7 +99,7 @@ OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
 
 ```
 $ cd # go to your home dir
-$ git clone https://github.com/wl-net/arcusplatform.git
+$ git clone https://github.com/arcus-smart-home/arcusplatform.git
 $ cd arcusplatform
 $ ./gradlew :platform:arcus-khakis:startPlatform
 $ ./gradlew startService
@@ -101,6 +156,20 @@ You can use oculus (`./gradlew :tools:oculus:run`) to login, assuming that clien
 
 This is more difficult than it sounds, because of mtls. You need to get a certificate issued for your site and add the root ca for your certificate into the java keystore on the hub.
 Otherwise, you may need to disable TLS and hard code your hub into platform/arcus-hubsession/src/main/java/com/iris/hubcom/server/session/HubClient.java:30 in order to "authenticate" the hub. The latter of these approaches is obviously not recommended.
+
+If you decide to use LetsEncrypt as your CA, then you can easily replace the trust store on your device with the one in this jar file, which will trust LetEncrypt (both the DST and ISRG roots). Execute the following on your hub (a
+
+```
+# md5sum  /data/agent/libs/iris2-hub-controller-2.13.22.jar
+276ed29f2ff79eb99f6bab0072621f7b  /data/agent/libs/iris2-hub-controller-2.13.22.jar
+```
+If you see a different version, you will need to update your hub first. Instructions on how to do so are TBD.
+
+```
+# curl https://tools.arcus.wl-net.net/files/iris2-system-2.13.22.jar --output /data/agent/libs/iris2-system-2.13.22.jar 
+```
+
+Now follow the instructions in tools/hubdebug and set `IRIS_GATEWAY_URI` to your server. Assuming you did this correctly, your hub should start blinking a green light, instead of green & red lights.
 
 ## Debugging
 
