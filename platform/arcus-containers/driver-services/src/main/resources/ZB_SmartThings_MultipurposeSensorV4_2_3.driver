@@ -91,6 +91,7 @@ model           "STSMLT250"
 
 
 matcher         'ZIGB:manufacturer': 0x110A, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': 'multiv4'
+matcher         'ZIGB:manufacturer': 0x1241, 'ZIGB:vendor': 'Samjin', 'ZIGB:model': 'multi'
 
 
 capabilities    Identify, DeviceOta
