@@ -37,16 +37,35 @@ else
    echo "Kafka is online"
 fi
 
-echo "127.0.0.1	kafkaops.eyeris" >> /etc/hosts
-
 export KAFKA_HEAP_OPTS="-Xmx4m -Xms4m"
 export KAFKA_JVM_PERFORMANCE_OPTS="-client -Djava.awt.headless=true"
 
 RESULT=0
 echo "Creating Kafka Provisions Topics..."
 
+METRICS_CONFIG=""
+
+if [[ -n "${KAFAOPS_METRICS_LOG_RETENTION_MS}" ]]; then
+    METRICS_CONFIG="${METRICS_CONFIG} --config retention.ms=${KAFAOPS_METRICS_LOG_RETENTION_MS}"
+fi
+
+if [[ -n "${KAFAOPS_METRICS_LOG_RETENTION_BYTES}" ]]; then
+    METRICS_CONFIG="${METRICS_CONFIG} --config retention.bytes=${KAFAOPS_METRICS_LOG_RETENTION_BYTES}"
+fi
+
 "${KAFKA_HOME}/bin/kafka-topics.sh" --zookeeper "${ZOOKEEPEROPS}" --create --partitions 128 --replication-factor ${KAFKAOPS_REPLICATION} --topic "irisLog" & PID0=$!
-"${KAFKA_HOME}/bin/kafka-topics.sh" --zookeeper "${ZOOKEEPEROPS}" --create --partitions 128 --replication-factor ${KAFKAOPS_REPLICATION} --topic "metrics" & PID1=$!
+"${KAFKA_HOME}/bin/kafka-topics.sh" --zookeeper "${ZOOKEEPEROPS}" --create --partitions 128 --replication-factor ${KAFKAOPS_REPLICATION} --topic "metrics" $METRICS_CONFIG & PID1=$!
+
+if [[ -n "$KAFAOPS_METRICS_LOG_RETENTION_MS" ]]; then
+   echo "Altering metrics retention.ms"
+   "${KAFKA_HOME}/bin/kafka-configs.sh" --zookeeper "${ZOOKEEPEROPS}" --alter --entity-type topics --entity-name metrics --add-config retention.ms=${KAFAOPS_METRICS_LOG_RETENTION_MS}
+fi
+
+if [[ -n "$KAFAOPS_METRICS_LOG_RETENTION_BYTES" ]]; then
+   echo "Altering metrics retention.bytes"
+   "${KAFKA_HOME}/bin/kafka-configs.sh" --zookeeper "${ZOOKEEPEROPS}" --alter --entity-type topics --entity-name metrics --add-config retention.bytes=${KAFAOPS_METRICS_LOG_RETENTION_BYTES}
+fi
+
 
 wait $PID0; RESULT=$(($RESULT | $?))
 wait $PID1; RESULT=$(($RESULT | $?))

@@ -55,6 +55,8 @@ kafka_init() {
     sed -i "s/^\s*num.partitions\s*=.*$/num.partitions=32/" $KAFKA_HOME/config/server.properties
     sed -i "s/^\s*num.recovery.threads.per.data.dir\s*=.*$/num.recovery.threads.per.data=4/" $KAFKA_HOME/config/server.properties
 
+    echo "" >> $KAFKA_HOME/config/server.properties # newer versions don't have a newline at the end.
+
     if [[ -n ${ADVERTISED_HSTN} ]] ; then
         echo "advertised.listeners=PLAINTEXT://$ADVERTISED_HSTN:9092" >> $KAFKA_HOME/config/server.properties
     fi
@@ -76,6 +78,9 @@ kafka_init() {
         echo "log.message.format.version=0.10.0.1" >> $KAFKA_HOME/config/server.properties
     fi 
 
+    if [[ -n ${KAFKA_LOG_SEGMENT_BYTES} ]] ; then
+        echo "log.segment.bytes=${KAFKA_LOG_SEGMENT_BYTES}" >> $KAFKA_HOME/config/server.properties
+    fi
 
     if [[ -n ${KAFKA_AUTO_CREATE_TOPICS_ENABLE} ]] ; then
         echo "auto.create.topics.enable=${KAFKA_AUTO_CREATE_TOPICS_ENABLE}" >> $KAFKA_HOME/config/server.properties

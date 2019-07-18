@@ -340,6 +340,9 @@ public class KafkaDispatcherImpl implements PartitionListener, KafkaDispatcher {
 				KafkaConsumer<?, ?> consumer
 		) {
 			List<PartitionInfo> kafkaPartitions = consumer.partitionsFor(topic);
+			if (kafkaPartitions == null) {
+				throw new RuntimeException("No partitions found for topic " + topic);
+			}
 			int partitionRatio = platformPartitions / kafkaPartitions.size(); 
 			logger.info("Discovered [{}] kafka partitions and [{}] platform partitions: [{}] platform partitions per kafka partition", kafkaPartitions.size(), platformPartitions, partitionRatio);
 			Map<Integer, Integer> partitionMap = new LinkedHashMap<>();
