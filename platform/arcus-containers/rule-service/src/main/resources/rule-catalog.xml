@@ -255,6 +255,48 @@
          </selectors>
       </template>
 
+      <template id="tx5nbas" keywords="scene" tags="scene,pres"
+                  added="2019-05-09T00:00:00" modified="2019-05-09T00:00:00"
+                  name="Turn On a Appliance When I Arrive"
+                  description="Turn on a switch when a person arrives home."
+                  extra="Keyfobs and Pendants are subject to delays in order to conserve battery life."
+                  premium="false">
+            <populations>
+                <population name="general" /> <population name="qa" /> <population name="beta" />
+            </populations>
+            <categories>
+                <category name="Buttons &amp; Fobs" />
+                <category name="Home &amp; Family" />
+                <category name="Scene" />
+            </categories>
+            <description>Turn ${switch}  ${on or off}  when ${a person or device} arrives home.</description>
+            <conditions>
+                <or>
+                    <received message="subspres:Arrived" from="SERV:subspres:${_placeId}">
+                        <attribute name="target" value="${a person or device}"/>
+                    </received>
+                    <received message="subspres:Arrived" from="SERV:subspres:${_placeId}">
+                        <attribute name="device" value="${a person or device}"/>
+                    </received>
+                </or>
+            </conditions>
+            <actions>
+                <device-query var="address" query="base:address == '${switch}' and swit:state != '${on or off}'">
+                    <set-attribute to="${address}" name="swit:state" value="${on or off}" />
+                </device-query>
+            </actions>
+            <selectors>
+                <selector type="presence" name="a person or device" />
+                <selector name="switch" type="device" query="base:caps contains 'swit'" />
+                <selector name="on or off" type="constant">
+                    <options>
+                        <option label="on" value="ON" />
+                        <option label="off" value="OFF" />
+                    </options>
+                </selector>
+            </selectors>
+        </template>
+
        <template id="c774bb" keywords="scene" tags="scene,pres"
          added="2015-11-30T00:00:00" modified="2015-11-30T00:00:00"
          name="Run a Scene When the Last Person Leaves"
