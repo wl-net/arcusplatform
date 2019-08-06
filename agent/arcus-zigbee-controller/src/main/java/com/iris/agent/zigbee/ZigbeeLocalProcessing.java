@@ -39,7 +39,7 @@ public interface ZigbeeLocalProcessing {
    long getNodeEui64(Address addr);
    long eui64();
    Observable<Bind.ZdpBindRsp> bind(long eui64, short profile, byte endpoint, short cluster, boolean server);
-   Observable<General.ZclWriteAttributesResponse> write(long eui64, short profile, byte endpoint, short cluster, Map<Short, ZclData> p4);
+   Observable<General.ZclWriteAttributesResponse> write(long eui64, short profile, byte endpoint, short cluster, Map<Short, ZclData> attrs);
    Observable<General.ZclWriteAttributesResponse> write(long eui64, short profile, byte endpoint, short cluster, General.ZclWriteAttributeRecord[] attrs);
    Observable<General.ZclReadAttributesResponse> read(long eui64, short profile, byte endpoint, short cluster, Collection<Short> attrs);
    Observable<General.ZclReadAttributesResponse> read(long eui64, short profile, byte endpoint, short cluster, short[] attrs);
