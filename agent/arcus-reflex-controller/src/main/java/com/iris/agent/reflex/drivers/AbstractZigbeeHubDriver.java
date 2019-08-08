@@ -15,6 +15,7 @@
  */
 package com.iris.agent.reflex.drivers;
 
+import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,15 +27,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.iris.agent.reflex.ReflexController;
+import com.iris.agent.reflexes.HubReflexVersions;
 import com.iris.agent.util.RxIris;
+import com.iris.agent.zigbee.ZigbeeClusterLibrary;
+import com.iris.agent.zigbee.ZigbeeNetwork;
+import com.iris.agent.zigbee.ZclFrame;
+import com.iris.agent.zigbee.ZigbeeNode;
+import com.iris.agent.zigbee.ezsp.EzspIncomingMessageHandler;
 import com.iris.messages.address.Address;
 import com.iris.protoc.runtime.ProtocMessage;
 import com.iris.protoc.runtime.ProtocUtil;
+import com.iris.protocol.ProtocolMessage;
 import com.iris.protocol.zigbee.ZclData;
 import com.iris.protocol.zigbee.ZigbeeProtocol;
 import com.iris.protocol.zigbee.msg.ZigbeeMessage;
 import com.iris.protocol.zigbee.zcl.Constants;
 import com.iris.protocol.zigbee.zcl.General;
+
 import com.iris.protocol.zigbee.zdp.Bind.ZdpBindRsp;
 
 import rx.Observable;
@@ -260,18 +269,20 @@ public abstract class AbstractZigbeeHubDriver extends AbstractHubDriver {
 
       ZigbeeMessage.Protocol pmsg = ZigbeeMessage.Protocol.serde().fromBytes(ByteOrder.LITTLE_ENDIAN, msg);
       switch (pmsg.getType()) {
-      case ZigbeeMessage.Zcl.ID:
-         return handleZcl(pmsg.getPayload());
+         case ZigbeeMessage.Zcl.ID:
+            return handleZcl(pmsg.getPayload());
 
-      case ZigbeeMessage.Zdp.ID:
-         return handleZdp(pmsg.getPayload());
+         case ZigbeeMessage.Zdp.ID:
+            return handleZdp(pmsg.getPayload());
 
-      default:
-         return false;
+         default:
+            return false;
       }
    }
 
-   /*
+   // XXX: sender is a byte?
+   private void handleUnknownNode(ZigbeeNetwork nwk, byte sender) {} // TODO: what do we want to do?
+
    private void handleZclMessage(ZigbeeNetwork nwk, EzspIncomingMessageHandler msg, ZclFrame zcl, String type) {
       ZigbeeNode node = nwk.getNodeUsingNwk(msg.rawSender());
       if (node == null) {
@@ -289,7 +300,7 @@ public abstract class AbstractZigbeeHubDriver extends AbstractHubDriver {
       boolean mspSpec = ((zcl.getFrameControl() & ZclFrame.MANUF_SPECIFIC) != 0);
 
       if (clsSpec && !mspSpec) {
-         switch (msg.getApsFrame().rawClusterId()) {
+         switch (msg.getApsFrame().getClusterId()) {
          case com.iris.protocol.zigbee.zcl.Ota.CLUSTER_ID:
             int cmd = zcl.getCommand();
             if (cmd == com.iris.protocol.zigbee.zcl.Ota.ImageBlockRequest.ID ||
@@ -359,7 +370,7 @@ public abstract class AbstractZigbeeHubDriver extends AbstractHubDriver {
    private void handleZclMessage(ZigbeeNetwork nwk, ZigbeeClusterLibrary.Zcl msg) {
       handleZclMessage(nwk, msg.msg, msg.zcl, "zcl");
    }
-
+   /*
    private void handleAmeMessage(ZigbeeNetwork nwk, ZigbeeAlertmeProfile.Ame msg) {
       handleZclMessage(nwk, msg.msg, msg.zcl, "alertme");
    }
