@@ -18,5 +18,21 @@
  */
 package com.iris.agent.zigbee;
 
+import com.zsmartsystems.zigbee.ZigBeeNetworkManager;
+import com.zsmartsystems.zigbee.dongle.ember.ZigBeeDongleEzsp;
+import com.zsmartsystems.zigbee.transport.ZigBeePort;
+import com.zsmartsystems.zigbee.transport.ZigBeeTransportTransmit;
+import com.zsmartsystems.zigbee.serial.ZigBeeSerialPort;
+
 public class ZigbeeController {
+
+   public void connect() {
+      ZigBeePort port = new ZigBeeSerialPort("/dev/ttyUSB1", 56700, ZigBeePort.FlowControl.FLOWCONTROL_OUT_XONOFF);
+
+      final ZigBeeTransportTransmit dongle = new ZigBeeDongleEzsp(port);
+
+      ZigBeeNetworkManager networkManager = new ZigBeeNetworkManager(dongle);
+
+      networkManager.initialize();
+   }
 }
