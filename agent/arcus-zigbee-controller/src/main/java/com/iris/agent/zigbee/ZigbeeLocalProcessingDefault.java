@@ -31,6 +31,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ZigbeeLocalProcessingDefault implements ZigbeeLocalProcessing {
+
+   private final ZigbeeController zigbee;
+   private long eui;
+
+   public ZigbeeLocalProcessingDefault(final ZigbeeController zigbee) {
+      this.zigbee = zigbee;
+   }
+
    @Override
    public Observable<Bind.ZdpBindRsp> bind(long eui64, short profile, byte endpoint, short cluster, boolean server) {
       return null;
@@ -78,7 +86,7 @@ public class ZigbeeLocalProcessingDefault implements ZigbeeLocalProcessing {
 
    @Override
    public long eui64() {
-      return 0;
+      return eui;
    }
 
    @Override
