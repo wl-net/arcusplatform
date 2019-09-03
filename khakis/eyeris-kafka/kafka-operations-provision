@@ -67,6 +67,17 @@ if [[ -n "$KAFAOPS_METRICS_LOG_RETENTION_BYTES" ]]; then
 fi
 
 
+if [[ -n "$KAFAOPS_METRICS_LOG_RETENTION_MS" ]]; then
+   echo "Altering metrics retention.ms"
+   "${KAFKA_HOME}/bin/kafka-configs.sh" --zookeeper "${ZOOKEEPEROPS}" --alter --entity-type topics --entity-name metrics --add-config retention.ms=${KAFAOPS_METRICS_LOG_RETENTION_MS}
+fi
+
+if [[ -n "$KAFAOPS_METRICS_LOG_RETENTION_BYTES" ]]; then
+   echo "Altering metrics retention.ms"
+   "${KAFKA_HOME}/bin/kafka-configs.sh" --zookeeper "${ZOOKEEPEROPS}" --alter --entity-type topics --entity-name metrics --add-config retention.bytes=${KAFAOPS_METRICS_LOG_RETENTION_BYTES}
+fi
+
+
 wait $PID0; RESULT=$(($RESULT | $?))
 wait $PID1; RESULT=$(($RESULT | $?))
 
