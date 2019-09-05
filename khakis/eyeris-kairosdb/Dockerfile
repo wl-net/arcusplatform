@@ -1,4 +1,8 @@
+# Based on https://github.com/kairosdb/kairosdb/issues/288#issuecomment-404411656
+
 FROM eyeris/java as builder
+
+USER root
 
 ARG KAIROSDB_TAG="v1.2.2"
 
@@ -11,11 +15,12 @@ RUN apt-get update && \
     mkdir -p /build && \
     tar -xzf ./build/kairosdb*.tar.gz -C /build && \
     cd .. && \
-    rm -Rf ./kairosdb/
+    rm -Rf ./kairosdb/ && \
+    chown -R arcus:arcus /build/kairosdb
 
 FROM eyeris/java
 
-COPY --from=0 /build/kairosdb /opt/kairosdb
+COPY --chown=arcus:arcus --from=0 /build/kairosdb /opt/kairosdb
 
 VOLUME /opt/kairosdb
 
