@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.twilio.exception.TwilioException;
+import com.twilio.http.HttpMethod;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -38,24 +40,14 @@ import com.iris.notification.dispatch.DispatchUnsupportedByUserException;
 import com.iris.platform.notification.Notification;
 import com.iris.platform.notification.provider.ivr.TwilioHelper;
 import com.iris.util.Net;
-import com.twilio.sdk.TwilioRestClient;
-import com.twilio.sdk.TwilioRestException;
-import com.twilio.sdk.resource.factory.CallFactory;
-import com.twilio.sdk.resource.instance.Call;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Call;
+import com.twilio.rest.api.v2010.account.CallCreator;
+import com.twilio.type.PhoneNumber;
 
 @Singleton
 public class TwilioSender {
    private static final Logger LOGGER = LoggerFactory.getLogger(TwilioSender.class);
-   
-   private final static String TWILIO_PARAM_METHOD= "GET";
-   private final static String TWILIO_PARAM_KEY_METHOD= "Method";
-   private final static String TWILIO_PARAM_KEY_TO= "To";
-   private final static String TWILIO_PARAM_KEY_FROM= "From";
-   private final static String TWILIO_PARAM_KEY_STATUSCALLBACK= "StatusCallback";
-   private final static String TWILIO_PARAM_KEY_STATUSCALLBACK_METHOD= "StatusCallbackMethod";
-   private final static String TWILIO_PARAM_KEY_STATUSCALLBACK_EVENT= "StatusCallbackEvent";
-   private final static String TWILIO_PARAM_KEY_FALLBACK_URL= "FallbackUrl";
-   private final static String TWILIO_PARAM_KEY_APPLICATIONSID= "ApplicationSid";
 
    private final static String TWILIO_PARAM_KEY_RECORD= "Record";
 
@@ -77,11 +69,11 @@ public class TwilioSender {
    @Inject(optional = true) @Named("twilio.recordCalls") boolean recordCalls=false;
    @Inject(optional = true) @Named("twilio.param.prefix") private String twilioNotificationParamPrefix="_";
 
-   private TwilioRestClient twilio;
+   private Twilio twilio;
    
    @Inject
    public TwilioSender(@Named("twilio.account.sid") String twilioAccountSid, @Named("twilio.account.auth") String twilioAccountAuth) {
-      this.twilio = new TwilioRestClient(twilioAccountSid, twilioAccountAuth);
+      Twilio.init(twilioAccountSid, twilioAccountAuth);
    }
 
    public String sendIVR(Notification notification, Person recipient) throws DispatchUnsupportedByUserException {
@@ -110,53 +102,39 @@ public class TwilioSender {
 
       String eventHandlerPath = IRIS_ACK_EVENT_HANDLER_PATH;
 
-      params.add(new BasicNameValuePair("Url", String.format("%s%s?%s&%s",
-            twilioCallbackServerUrl,
-            scriptHandlerPath,
-            linkback,
-            parameters)));
-      
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_TO, recipient.getMobileNumber()));
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_METHOD, TWILIO_PARAM_METHOD));
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_FROM, twilioAccountFrom));
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_STATUSCALLBACK,
-         format("%s%s?%s", twilioCallbackServerUrl, eventHandlerPath, linkback)));
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_STATUSCALLBACK_METHOD, TWILIO_PARAM_METHOD));
-      params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_STATUSCALLBACK_EVENT, TWILIO_PARAM_KEY_STATUSCALLBACK_EVENT_COMPLETED));
-      
-      if(recordCalls){
-         params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_RECORD, TWILIO_PARAM_VALUE_TRUE));
+      CallCreator callCreator = Call.creator(new PhoneNumber(recipient.getMobileNumber()),
+              new PhoneNumber(twilioAccountFrom),
+              String.format("%s%s?%s&%s",
+                      twilioCallbackServerUrl,
+                      scriptHandlerPath,
+                      linkback,
+                      parameters));
+
+      callCreator.setStatusCallback(format("%s%s?%s", twilioCallbackServerUrl, eventHandlerPath, linkback));
+      callCreator.setStatusCallbackMethod(HttpMethod.GET);
+      callCreator.setStatusCallbackEvent(TWILIO_PARAM_KEY_STATUSCALLBACK_EVENT_COMPLETED);
+
+      if (recordCalls) {
+         callCreator.setRecord(recordCalls);
       }
       
-      if(twilioApplicationSid!=null){
-         params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_APPLICATIONSID, twilioApplicationSid));
+      if (twilioApplicationSid != null) {
+         callCreator.setApplicationSid(twilioApplicationSid);
       }
       
-      if(twilioFallbackUrl!=null){
-         params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_FALLBACK_URL, twilioFallbackUrl));
+      if (twilioFallbackUrl != null) {
+         callCreator.setFallbackUrl(twilioFallbackUrl);
       }
-      if(ifMachine!=null){
-         params.add(new BasicNameValuePair(TWILIO_PARAM_KEY_IF_MACHINE, ifMachine));
+      if (ifMachine != null) {
+         callCreator.setMachineDetection(ifMachine);
       }
-      
-      CallFactory callFactory = twilio.getAccount().getCallFactory();
+
       try {
-         Call call = callFactory.create(params);
+         Call call = callCreator.create();
          return call.getSid();
-      }
-      catch (TwilioRestException tre) {
-         LOGGER.error("Error Contacting Twilio",tre);
-         switch(tre.getErrorCode()){
-            case 21211:   
-            case 13224:
-               throw new DispatchUnsupportedByUserException(tre.getErrorMessage());
-            default:
-               throw new RuntimeException("unknown twilio exception",tre);
-         }
-      }
-      catch (Exception e) {
+      } catch (TwilioException e) {
          LOGGER.error("Error Contacting Twilio",e);
-         throw new RuntimeException(e);
+         throw new RuntimeException("unknown twilio exception", e);
       }
    }
 }
