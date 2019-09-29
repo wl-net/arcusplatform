@@ -104,11 +104,8 @@ public class TwilioSender {
 
       CallCreator callCreator = Call.creator(new PhoneNumber(recipient.getMobileNumber()),
               new PhoneNumber(twilioAccountFrom),
-              String.format("%s%s?%s&%s",
-                      twilioCallbackServerUrl,
-                      scriptHandlerPath,
-                      linkback,
-                      parameters));
+              twilioApplicationSid
+      );
 
       callCreator.setStatusCallback(format("%s%s?%s", twilioCallbackServerUrl, eventHandlerPath, linkback));
       callCreator.setStatusCallbackMethod(HttpMethod.GET);
