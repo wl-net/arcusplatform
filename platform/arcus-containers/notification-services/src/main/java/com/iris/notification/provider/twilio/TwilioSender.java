@@ -107,8 +107,8 @@ public class TwilioSender {
               twilioApplicationSid
       );
 
-      callCreator.setStatusCallback(format("%s%s?%s", twilioCallbackServerUrl, eventHandlerPath, linkback));
-      callCreator.setStatusCallbackMethod(HttpMethod.GET);
+      callCreator.setUrl(format("%s%s?%s", twilioCallbackServerUrl, eventHandlerPath, linkback));
+      callCreator.setMethod(HttpMethod.GET);
       callCreator.setStatusCallbackEvent(TWILIO_PARAM_KEY_STATUSCALLBACK_EVENT_COMPLETED);
 
       if (recordCalls) {
