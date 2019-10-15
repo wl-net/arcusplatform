@@ -245,7 +245,9 @@ ext.libraries << [
 		smackCore: "org.igniterealtime.smack:smack-core:4.0.7",
 		smackTCP: "org.igniterealtime.smack:smack-tcp:4.0.7",
 		smackExt: "org.igniterealtime.smack:smack-extensions:4.0.7",
-		twilio: "com.twilio.sdk:twilio:7.42.0",
+		twilio: dependencies.create("com.twilio.sdk:twilio:7.42.0") {
+			exclude group: "com.google.inject" // interferes with platform guice
+		},
 
 
 // JAXB Dependencies
