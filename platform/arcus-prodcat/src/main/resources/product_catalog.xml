@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <prodcat xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://arcus.com/prodcat_1.0.0">
   <brands>
+    <brand name="Arcus"/>
     <brand name="Aeotec by Aeon Labs"/>
     <brand name="Amazon"/>
     <brand name="Blink"/>
@@ -15,6 +16,7 @@
     <brand name="FortrezZ"/>
     <brand name="Gatehouse"/>
     <brand name="GE"/>
+    <brand name="Generic"/>
     <brand name="Genie"/>
     <brand name="GoControl"/>
     <brand name="Google"/>
@@ -74,6 +76,54 @@
     <category name="Voice Assistant"/>
   </categories>
   <products>
+    <product id="0c9a55" name="Generic Contact Sensor" shortname="Contact Sensor" screen="Contact" description="" manufacturer="Arcus" installManualUrl="" vendor="Arcus" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="contact, door, window, sensor, security, alarmcontact, generic" ota="No" protofamily="IPCD" pairingMode="IPCD" hubrequired="false" added="2019-09-24T19:56:50-0600" lastchanged="2019-09-24T19:56:50-0600">
+        <categories>
+            <category name="Cameras &amp; Sensors"/>
+            <category name="Care"/>
+            <category name="Doors &amp; Locks"/>
+            <category name="Security"/>
+            <category name="Windows &amp; Blinds"/>
+        </categories>
+        <pair>
+            <step1 type="text" img="" text="Enter the Device ID" target="BRDG::IPCD" message="bridgesvc:RegisterDevice">
+                <input type="text" label="8-Character Code" name="IPCD:sn" minlen="8" maxlen="8" required="true"/>
+                <input type="hidden" name="IPCD:v1devicetype" value="GenericContactSensor"/>
+            </step1>
+        </pair>
+        <removal>
+          <step1 type="text" img="" text="Please wait for the device to be removed from the Arcus Cloud Platform. &#xA;          &#x9;If this takes longer than a few seconds, consider factory resetting the device."/>
+        </removal>
+        <reset>
+            <step1 type="text" img="" text="TODO"/>
+        </reset>
+        <populations>
+            <population name="general"/>
+            <population name="qa"/>
+            <population name="beta"/>
+        </populations>
+    </product>
+    <product id="0c9a56" name="Generic Switch" shortname="Light Switch" screen="Switch" description="" manufacturer="Arcus" installManualUrl="" vendor="Arcus" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="switch, energy, power, generic" ota="No" protofamily="IPCD" pairingMode="IPCD" hubrequired="false" added="2019-09-24T19:56:50-0600" lastchanged="2019-09-24T19:56:50-0600">
+      <categories>
+        <category name="Lights &amp; Switches"/>
+      </categories>
+      <pair>
+        <step1 type="text" img="" text="Enter the Device ID" target="BRDG::IPCD" message="bridgesvc:RegisterDevice">
+          <input type="text" label="8-Character Code" name="IPCD:sn" minlen="8" maxlen="8" required="true"/>
+          <input type="hidden" name="IPCD:v1devicetype" value="GenericSwitch"/>
+        </step1>
+      </pair>
+      <removal>
+        <step1 type="text" img="" text="Please wait for the device to be removed from the Arcus Cloud Platform. &#xA;          &#x9;If this takes longer than a few seconds, consider factory resetting the device."/>
+      </removal>
+      <reset>
+        <step1 type="text" img="" text="TODO"/>
+      </reset>
+      <populations>
+        <population name="general"/>
+        <population name="qa"/>
+        <population name="beta"/>
+      </populations>
+    </product>
     <product id="0c9a66" name="Plug-In Switch (12719 Z-Wave)" shortname="Plug-In Switch" screen="Switch" description="" manufacturer="Jasco" installManualUrl="https://byjasco.com/sites/default/files/product/manuals/12719%20EnFrSp%20QStart%20V1%20081814.pdf" vendor="GE" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/NNOZR9qrmpQ" keywords="GE, Jasco, indoor, module, control, outlet, plug, switch, energy, 120, volt, 15, amp, power, zwave, 12719" ota="No" protofamily="Z-Wave" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600">
       <categories>
         <category name="Lights &amp; Switches"/>
@@ -612,7 +662,7 @@
       </populations>
       <reconnect/>
     </product>
-    <product name="Wi-Fi Indoor Smart Plug" shortname="Smart Plug" screen="Switch" description="" manufacturer="GreatStar" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Greatstar, Iris, indoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="2.12" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="220a4a" added="2018-04-20T14:46:07-0400" lastchanged="2018-09-12T22:56:31.380Z">
+    <product name="Wi-Fi Indoor Smart Plug" shortname="Smart Plug" screen="Switch" description="" manufacturer="GreatStar" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="" keywords="Greatstar, Iris, indoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="2.12" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="220a4a" added="2018-04-20T14:46:07-0400" lastchanged="2018-09-12T22:56:31.380Z">
       <categories>
         <category name="Lights &amp; Switches"/>
       </categories>
@@ -633,7 +683,7 @@
       <removal/>
       <reconnect/>
     </product>
-    <product name="Wi-Fi Outdoor Smart Plug" shortname="Smart Plug" screen="Switch" description="" manufacturer="GreatStar" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" keywords="Greatstar, Iris, outdoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="2.12" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="2a97b9" added="2018-04-20T14:46:07-0400" lastchanged="2018-09-12T22:56:44.422Z">
+    <product name="Wi-Fi Outdoor Smart Plug" shortname="Smart Plug" screen="Switch" description="" manufacturer="GreatStar" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="" keywords="Greatstar, Iris, outdoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="2.12" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="2a97b9" added="2018-04-20T14:46:07-0400" lastchanged="2018-09-12T22:56:44.422Z">
       <categories>
         <category name="Lights &amp; Switches"/>
       </categories>
@@ -1443,7 +1493,7 @@
         <population name="beta"/>
       </populations>
     </product>
-    <product name="Wi-Fi Smart Switch" shortname="Smart Switch" screen="Switch" description="" manufacturer="Swann" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/CVTgIfymFEk" keywords="Swann, Iris, indoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="1.13.0" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="162918" added="2016-05-17T09:11:29-0400" lastchanged="2018-08-15T20:57:55.165Z">
+    <product name="Wi-Fi Smart Switch" shortname="Smart Switch" screen="Switch" description="" manufacturer="Swann" installManualUrl="" vendor="Iris" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="https://youtu.be/CVTgIfymFEk" keywords="Swann, Iris, indoor, module, control, outlet, smart, plug, switch, 120, volt, wifi" ota="true" protofamily="IPCD" hubrequired="false" minappversion="1.13.0" appRequired="true" pairingMode="WIFI" pairingIdleTimeoutMs="240000" id="162918" added="2016-05-17T09:11:29-0400" lastchanged="2018-08-15T20:57:55.165Z">
       <categories>
         <category name="Lights &amp; Switches"/>
       </categories>
@@ -2403,7 +2453,7 @@
         <population name="beta"/>
       </populations>
     </product>
-    <product id="cf441c" name="Electric Water Heater Controller" shortname="Water Heater" screen="Water Heater" description="" manufacturer="AOSmith" installManualUrl="" vendor="EnergySmart" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/19STYASvOD8" keywords="Energy, Smart, Water, Heater, Whirlpool, AO, Smith" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
+    <product id="cf441c" name="Electric Water Heater Controller" shortname="Water Heater" screen="Water Heater" description="" manufacturer="AOSmith" installManualUrl="" vendor="EnergySmart" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="https://youtu.be/19STYASvOD8" keywords="Energy, Smart, Water, Heater, Whirlpool, AO, Smith" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
       <categories>
         <category name="Water"/>
       </categories>
@@ -2427,7 +2477,7 @@
         <population name="beta"/>
       </populations>
     </product>
-    <product id="3981d9" name="Water Softener" shortname="Water Softener" screen="Water Softener" description="" manufacturer="EcoWater" installManualUrl="" vendor="Whirlpool" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/uVVoVOw5Ouk" keywords="" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
+    <product id="3981d9" name="Water Softener" shortname="Water Softener" screen="Water Softener" description="" manufacturer="EcoWater" installManualUrl="" vendor="Whirlpool" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="https://youtu.be/uVVoVOw5Ouk" keywords="" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
       <categories>
         <category name="Water"/>
       </categories>
@@ -2469,7 +2519,7 @@
         <population name="beta"/>
       </populations>
     </product>
-    <product id="aeda43" name="Aladdin Connect Garage Door Controller" shortname="Garage Door Controller" screen="Genie Aladdin Controller" description="" manufacturer="Genie" installManualUrl="http://www.geniecompany.com/aladdinconnect/" vendor="Genie" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="https://youtu.be/U1kmPAH1skM" keywords="Genie, Aladdin, Connect, garage, door, opener, takeover, ip, wifi, wi-fi, ipcd, controller, barrier, security, lock" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
+    <product id="aeda43" name="Aladdin Connect Garage Door Controller" shortname="Garage Door Controller" screen="Genie Aladdin Controller" description="" manufacturer="Genie" installManualUrl="http://www.geniecompany.com/aladdinconnect/" vendor="Genie" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="https://youtu.be/U1kmPAH1skM" keywords="Genie, Aladdin, Connect, garage, door, opener, takeover, ip, wifi, wi-fi, ipcd, controller, barrier, security, lock" ota="Yes" protofamily="IPCD" hubrequired="false" added="2015-06-29T22:56:59-0600" lastchanged="2018-03-08T10:27:00-0600" pairingMode="IPCD" pairingIdleTimeoutMs="240000">
       <categories>
         <category name="Doors &amp; Locks"/>
         <category name="Care"/>
@@ -2496,7 +2546,7 @@
         <population name="beta"/>
       </populations>
     </product>
-    <product id="aeda44" name="Aladdin Connect Door Sensor" shortname="Garage Door" screen="Garage Door" description="" manufacturer="Genie" installManualUrl="http://www.geniecompany.com/aladdinconnect/" vendor="Genie" cert="workswith" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" batteryprimsize="CR2450" batteryprimnum="1" keywords="Genie, Aladdin, Connect, garage, door, position, sensor, opener, ip, wifi, wi-fi, ipcd, controller, barrier, security, lock" ota="" protofamily="Proprietary" hubrequired="false" devrequired="aeda43" added="2015-06-29T22:56:59-0600" lastchanged="2018-04-19T09:00:00-0600" pairingMode="BRIDGED_DEVICE" appRequired="false">
+    <product id="aeda44" name="Aladdin Connect Door Sensor" shortname="Garage Door" screen="Garage Door" description="" manufacturer="Genie" installManualUrl="http://www.geniecompany.com/aladdinconnect/" vendor="Genie" cert="workswith" canbrowse="false" cansearch="false" helpurl="" pairvideourl="" batteryprimsize="CR2450" batteryprimnum="1" keywords="Genie, Aladdin, Connect, garage, door, position, sensor, opener, ip, wifi, wi-fi, ipcd, controller, barrier, security, lock" ota="" protofamily="Proprietary" hubrequired="false" devrequired="aeda43" added="2015-06-29T22:56:59-0600" lastchanged="2018-04-19T09:00:00-0600" pairingMode="BRIDGED_DEVICE" appRequired="false">
       <categories>
         <category name="Doors &amp; Locks"/>
         <category name="Care"/>
@@ -3953,6 +4003,24 @@
         <step0 type="text" img="" text="TIP: Do not use other Iris devices at this time to avoid removing them. It is best if the device is within 10 feet of the hub."/>
         <step1 type="text" img="" text="Press the ZWAVE button 3 times."/>
         <step2 type="text" img="" text="The LED will flash 5 times and the hub will beep when the device is successfully removed."/>
+      </removal>
+      <populations>
+        <population name="general"/>
+        <population name="qa"/>
+        <population name="beta"/>
+      </populations>
+    </product>
+    <product id="acd43a" name="S2 Dimmer Switch (Zen27)" shortname="Dimmer Switch" screen="Dimmer" description="" manufacturer="Zooz" vendor="Zooz" cert="none" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" batteryprimsize="" batteryprimnum="0" keywords="zooz, switch, dimmer, zwave, zen27" ota="No" protofamily="Z-Wave" added="2019-10-13T14:10:00-0700" lastchanged="2019-10-13T14:10:30-0700">
+      <categories>
+        <category name="Lights &amp; Switches"/>
+      </categories>
+      <pair>
+        <step1 type="text" img="" text="Press the up button three times quickly. The LED will blink rapidly in pairing mode and the hub will beep when pairing is complete"/>
+      </pair>
+      <removal>
+        <step0 type="text" img="" text="TIP: Do not use other Iris devices at this time to avoid removing them. It is best if the device is within 10 feet of the hub."/>
+        <step1 type="text" img="" text="Pres the down button three times quickly."/>
+        <step2 type="text" img="" text="The LED will flash rapidly and the hub will beep when the device is successfully removed."/>
       </removal>
       <populations>
         <population name="general"/>
