@@ -51,6 +51,7 @@ import com.iris.platform.history.appender.translator.ValueGetter;
 				val={HVACMODE_AUTO, HVACMODE_OFF, HVACMODE_HEAT, HVACMODE_COOL}, 
 				tpl="device.thermo.hvacmode.?", 
 				critical=true)
+@AnyValue(attr=ThermostatCapability.ATTR_FANMODE, tpl="device.thermo.fanmode.?", critical=true)
 @AnyValue(attr=ThermostatCapability.ATTR_HEATSETPOINT, tpl="device.thermo.heatsetpoint", critical=true)
 @AnyValue(attr=ThermostatCapability.ATTR_COOLSETPOINT, tpl="device.thermo.coolsetpoint", critical=true)
 @Values({ValueGetter.ATTR_VALUE_AS_FAHRENHEIT})
