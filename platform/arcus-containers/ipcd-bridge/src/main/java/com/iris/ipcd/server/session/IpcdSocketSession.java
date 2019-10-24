@@ -50,9 +50,9 @@ public class IpcdSocketSession extends IpcdSession {
    private final Set<String> txnids = new HashSet<>();
 
    /**
-    * Whether or not this session supports multiple devices over a single connection.
+    * Whether or not this session is a bridge (i.e. multiple devices over a single connection).
     */
-   private boolean isMultiDevice = false;
+   private boolean isBridge = false;
 
    public IpcdSocketSession(
          SessionRegistry parent,
