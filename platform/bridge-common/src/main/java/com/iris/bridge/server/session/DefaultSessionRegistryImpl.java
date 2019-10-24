@@ -72,6 +72,7 @@ public class DefaultSessionRegistryImpl implements SessionRegistry  {
       logger.debug("put n={}", sessionMap.size());
 
    }
+
    /***
     * Register a client other than the default against with this session.
     * This is useful when an IPCD device would like to host act as a hub and provide additional devices.
