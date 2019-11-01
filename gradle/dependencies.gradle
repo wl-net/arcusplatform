@@ -111,9 +111,9 @@ ext.libraries << [
 		sqlite4java: "com.almworks.sqlite4java:sqlite4java:1.0.392",
 
 // guice dependencies
-		guiceCore: "com.google.inject:guice:4.0-beta5",
-		guiceServlet: "com.google.inject.extensions:guice-servlet:4.0-beta5",
-		guiceMultibindings: "com.google.inject.extensions:guice-multibindings:4.0-beta5",
+		guiceCore: "com.google.inject:guice:4.0",
+		guiceServlet: "com.google.inject.extensions:guice-servlet:4.0",
+		guiceMultibindings: "com.google.inject.extensions:guice-multibindings:4.0",
 
 // governator runtime dependencies
 		jacksonCore: "com.fasterxml.jackson.core:jackson-core:2.4.3",
