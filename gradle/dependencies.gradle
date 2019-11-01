@@ -154,7 +154,7 @@ ext.libraries << [
 // misc dependencies
 		guava: "com.google.guava:guava:19.0",
 		google_guava_testlib: "com.google.guava:guava-testlib:19.0",
-		gson: "com.google.code.gson:gson:2.3.1",
+		gson: "com.google.code.gson:gson:2.8.6",
 		commons_lang: "org.apache.commons:commons-lang3:3.8.1",
 		commons_csv: "org.apache.commons:commons-csv:1.2",
 		supercsv: 'net.sf.supercsv:super-csv:2.4.0',
