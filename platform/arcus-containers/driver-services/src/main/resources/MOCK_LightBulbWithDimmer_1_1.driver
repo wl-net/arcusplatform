@@ -31,7 +31,7 @@ model 			"Mock Dimmable Light Bulb"
 matcher         'MOCK:Capability' : 'LightBulbWithDimmer'
 matcher         'MOCK:ProductId'  : '9a73b2'
 
-capabilities	DevicePower, Switch, Dimmer, Light, DeviceMock
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Light', 'DeviceMock'
 
 importCapability 'mock/MOCK_Switch'
 importCapability 'mock/MOCK_Dimmer'

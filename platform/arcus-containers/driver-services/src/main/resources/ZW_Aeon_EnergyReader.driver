@@ -48,7 +48,7 @@ matcher		'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0002, 'ZWAV:ProductI
 //		0x85 (-121)	COMMAND_CLASS_ASSOCIATION
 //		0x60 (96)	COMMAND_CLASS_MULTI_CHANNEL_V2
 
-capabilities	DevicePower, PowerUse
+capabilities	'DevicePower', 'PowerUse'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

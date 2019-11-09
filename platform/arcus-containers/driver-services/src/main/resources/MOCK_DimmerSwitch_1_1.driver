@@ -28,7 +28,7 @@ model 			"DimmerSwitch"
 matcher        'MOCK:Capability' : 'DimmerSwitch'
 matcher        'MOCK:ProductId'  : '6c56c8'
 
-capabilities	DevicePower, Dimmer, Switch, Indicator, DeviceMock
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Indicator', 'DeviceMock'
 
 
 // ########### driver lifecycle callbacks ##################

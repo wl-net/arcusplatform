@@ -28,7 +28,7 @@ model 			"Smoke CO Detector"
 matcher        'MOCK:Capability' : 'SmokeCOSensor'
 matcher        'MOCK:ProductId'  : '1d33c1'
 
-capabilities	DevicePower, Smoke, CarbonMonoxide, Test, DeviceMock
+capabilities	'DevicePower', 'Smoke', 'CarbonMonoxide', 'Test', 'DeviceMock'
 
 
 onAdded {

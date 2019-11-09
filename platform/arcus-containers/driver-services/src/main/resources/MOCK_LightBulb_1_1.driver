@@ -31,7 +31,7 @@ model 			"Mock Light Bulb"
 matcher        'MOCK:Capability' : 'LightBulb'
 matcher        'MOCK:ProductId'  : '7aa004'
 
-capabilities	DevicePower, Switch, Light, DeviceMock
+capabilities	'DevicePower', 'Switch', 'Light', 'DeviceMock'
 
 importCapability 'mock/MOCK_Switch'
 

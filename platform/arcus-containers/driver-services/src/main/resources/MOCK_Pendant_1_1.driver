@@ -31,7 +31,7 @@ model 			"Pendant"
 matcher        'MOCK:Capability' : 'Pendant'
 matcher        'MOCK:ProductId'  : 'f93033'
 
-capabilities	DevicePower, Button, Presence, DeviceMock
+capabilities	'DevicePower', 'Button', 'Presence', 'DeviceMock'
 
 importCapability 'generic/PresenceDeviceConnection'
 

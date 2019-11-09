@@ -50,7 +50,7 @@ model            "ZSE08"
 matcher          'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0082
 
 
-capabilities     DevicePower, Contact
+capabilities     'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveContact'

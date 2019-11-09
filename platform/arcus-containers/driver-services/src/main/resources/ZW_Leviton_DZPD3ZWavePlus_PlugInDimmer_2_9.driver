@@ -32,7 +32,7 @@ model            "DZPD3"
 
 matcher          'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x3501, 'ZWAV:ProductId': 0x0001
 
-capabilities	DevicePower, Switch, Dimmer
+capabilities     'DevicePower', 'Switch', 'Dimmer'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

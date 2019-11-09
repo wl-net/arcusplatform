@@ -31,7 +31,7 @@ model 			"PIR-ZWAVE2"
 matcher			'ZWAV:Manufacturer': 0x014A, 'ZWAV:ProductType': 0x0001, 'ZWAV:ProductId': 0x0001
 
 
-capabilities	DevicePower, Motion
+capabilities	'DevicePower', 'Motion'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

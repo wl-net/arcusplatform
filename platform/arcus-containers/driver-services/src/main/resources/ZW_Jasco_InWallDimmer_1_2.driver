@@ -31,7 +31,7 @@ matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4457, 'ZWAV:Product
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4450, 'ZWAV:ProductId': 0x3030
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3031
 
-capabilities	DevicePower, Dimmer, Switch, Indicator
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Indicator'
 
 importCapability 'zwave/JascoZWaveSwitchAll'
 importCapability 'zwave/GenericZWaveDim'

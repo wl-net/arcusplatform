@@ -33,7 +33,7 @@ populations     [Population.NAME_BETA,Population.NAME_QA]
 matcher         'MOCK:Capability' : 'Button'
 matcher         'MOCK:ProductId'  : 'bbf1cf'
 
-capabilities	DevicePower, Button, DeviceMock
+capabilities	'DevicePower', 'Button', 'DeviceMock'
 
 
 final long RELEASE_DELAY_MSEC    = 1000  // simulate button RELEASED 1 second after PRESSED

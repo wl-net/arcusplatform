@@ -30,7 +30,7 @@ model           "Zen27"
 matcher         'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0xa000, 'ZWAV:ProductId': 0xa002
 
 
-capabilities	DevicePower, Dimmer, Switch, Indicator
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Indicator'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

@@ -93,7 +93,7 @@ model           "STSMLT250"
 matcher         'ZIGB:manufacturer': 0x110A, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': 'multiv4'
 
 
-capabilities    Identify, DeviceOta
+capabilities    'DevicePower', 'Contact', 'Temperature', 'Identify', 'DeviceOta'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

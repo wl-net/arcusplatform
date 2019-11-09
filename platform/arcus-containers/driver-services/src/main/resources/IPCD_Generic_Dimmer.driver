@@ -24,7 +24,7 @@ model          "Dimmer"
 
 matcher        'IPCD:vendor' : 'Generic', 'IPCD:model' : 'Dimmer'
 
-capabilities   DevicePower, Dimmer, Switch
+capabilities   'DevicePower', 'Dimmer', 'Switch'
 
 
 DevicePower.source                 DevicePower.SOURCE_LINE

@@ -76,6 +76,7 @@ model           "NCZ-3010"
 
 matcher         'ZIGB:manufacturer': 0x10B9, 'ZIGB:vendor': 'NYCE', 'ZIGB:model': '3010'
 
+capabilities    'DevicePower', 'Contact'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

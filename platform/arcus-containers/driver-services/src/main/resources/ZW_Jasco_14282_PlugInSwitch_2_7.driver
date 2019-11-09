@@ -31,7 +31,7 @@ matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5052, 'ZWAV:Product
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5052, 'ZWAV:ProductId': 0x3034	//Jasco
 
 
-capabilities	DevicePower, Switch, Indicator
+capabilities	'DevicePower', 'Switch', 'Indicator'
 
 importCapability 'zwave/GenericZWaveSwitch'
 importCapability 'zwave/GenericZWaveVersion'

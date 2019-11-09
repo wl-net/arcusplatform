@@ -66,6 +66,7 @@ model           "MCZ1"
 
 matcher         'ZWAV:Manufacturer': 0x026E, 'ZWAV:ProductType': 0x4D43, 'ZWAV:ProductId': 0x5A31
 
+capabilities    'DevicePower'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

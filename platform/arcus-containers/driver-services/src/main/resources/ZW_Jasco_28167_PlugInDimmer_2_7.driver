@@ -31,7 +31,7 @@ model            "ZW3104"
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5044, 'ZWAV:ProductId': 0x3038  //GE
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5044, 'ZWAV:ProductId': 0x3037  //Jasco
 
-capabilities     DevicePower, Switch, Dimmer, Indicator
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Indicator'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

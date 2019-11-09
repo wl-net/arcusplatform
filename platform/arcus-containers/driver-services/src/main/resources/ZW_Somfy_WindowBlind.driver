@@ -43,7 +43,7 @@ model 			"1811265"
 //matcher			'ZWAV:Manufacturer': 0x0047, 'ZWAV:ProductType': 0x5A52
 matcher			'ZWAV:Manufacturer': 999999999, 'ZWAV:ProductType': 999999999, 'ZWAV:ProductId': 999999999		//  !!!! DRIVER NO LONGER USED !!!!
 
-capabilities	DevicePower, Shade, Somfy1  // , Identify (used to test "Favorite"
+capabilities	'DevicePower', 'Shade', 'Somfy1'  // , Identify (used to test "Favorite"
 
 
 // set DevicePower

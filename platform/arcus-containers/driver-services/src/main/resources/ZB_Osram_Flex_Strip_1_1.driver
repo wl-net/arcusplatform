@@ -47,7 +47,7 @@ model           "Lightify Flex RGBW"
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY Flex RGBW'         // Sample at STA
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'Flex RGBW'                  // Sample at Mooresville
 
-capabilities    DevicePower, Switch, Light, Color, ColorTemperature, Dimmer, Identify, DeviceOta
+capabilities    'DevicePower', 'Switch', 'Light', 'Color', 'ColorTemperature', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeColor'

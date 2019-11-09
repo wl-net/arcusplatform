@@ -34,7 +34,7 @@ model 			"Somfy"
 matcher         'MOCK:Capability' : 'SomfyV1Bridge'
 matcher        'MOCK:ProductId'  : 'b726df'
 
-capabilities	DevicePower
+capabilities	'DevicePower'
 
 
 

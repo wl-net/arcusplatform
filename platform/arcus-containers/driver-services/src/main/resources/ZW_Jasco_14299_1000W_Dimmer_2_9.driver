@@ -52,6 +52,8 @@ model            "ZW3006"
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3039        // GE 14299/ZW3006
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3136        // Jasco 14326/ZW3006
 
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Indicator'
+
 DevicePower {
     source DevicePower.SOURCE_LINE
     linecapable true

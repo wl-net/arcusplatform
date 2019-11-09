@@ -84,7 +84,7 @@ matcher          'ZIGB:manufacturer': 0xAAAA, 'ZIGB:vendor': 'Yale', 'ZIGB:model
 matcher          'ZIGB:manufacturer': 0x101D, 'ZIGB:vendor': 'Yale', 'ZIGB:model': 'YRD210 PB DB'
 
 
-capabilities     DevicePower, DoorLock, Identify, DeviceOta
+capabilities     'DevicePower', 'DoorLock', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDoorLock_2_6'
 importCapability 'zigbee/GenericZigbeeDoorLockPower'

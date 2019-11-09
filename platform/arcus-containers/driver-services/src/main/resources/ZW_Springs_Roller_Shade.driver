@@ -46,7 +46,7 @@ model           "RSZ1"
 
 matcher         'ZWAV:Manufacturer': 0x026E, 'ZWAV:ProductType': 0x5253, 'ZWAV:ProductId': 0x5A31 
 
-capabilities	DevicePower, Shade
+capabilities	'DevicePower', 'Shade'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 importCapability 'zwave/GenericZWaveVersion'

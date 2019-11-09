@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-capability IrrigationSchedulable
+capability "IrrigationSchedulable"
 description "Mock Implementation for the IrrigationSchedulable capability"
 version "1.0"
 

@@ -29,7 +29,7 @@ productId		"359d72"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4F50, 'ZWAV:ProductId': 0x3032	//GE
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4F50, 'ZWAV:ProductId': 0x3033	//Jasco
 
-capabilities	DevicePower, Switch
+capabilities	'DevicePower', 'Switch'
 
 importCapability 'zwave/GenericZWaveVersion'
 

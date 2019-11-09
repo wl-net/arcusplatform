@@ -28,7 +28,7 @@ model 			"Switch"
 matcher        'MOCK:Capability' : 'Switch'
 matcher        'MOCK:ProductId'  : '671eee'
 
-capabilities	DevicePower, PowerUse, Switch, Indicator, DeviceMock
+capabilities	'DevicePower', 'PowerUse', 'Switch', 'Indicator', 'DeviceMock'
 
 
 // ########### driver lifecycle callbacks ##################

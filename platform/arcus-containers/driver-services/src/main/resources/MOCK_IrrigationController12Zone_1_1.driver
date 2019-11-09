@@ -32,7 +32,7 @@ matcher         'MOCK:Capability' : 'IrrigationController12Zone'
 // no product id, hence no product matcher
 // FIXME consider setting this to be the Orbit 12 zone irrigation monstrosity
 
-capabilities	DevicePower, IrrigationController, DeviceMock, IrrigationSchedulable
+capabilities	'DevicePower', 'IrrigationController', 'DeviceMock', 'IrrigationSchedulable', 'IrrigationZone'
 
 @Field def final String ZONE_PREFIX 		= 'z'
 def final ZONE_NAMES						= ['Veggie Garden','Herb Garden','Tea Garden','Fruit Garden','Flower Garden','Rose Garden','Terrace Garden','Roof Garden','Front Yard','Back Yard','East Yard','West Yard']

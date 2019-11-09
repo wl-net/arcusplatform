@@ -33,7 +33,7 @@ model            "VRE06"
 matcher          'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x0E01, 'ZWAV:ProductId': 0x0334
 
 
-capabilities	DevicePower, Switch, Dimmer
+capabilities     'DevicePower', 'Switch', 'Dimmer'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

@@ -45,7 +45,7 @@ model           "Lightify Gardenspot"
 matcher	        'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'Gardenspot RGB'			
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY Gardenspot RGB'
 
-capabilities    DevicePower, Switch, Light, Color, Dimmer, Identify, DeviceOta
+capabilities    'DevicePower', 'Switch', 'Light', 'Color', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

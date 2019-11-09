@@ -29,7 +29,7 @@ model 			'910'
 matcher			'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0236  //Type 910 5 Key PB Deadbolt
 matcher			'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0236  //Type 910 5 Key PB Deadbolt
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 importCapability 'zwave/GenericZWaveVersion'
 
@@ -50,12 +50,12 @@ importCapability 'zwave/GenericZWaveVersion'
 //		0x8B (-117) TIME_PARAMETERS
 //      0x98 (-104) Security
 /////////////////////////////////////////////////////////////
-DevicePower.battery 				   0
-DevicePower.source					DevicePower.SOURCE_BATTERY
-DevicePower.linecapable          false
-DevicePower.backupbatterycapable false
-DoorLock.type					 	   DoorLock.TYPE_DEADBOLT
-DeviceAdvanced.errors               [:]
+//DevicePower.battery 				   0
+//DevicePower.source					DevicePower.SOURCE_BATTERY
+//DevicePower.linecapable          false
+//DevicePower.backupbatterycapable false
+//DoorLock.type					 	   DoorLock.TYPE_DEADBOLT
+//DeviceAdvanced.errors               [:]
 
 def final String DEVICE_NAME	=	"SBD Deadbolt 910"
 def final int MAX_SUPPORTED_PINS			= 30

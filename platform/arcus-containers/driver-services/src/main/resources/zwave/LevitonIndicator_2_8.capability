@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability		Indicator
+capability		"Indicator"
 description		"Implementation of Indicator for Leviton"
 version			"2.8"
 

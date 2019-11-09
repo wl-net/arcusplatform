@@ -46,7 +46,7 @@ model           "ZW089-A"
 matcher         'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0102, 'ZWAV:ProductId': 0x0059
 matcher         'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0102, 'ZWAV:ProductId': 0x0059
 
-capabilities    DevicePower, Contact
+capabilities    'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

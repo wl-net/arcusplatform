@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import groovy.transform.Field
-capability		Switch
+capability		"Switch"
 description		"Default implementation for the Zigbee Switch capability"
 version			"2.9"
 

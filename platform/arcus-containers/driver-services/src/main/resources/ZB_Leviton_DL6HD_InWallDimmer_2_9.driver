@@ -32,7 +32,7 @@ model 			"DL6HD"
 matcher			'ZIGB:manufacturer' : LEVITON_MSP, 'ZIGB:vendor': 'Leviton', 'ZIGB:model': 'DL6HD'
 matcher			'ZIGB:manufacturer' : LEVITON_MSP, 'ZIGB:vendor': 'DL6HD', 'ZIGB:model': 'DL6HD'
 
-capabilities	DevicePower, Switch, Dimmer, Identify, DeviceOta
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

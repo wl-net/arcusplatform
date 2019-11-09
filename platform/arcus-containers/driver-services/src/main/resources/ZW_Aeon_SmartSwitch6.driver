@@ -65,7 +65,7 @@ model           "ZW096-A02"
 matcher         'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0103, 'ZWAV:ProductId': 0x0060
 matcher         'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0103, 'ZWAV:ProductId': 0x0060
 
-capabilities    DevicePower, Switch, PowerUse
+capabilities    'DevicePower', 'Switch', 'PowerUse'
 
 // Device Type:
 //		Switch Binary

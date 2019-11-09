@@ -61,7 +61,7 @@ model 			"NCZ-3014"
 
 matcher			'ZIGB:manufacturer': 0x10B9, 'ZIGB:vendor': 'NYCE', 'ZIGB:model': '3014'
 
-capabilities	DevicePower, Tilt, Contact
+capabilities	'DevicePower', 'Tilt', 'Contact'
 
 importCapability 'generic/GenericContact'
 importCapability 'generic/GenericTiltWithContact'

@@ -91,7 +91,7 @@ matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite',  'ZIGB
 matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite',  'ZIGB:model': '3321'
 
 
-capabilities    Identify, DeviceOta
+capabilities    'DevicePower', 'Contact', 'Tilt', 'Temperature', 'Identify', 'DeviceOta'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

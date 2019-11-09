@@ -19,7 +19,7 @@
  
  import groovy.transform.Field
  
-capability		KeyPad
+capability		"KeyPad"
 description		"Read only ZigBee Keypad to monitor Alarm State"
 version			"1.0"
 

@@ -35,7 +35,7 @@ model            "DMWV1"
 
 matcher          'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0002 
 
-capabilities     DevicePower, Valve
+capabilities     'DevicePower', 'Valve'
 importCapability 'zwave/GenericZWaveVersion'
 
 //TODO: Confirm with sample

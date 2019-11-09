@@ -26,6 +26,8 @@ model          "GL08-2"
 
 matcher        'IPCD:vendor' : 'GreatStar', 'IPCD:model' : 'plug_outdoor'
 
+capabilities   'DevicePower', 'DeviceOta', 'Switch', 'WiFi'
+
 @Field final String PARAMETER_WIFI_SSID			= "wifi.SSID"
 @Field final String PARAMETER_WIFI_RSSI			= "wifi.RSSI"
 @Field final String PARAMETER_SWITCH			= "switch.state"

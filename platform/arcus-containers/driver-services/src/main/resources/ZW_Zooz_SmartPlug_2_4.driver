@@ -57,7 +57,7 @@ model           "ZEN06"
 
 matcher         'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0x0101, 'ZWAV:ProductId': 0x000A
 
-capabilities    DevicePower, Switch, PowerUse
+capabilities    'DevicePower', 'Switch', 'PowerUse'
 
 
 DevicePower.source               DevicePower.SOURCE_LINE

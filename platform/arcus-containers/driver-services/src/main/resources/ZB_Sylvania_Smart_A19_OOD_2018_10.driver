@@ -52,7 +52,7 @@ model            "74696"
 
 matcher          'ZIGB:manufacturer': 0x1189, 'ZIGB:vendor': 'LEDVANCE', 'ZIGB:model': 'A19 W 10 year'
 
-capabilities     Identify, DeviceOta
+capabilities     'Identify', 'DeviceOta', 'DevicePower', 'Switch', 'Dimmer', 'Light'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

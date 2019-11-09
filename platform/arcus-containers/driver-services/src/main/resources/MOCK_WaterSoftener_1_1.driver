@@ -28,7 +28,7 @@ model 			"Water Softener"
 matcher        'MOCK:Capability' : 'WaterSoftener'
 matcher        'MOCK:ProductId'  : '3981d9'
 
-capabilities   DevicePower, Flow, WaterSoftener, WaterHardness, EcowaterWaterSoftener, DeviceMock
+capabilities   'DevicePower', 'Flow', 'WaterSoftener', 'WaterHardness', 'EcowaterWaterSoftener', 'DeviceMock'
 
 importCapability 'mock/MOCK_WiFi'
 importCapability 'mock/MOCK_WiFiScan'

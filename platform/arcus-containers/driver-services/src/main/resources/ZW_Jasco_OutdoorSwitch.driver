@@ -28,7 +28,7 @@ productId		"359d72"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5250, 'ZWAV:ProductId': 0x3130
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4F50, 'ZWAV:ProductId': 0x3031
 
-capabilities	DevicePower, Switch
+capabilities	'DevicePower', 'Switch'
 
 importCapability 'zwave/GenericZWaveVersion'
 

@@ -65,7 +65,7 @@ matcher         'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x494D, 'ZWAV:P
 matcher         'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x494D, 'ZWAV:ProductId': 0x3034    // Jasco
 
 
-capabilities    DevicePower, Switch, Dimmer, Motion
+capabilities    'DevicePower', 'Switch', 'Dimmer', 'Motion'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

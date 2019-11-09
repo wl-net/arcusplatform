@@ -50,7 +50,7 @@ model 			"CEN-APP-PLUG-1"
 matcher			'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '4257050-RZHAC'
 
 
-capabilities	DevicePower, Switch, PowerUse, Identify, DeviceOta
+capabilities	'DevicePower', 'Switch', 'PowerUse', 'Identify', 'DeviceOta'
 
 
 DevicePower.source               DevicePower.SOURCE_LINE

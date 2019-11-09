@@ -36,6 +36,8 @@ vendor         'First Alert'   // manufactured by: Jarden Safety and Security
 model          'ZCOMBO'
 
 matcher        'ZWAV:Manufacturer': 0x0138, 'ZWAV:ProductType': 0x0001, 'ZWAV:ProductId': 0x0002
+
+capabilities   'DevicePower', 'Smoke', 'CarbonMonoxide', 'Test'
 ////////////////////////////////////////////////////////////////////////////////
 
 

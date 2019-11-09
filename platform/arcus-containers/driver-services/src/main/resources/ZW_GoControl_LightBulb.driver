@@ -31,7 +31,7 @@ model 			"LB60Z-1,LBR30Z-1"
 				// Note: both A19 and BR30 bulbs use the same matcher values
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4754, 'ZWAV:ProductId': 0x3038
 
-capabilities	DevicePower, Dimmer, Switch, Light
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light'
 
 importCapability 'zwave/GenericZWaveDim'
 

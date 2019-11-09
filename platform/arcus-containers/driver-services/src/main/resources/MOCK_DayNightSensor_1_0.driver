@@ -32,7 +32,7 @@ model 			"DayNightSensor"
 matcher         'MOCK:Capability' : 'DayNightSensor'
 // no real product, hence no product matcher
 
-capabilities	DevicePower, DayNightSensor, DeviceMock
+capabilities	'DevicePower', 'DayNightSensor', 'DeviceMock'
 
 
 

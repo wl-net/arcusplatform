@@ -55,7 +55,7 @@ model           "KONOz"
 
 matcher         'ZIGB:manufacturer': 0x1202, 'ZIGB:vendor': 'LUX', 'ZIGB:model': 'KONOZ'
 
-
+capabilities    'DevicePower', 'Temperature', 'Thermostat'
 //                These capabilities are all declared in 'uses' files above, and declaration blocks below
 //capabilities    DevicePower, Thermostat, Temperature, DeviceOta, Identify, 
 

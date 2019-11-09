@@ -33,7 +33,7 @@ model 			"Siren"
 matcher        'MOCK:Capability' : 'Siren'
 matcher        'MOCK:ProductId'  : '45fe8f'
 
-capabilities	DevicePower, Alert, DeviceMock
+capabilities	'DevicePower', 'Alert', 'DeviceMock'
 
 
 

@@ -30,7 +30,7 @@ model 			"VRF01-1LZ"
 
 matcher			'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x1001, 'ZWAV:ProductId': 0x0334
 
-capabilities	DevicePower, Switch, Fan
+capabilities	'DevicePower', 'Switch', 'Fan'
 
 importCapability 'zwave/GenericZWaveFan'
 importCapability 'zwave/GenericZWaveVersion'

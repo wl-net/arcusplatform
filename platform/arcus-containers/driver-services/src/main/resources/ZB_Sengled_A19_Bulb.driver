@@ -43,7 +43,7 @@ model 			"Z01-CIA19"
 matcher			'ZIGB:manufacturer': 0x1901, 'ZIGB:vendor': 'sengled', 'ZIGB:model': 'Z01-CIA19'
 matcher			'ZIGB:manufacturer': 0x1160, 'ZIGB:vendor': 'sengled', 'ZIGB:model': 'Z01-CIA19NAE26'
 
-capabilities	DevicePower, Dimmer, Switch, Light, DeviceOta, Identify
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'DeviceOta', 'Identify'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'
@@ -103,18 +103,18 @@ final int OFFLINE_TIMEOUT_SECS      = 600       // 10 minutes
 final short IDENT_PERIOD_SECS       = 10        // number of seconds for device to Identify itself when Identify method is called
 
 
-DevicePower.source                  DevicePower.SOURCE_LINE
-DevicePower.linecapable             true
-DevicePower.backupbatterycapable    false
-Switch.state                        Switch.STATE_ON
-Dimmer.brightness                   DFLT_BRIGHTNESS
-Light.colormode                     Light.COLORMODE_NORMAL
 
 ////////////////////////////////////////////////////////////////////////////////
 // Driver lifecycle callbacks
 ////////////////////////////////////////////////////////////////////////////////
 
 onAdded {
+    DevicePower.source                  DevicePower.SOURCE_LINE
+    DevicePower.linecapable             true
+    DevicePower.backupbatterycapable    false
+    Switch.state                        Switch.STATE_ON
+    Dimmer.brightness                   DFLT_BRIGHTNESS
+    Light.colormode                     Light.COLORMODE_NORMAL
 	log.debug "{} added.", DEVICE_NAME
 	
 	// set default attribute values

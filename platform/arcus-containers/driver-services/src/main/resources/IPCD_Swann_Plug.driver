@@ -28,7 +28,7 @@ model          "IRIS-WSP1PA-LW"
 
 matcher        'IPCD:vendor' : 'Swann', 'IPCD:model' : 'IrisWifiPlug'
 
-capabilities   DevicePower, WiFi, DeviceOta, Switch
+capabilities   'DevicePower', 'WiFi', 'DeviceOta', 'Switch'
 
 DevicePower.source                 DevicePower.SOURCE_LINE
 DevicePower.linecapable            true

@@ -22,7 +22,7 @@ deviceTypeHint "dev"
 matcher protocol:"MOCK"
 
 // only expose the device and device advanced capabilities
-capabilities Device, DeviceAdvanced, DeviceMock
+capabilities Device, 'DeviceAdvanced', 'DeviceMock'
 
 onAdded {
 	log.debug "Fallback Driver started."

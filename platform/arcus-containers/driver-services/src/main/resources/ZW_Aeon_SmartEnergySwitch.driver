@@ -55,7 +55,7 @@ model           'DSC06106-ZWUS'
 matcher         'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0006
 matcher         'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0006
 
-capabilities    DevicePower, Switch, PowerUse
+capabilities    'DevicePower', 'Switch', 'PowerUse'
 
 // Device Type:
 //		Switch Binary

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-capability		IpInfo
+capability		"IpInfo"
 description		"Mock implementation for the IpInfo capability"
 version			"1.0"
 

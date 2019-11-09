@@ -29,7 +29,7 @@ matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4F44, 'ZWAV:Product
 // samples?
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5042, 'ZWAV:ProductId': 0x4004
 
-capabilities	DevicePower, Switch, PowerUse
+capabilities	'DevicePower', 'Switch', 'PowerUse'
 
 importCapability 'zwave/GenericZWaveSwitch'
 importCapability 'zwave/GenericZWaveVersion'

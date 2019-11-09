@@ -28,7 +28,7 @@ model 			"ElectricMeter"
 matcher        'MOCK:Capability' : 'ElectricalMeter'
 matcher        'MOCK:ProductId'  : 'ab67e11'
 
-capabilities	DevicePower, PowerUse, DeviceMock
+capabilities	'DevicePower', 'PowerUse', 'DeviceMock'
 
 
 // ########### driver lifecycle callbacks ##################

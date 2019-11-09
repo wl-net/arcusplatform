@@ -56,7 +56,7 @@ model 			"27087"
 
 matcher			'ZIGB:vendor': 'Orbit', 'ZIGB:model': 'WT15ZB-12'
 
-capabilities	IrrigationController, IrrigationSchedulable, Identify, DevicePower, DeviceOta
+capabilities	'IrrigationController', 'IrrigationSchedulable', 'Identify', 'DevicePower', 'DeviceOta', 'IrrigationZone' // TODO?
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

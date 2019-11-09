@@ -41,6 +41,7 @@ matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_MULTILEV
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_MULTILEVEL, 'ZWAV:Specific':ZWaveSwitchMultilevelSpecificDevices.SPECIFIC_TYPE_MOTOR_MULTIPOSITION       // 0x11, 0x03
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_MULTILEVEL, 'ZWAV:Specific':ZWaveSwitchMultilevelSpecificDevices.SPECIFIC_TYPE_SCENE_SWITCH_MULTILEVEL   // 0x11, 0x04
 
+capabilities     'DevicePower', 'Switch', 'Dimmer'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

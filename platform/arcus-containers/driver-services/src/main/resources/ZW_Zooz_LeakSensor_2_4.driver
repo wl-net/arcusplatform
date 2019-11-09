@@ -54,7 +54,7 @@ model            "ZSE30"
 
 matcher          'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0085
 
-capabilities     DevicePower, LeakH2O
+capabilities     'DevicePower', 'LeakH2O'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveVersion'

@@ -37,7 +37,7 @@ model           "SABCA1"
 matcher         'MOCK:Capability' : 'Halo'
 matcher         'MOCK:ProductId'  : 'a2060f'
 
-capabilities    DevicePower, Smoke, CarbonMonoxide, Test, Identify, Atmos, Temperature, RelativeHumidity, Switch, Dimmer, Light, Color, Halo, DeviceMock
+capabilities    'DevicePower', 'Smoke', 'CarbonMonoxide', 'Test', 'Identify', 'Atmos', 'Temperature', 'RelativeHumidity', 'Switch', 'Dimmer', 'Light', 'Color', 'Halo', 'DeviceMock'
 
 
 @Field final String DEVICE_NAME         = 'Mock Halo'

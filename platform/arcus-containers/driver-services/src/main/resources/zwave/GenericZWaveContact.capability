@@ -18,7 +18,7 @@ import groovy.transform.Field
 
 description		"Default ZWave implementation for the Contact capability"
 version			"1.0"
-capability       Contact
+capability       'Contact'
 
 @Field def final String DEFAULT_NAME     = 'ZWave Contact Device'
 

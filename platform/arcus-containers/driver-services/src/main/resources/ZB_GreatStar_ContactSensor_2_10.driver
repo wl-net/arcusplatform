@@ -41,7 +41,7 @@ model           "ContactSensor"
 
 matcher         'ZIGB:vendor': 'iMagic by GreatStar', 'ZIGB:model': '1116-S'
 
-capabilities    Identify, DeviceOta
+capabilities    'Identify', 'DeviceOta', 'Contact'
 
 
 @Field final byte ENDPOINT    = 1

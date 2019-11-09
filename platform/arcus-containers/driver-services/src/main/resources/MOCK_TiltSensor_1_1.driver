@@ -28,7 +28,7 @@ model 			"TiltSensor"
 matcher        'MOCK:Capability' : 'TiltSensor'
 matcher        'MOCK:ProductId'  : 'fbf00f'
 
-capabilities   DevicePower, Tilt, DeviceMock
+capabilities   'DevicePower', 'Tilt', 'DeviceMock'
 
 
 

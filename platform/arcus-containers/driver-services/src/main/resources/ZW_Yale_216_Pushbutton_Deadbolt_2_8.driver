@@ -47,7 +47,7 @@ model            'YRD216'
 
 matcher          'ZWAV:Manufacturer': 0x0129, 'ZWAV:ProductType': 0x8004        //   Yale product ID is used like version and can update frequently
 
-capabilities     DevicePower, DoorLock
+capabilities     'DevicePower', 'DoorLock'
 
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 importCapability 'zwave/GenericZWaveVersion'

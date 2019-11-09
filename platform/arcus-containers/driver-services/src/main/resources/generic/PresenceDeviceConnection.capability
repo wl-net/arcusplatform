@@ -17,8 +17,8 @@
  * Presence Device implementation of DeviceConnection.
  */
 
-capability     Presence
-capability     DeviceConnection
+capability     'Presence'
+capability     'DeviceConnection'
 description    "Implementation for Presence to keep devices from being marked OFFLINE"
 version        "1.0"
 

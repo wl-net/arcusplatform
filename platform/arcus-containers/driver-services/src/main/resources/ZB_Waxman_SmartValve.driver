@@ -35,7 +35,7 @@ matcher			'ZIGB:manufacturer': 0x1002, 'ZIGB:vendor': 'WAXMAN', 'ZIGB:model': 'H
 matcher			'ZIGB:manufacturer': 0x113B, 'ZIGB:vendor': 'WAXMAN', 'ZIGB:model': 'House Water Valve - MDL-8810300L'		// 20150803 - V2
 
 
-capabilities	DevicePower, Valve, Test, Identify
+capabilities	'DevicePower', 'Valve', 'Test', 'Identify'
 
 DevicePower.battery 			 0
 DevicePower.source               DevicePower.SOURCE_BATTERY

@@ -24,7 +24,7 @@ model          "Switch"
 
 matcher        'IPCD:vendor' : 'Generic', 'IPCD:model' : 'Switch'
 
-capabilities   DevicePower, Switch
+capabilities   'DevicePower', 'Switch'
 
 
 DevicePower.source                 DevicePower.SOURCE_LINE

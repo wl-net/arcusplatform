@@ -37,6 +37,8 @@ model            "IRFPR-ZB"
 matcher          'ZIGB:manufacturer': 0x1133, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'RFPR-ZB'
 matcher          'ZIGB:manufacturer': 0x1133, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'RFPR-ZB-MS'
 
+capabilities     'DevicePower', 'Motion', 'Temperature', 'Identify', 'Illuminance'
+
 uses "zigbee.GenericZigbeeDeviceOta"
 
 

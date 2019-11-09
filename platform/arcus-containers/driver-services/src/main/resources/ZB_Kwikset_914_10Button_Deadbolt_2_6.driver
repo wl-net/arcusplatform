@@ -83,7 +83,7 @@ model            "914"
 
 matcher          'ZIGB:manufacturer': 4242, 'ZIGB:vendor': 'Kwikset', 'ZIGB:model': 'SMARTCODE_DEADBOLT_10'
 
-capabilities     DevicePower, DoorLock, Temperature, Identify, DeviceOta
+capabilities     'DevicePower', 'DoorLock', 'Temperature', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDoorLock_2_6'
 importCapability 'zigbee/GenericZigbeeDoorLockPower'

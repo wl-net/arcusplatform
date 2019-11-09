@@ -29,7 +29,7 @@ model 			"ContactSensor"
 matcher         'MOCK:Capability' : 'ContactSensor'
 matcher         'MOCK:ProductId'  : '4dd18a'
 
-capabilities	DevicePower, Contact, Temperature, DeviceMock
+capabilities	'DevicePower', 'Contact', 'Temperature', 'DeviceMock'
 
 DeviceConnection.signal	91
 

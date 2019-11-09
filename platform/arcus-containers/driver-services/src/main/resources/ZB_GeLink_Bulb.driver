@@ -64,7 +64,7 @@ model 			"ZLL Light"
 
 matcher			'ZIGB:manufacturer': 0x10DC ,'ZIGB:vendor': 'GE_Appliances', 'ZIGB:model': 'ZLL Light'
 
-capabilities	DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

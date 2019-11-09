@@ -57,6 +57,8 @@ model           "GB-00Z-1"
 
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4742, 'ZWAV:ProductId': 0x3030
 
+capabilities    'DevicePower', 'Glass'
+
 uses 'zwave.GenericZWaveBattery'        // use generic ZWave Battery handling
 uses 'zwave.GenericZWaveVersion'        // use generic ZWave version
 

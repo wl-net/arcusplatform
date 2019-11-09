@@ -29,7 +29,7 @@ model 			"GenieAladdinBridge"
 matcher        'MOCK:Capability' : 'GenieAladdinBridge'
 matcher        'MOCK:ProductId'  : 'aeda43'
 
-capabilities	DevicePower, Bridge, WiFi, DeviceMock
+capabilities	'DevicePower', 'Bridge', 'WiFi', 'DeviceMock'
 
 WiFi.state                 WiFi.STATE_CONNECTED
 WiFi.enabled               true

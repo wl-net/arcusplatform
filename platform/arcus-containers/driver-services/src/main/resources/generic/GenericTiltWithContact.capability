@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-capability		Base
+capability		'Base'
 description		"Tilt sensor that supports Contact which uses a tag closedOnUpright to determine if contact is CLOSED when tilt state is upright"
 version			"1.0"
 

@@ -28,7 +28,7 @@ model 			"DZPA1"
 
 matcher			'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x1A02, 'ZWAV:ProductId': 0x0334
 
-capabilities	DevicePower, Switch
+capabilities	'DevicePower', 'Switch'
 
 importCapability 'zwave/GenericZWaveSwitch'
 importCapability 'zwave/GenericZWaveVersion'

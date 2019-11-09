@@ -30,7 +30,7 @@ model 			"DZMX1"
 
 matcher			'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x1B03, 'ZWAV:ProductId': 0x0334
 
-capabilities	DevicePower, Switch, Dimmer
+capabilities	'DevicePower', 'Switch', 'Dimmer'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'
@@ -67,6 +67,10 @@ onAdded {
 	log.debug "Device with Attributes {}", message.attributes
 	
 	// set default attribute values
+	DevicePower.battery 				   0
+    DevicePower.source               DevicePower.SOURCE_LINE
+    DevicePower.linecapable          true
+    DevicePower.backupbatterycapable false
 	DevicePower.sourcechanged     ((null != DeviceAdvanced.added.get()) ? DeviceAdvanced.added.get() : new Date())
 	
 }

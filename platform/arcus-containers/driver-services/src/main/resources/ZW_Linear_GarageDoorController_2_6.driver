@@ -37,6 +37,8 @@ matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4744, 'ZWAV:Product
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4744, 'ZWAV:ProductId': 0x3030
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4744, 'ZWAV:ProductId': 0x3530
 
+capabilities    'DevicePower', 'MotorizedDoor'
+
 uses 'zwave.GenericZWaveVersion'
 
 // Generic Device Class:    GENERIC_TYPE_ENTRY_CONTROL

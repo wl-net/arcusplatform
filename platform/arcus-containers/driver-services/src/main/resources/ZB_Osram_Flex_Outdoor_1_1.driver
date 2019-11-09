@@ -45,7 +45,7 @@ model           "Lightify Flex Outdoor RGBW"
 
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY FLEX OUTDOOR RGBW'
 
-capabilities    DevicePower, Switch, Light, Color, ColorTemperature, Dimmer, Identify, DeviceOta
+capabilities    'DevicePower', 'Switch', 'Light', 'Color', 'ColorTemperature', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeColor'

@@ -18,8 +18,8 @@ import groovy.transform.Field
 
 description		"Default implementation for the ZWave Fan capability"
 version			"1.0"
-capability       Fan
-capability		 Switch
+capability      "Fan"
+capability		"Switch"
 
 @Field static final int DEFAULT_LOW_SPEED_VALUE     = 32
 

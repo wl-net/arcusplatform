@@ -57,7 +57,7 @@ model           "ZEN07"
 matcher         'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x1087       // documented, with Z-Wave Alliance
 matcher         'ZWAV:Manufacturer': 0x027A, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0087       // actual reported by device
 
-capabilities    DevicePower, Switch, PowerUse
+capabilities    'DevicePower', 'Switch', 'PowerUse'
 
 importCapability 'zwave/GenericZWaveVersion'
 

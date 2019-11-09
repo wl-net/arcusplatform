@@ -24,7 +24,7 @@ model          "ContactSensor"
 
 matcher        'IPCD:vendor' : 'Generic', 'IPCD:model' : 'ContactSensor'
 
-capabilities   DevicePower, Contact
+capabilities   'DevicePower', 'Contact'
 
 DevicePower.source                 DevicePower.SOURCE_LINE
 DevicePower.linecapable            true

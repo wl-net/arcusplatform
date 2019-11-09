@@ -32,7 +32,7 @@ model 			"VRS15-1LZ"
 matcher			'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x0301, 'ZWAV:ProductId': 0x0334
 
 
-capabilities Switch, DevicePower
+capabilities     'Switch', 'DevicePower'
 
 importCapability 'zwave/GenericZWaveVersion'
 importCapability 'zwave/GenericZWaveSwitch'

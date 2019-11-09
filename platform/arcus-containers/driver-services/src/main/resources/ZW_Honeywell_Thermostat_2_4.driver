@@ -33,7 +33,7 @@ model 			"TH8320ZW"
 
 matcher			'ZWAV:Manufacturer': 0x39, 'ZWAV:ProductType': 0x11, 'ZWAV:ProductId': 0x01
 
-capabilities	DevicePower, Temperature, RelativeHumidity, Thermostat
+capabilities	DevicePower, Temperature, 'RelativeHumidity', 'Thermostat'
 
 importCapability 'zwave/GenericZWaveThermostat'
 

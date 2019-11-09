@@ -62,7 +62,7 @@ model            "DMS01"
 
 matcher          'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0088
 
-capabilities     DevicePower, Alert, Identify
+capabilities     'DevicePower', 'Alert', 'Identify'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveVersion'

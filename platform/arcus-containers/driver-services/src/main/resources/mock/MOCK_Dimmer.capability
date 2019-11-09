@@ -19,7 +19,7 @@
  */
 
 
-capability		Dimmer
+capability		"Dimmer"
 description		"Mock implementation for the dimmer capability"
 version			"1.0"
 

@@ -38,7 +38,7 @@ model           "20HM6007"
 matcher         'MOCK:Capability' : 'TwinstarSpaceHeater'
 matcher         'MOCK:ProductId'  : 'bf5579'
 
-capabilities    DevicePower, Identify, Temperature, SpaceHeater, TwinStar, DeviceMock
+capabilities    'DevicePower', 'Identify', 'Temperature', 'SpaceHeater', 'TwinStar', 'DeviceMock'
 
 
 @Field final String DEVICE_NAME = 'Mock Twinstar Space Heater'

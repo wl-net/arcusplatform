@@ -43,7 +43,7 @@ model           "Lightify BR30 RGBW"
 
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY BR RGBW'
 
-capabilities    DevicePower, Switch, Light, Color, ColorTemperature, Dimmer, Identify, DeviceOta
+capabilities    'DevicePower', 'Switch', 'Light', 'Color', 'ColorTemperature', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeColor'

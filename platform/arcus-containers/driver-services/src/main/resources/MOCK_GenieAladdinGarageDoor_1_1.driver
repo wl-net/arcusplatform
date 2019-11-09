@@ -36,7 +36,7 @@ model 			"GenieAladdinGarageDoor"
 matcher        'MOCK:Capability' : 'GenieAladdinGarageDoor'
 matcher        'MOCK:ProductId'  : 'aeda44'
 
-capabilities	DevicePower, BridgeChild, MotorizedDoor, 'devmock'
+capabilities	'DevicePower', 'BridgeChild', 'MotorizedDoor', 'DeviceMock'
 
 importCapability 'mock/MOCK_MotorizedDoor'
 

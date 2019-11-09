@@ -40,6 +40,8 @@ model            "RFDL-ZB"
 matcher          'ZIGB:manufacturer': 0x1133, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'RFDL-ZB'
 matcher          'ZIGB:manufacturer': 0x1133, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'RFDL-ZB-MS'
 
+capabilities     'DevicePower', 'Motion', 'Temperature', 'Identify', 'Illuminance'
+
 uses "zigbee.GenericZigbeeDeviceOta"
 
 

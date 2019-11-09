@@ -34,7 +34,7 @@ model 		"SmartPlug"
 
 matcher         'ZIGB:vendor': 'iMagic by GreatStar', 'ZIGB:model': '1113-S'
 
-capabilities	DevicePower, Switch, PowerUse, Identify, DeviceOta
+capabilities	'DevicePower', 'Switch', 'PowerUse', 'Identify', 'DeviceOta'
 
 DevicePower.source               DevicePower.SOURCE_LINE
 DevicePower.linecapable          true

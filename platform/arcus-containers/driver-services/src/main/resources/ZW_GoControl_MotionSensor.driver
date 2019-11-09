@@ -48,7 +48,7 @@ model           "WAPIRZ-1"
 matcher         'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x2002, 'ZWAV:ProductId': 0x0203
 
 
-capabilities	DevicePower, Motion, Temperature
+capabilities	'DevicePower', 'Motion', 'Temperature'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

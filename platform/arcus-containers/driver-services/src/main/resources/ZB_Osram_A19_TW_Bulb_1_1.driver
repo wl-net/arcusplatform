@@ -44,7 +44,7 @@ model 			"Lightify A19 TW"
 matcher			'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'Classic A60 TW'				//Early Samples
 matcher			'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY A19 Tunable White'
 
-capabilities	DevicePower, Dimmer, Switch, Light, ColorTemperature, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'ColorTemperature', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeColor'

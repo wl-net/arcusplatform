@@ -18,7 +18,7 @@ import groovy.transform.Field
 
 description		"Default ZWave implementation for the DevicePower capability for Battery Powered devices"
 version			"1.0"
-capability       DevicePower
+capability       'DevicePower'
 
 @Field def final String DEFAULT_NAME     = 'ZWave Battery Powered Device'
 

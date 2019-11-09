@@ -57,7 +57,7 @@ model           "DMOF1"
 matcher         'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0087       // Dome
 
 
-capabilities    DevicePower, Switch, PowerUse
+capabilities    'DevicePower', 'Switch', 'PowerUse'
 
 importCapability 'zwave/GenericZWaveVersion'
 

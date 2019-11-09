@@ -28,7 +28,7 @@ model 			"AirVent"
 matcher         'MOCK:Capability' : 'Vent'
 matcher        'MOCK:ProductId'  : 'dc328e'
 
-capabilities    DevicePower, Identify, Vent, Switch, Temperature, DeviceMock
+capabilities    'DevicePower', 'Identify', 'Vent', 'Switch', 'Temperature', 'DeviceMock'
 
 
 def final long VENT_DELAY_MSEC = 2000		// delay 2 seconds for louver adjustment operation

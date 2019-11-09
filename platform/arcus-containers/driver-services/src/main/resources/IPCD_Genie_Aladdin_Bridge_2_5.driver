@@ -38,7 +38,7 @@ model          "Aladdin"
 
 matcher        'IPCD:vendor' : 'Genie', 'IPCD:model' : 'Aladdin'
 
-capabilities   DevicePower, Bridge, WiFi, DeviceOta
+capabilities   'DevicePower', 'Bridge', 'WiFi', 'DeviceOta'
 
 
 DevicePower.source                 DevicePower.SOURCE_LINE

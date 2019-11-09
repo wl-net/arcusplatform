@@ -66,6 +66,7 @@ model            "ZW3009"
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3233    //GE
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3234    //Jasco
 
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Indicator'
 
 final int POLLING_INTERVAL_SEC    = 3600        // every hour
 

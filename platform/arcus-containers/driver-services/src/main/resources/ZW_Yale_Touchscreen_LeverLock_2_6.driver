@@ -29,7 +29,7 @@ model 			'YRL220'
 matcher			'ZWAV:Manufacturer': 0x0109, 'ZWAV:ProductType': 0x01 //  Yale product ID is used like version and can update frequently
 matcher			'ZWAV:Manufacturer': 0x0129, 'ZWAV:ProductType': 0x01 
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 
 /////////////////////////////////////////////////////////////

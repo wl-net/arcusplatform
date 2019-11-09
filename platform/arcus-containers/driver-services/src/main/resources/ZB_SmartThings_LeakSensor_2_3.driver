@@ -86,7 +86,7 @@ matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:
 matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': ~/3315-[a-zA-Z]/    // match on any model string of 3315-*,  -S, -G, -L, etc.
 
 
-capabilities    Identify, DeviceOta
+capabilities    'Identify', 'DeviceOta', 'LeakH2O', 'Temperature'
 
 
 ////////////////////////////////////////////////////////////////////////////////

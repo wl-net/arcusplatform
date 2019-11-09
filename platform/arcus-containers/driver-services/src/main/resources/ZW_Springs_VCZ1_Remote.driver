@@ -47,7 +47,7 @@ model           "VC1"
 matcher         'ZWAV:Manufacturer': 0x026E, 'ZWAV:ProductType': 0x5643, 'ZWAV:ProductId': 0x5A31
 
 
-capabilities	DevicePower
+capabilities	'DevicePower'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 importCapability 'zwave/GenericZWaveVersion'

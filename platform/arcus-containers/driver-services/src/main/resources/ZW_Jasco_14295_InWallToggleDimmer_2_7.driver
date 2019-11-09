@@ -31,7 +31,7 @@ model            "14295"
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3130	//GE
 matcher          'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3137	//Jasco
 
-capabilities     DevicePower, Switch, Dimmer
+capabilities     'DevicePower', 'Switch', 'Dimmer'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

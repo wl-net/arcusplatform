@@ -33,7 +33,7 @@ model 			"GlassBreakSensor"
 matcher        'MOCK:Capability' : 'GlassBreakSensor'
 matcher        'MOCK:ProductId'  : '468d89'
 
-capabilities	DevicePower, Glass, DeviceMock
+capabilities	'DevicePower', 'Glass', 'DeviceMock'
 
 
 

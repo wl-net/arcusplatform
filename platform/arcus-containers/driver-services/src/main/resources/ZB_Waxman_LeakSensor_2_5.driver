@@ -94,7 +94,7 @@ matcher         'ZIGB:manufacturer': 0x113B, 'ZIGB:vendor': 'Waxman', 'ZIGB:mode
 matcher         'ZIGB:manufacturer': 0x113B, 'ZIGB:vendor': 'WAXMAN', 'ZIGB:model': 'leakSMART Water Sensor V2'
 
 
-capabilities    Identify, DeviceOta
+capabilities    'DevicePower', 'LeakH2O', 'Temperature', 'Identify', 'DeviceOta'
 
 
 ////////////////////////////////////////////////////////////////////////////////

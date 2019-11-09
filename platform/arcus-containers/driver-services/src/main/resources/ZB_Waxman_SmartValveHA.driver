@@ -34,7 +34,7 @@ model 			"TBD"
 matcher			'ZIGB:manufacturer': 0x113B, 'ZIGB:vendor': 'WAXMAN', 'ZIGB:model': 'House Water Valve - MDL-TBD'      		// Hardware Version 0x0A
 matcher			'ZIGB:manufacturer': 0x113B, 'ZIGB:vendor': 'WAXMAN', 'ZIGB:model': 'leakSMART Water Valve v2.10'			// production release
 
-capabilities	DevicePower, Valve, Test, Identify, DeviceOta
+capabilities	'DevicePower', 'Valve', 'Test', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

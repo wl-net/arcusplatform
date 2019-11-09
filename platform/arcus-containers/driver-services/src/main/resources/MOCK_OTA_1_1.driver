@@ -33,7 +33,7 @@ model          "OTADevice"
 matcher        'MOCK:Capability' : 'OTADevice'
 matcher        'MOCK:ProductId'  : 'bbf1c5'
 
-capabilities   DeviceOta, DeviceMock
+capabilities   'DeviceOta', 'DeviceMock'
 
 
 def final long FIRMWARE_UPDATE_DELAY = 10000     

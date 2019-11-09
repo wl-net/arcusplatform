@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-capability		DevicePower
+capability		"DevicePower"
 description		"Implementation of DevicePower for the Zigbee DoorLocks"
 version			"1.0"
 

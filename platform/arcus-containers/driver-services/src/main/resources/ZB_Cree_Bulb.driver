@@ -50,7 +50,7 @@ model 			"BA19"
 matcher			'ZIGB:manufacturer': 0x1149		// Cree Inc.
 
 
-capabilities	DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 
 importCapability 'zigbee/GenericZigbeeDimmer'

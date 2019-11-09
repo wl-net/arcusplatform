@@ -54,7 +54,7 @@ model 			"ST-PRS-V2"
 //matcher			'ZIGB:manufacturer': 4362, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': 'PGC410EU'
 matcher			'ZIGB:manufacturer': 4362, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': ~/^PGC410.*/		// match PGC410, or PGC410EU, or any other suffix they decide to add
 
-capabilities	DevicePower, Presence
+capabilities	'DevicePower', 'Presence'
 
 importCapability 'generic/PresenceDeviceConnection'
 

@@ -29,7 +29,7 @@ model 			"12485, 12730"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3034
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x0507, 'ZWAV:ProductId': 0x0403
 
-capabilities	DevicePower, Switch, Fan, Indicator
+capabilities	'DevicePower', 'Switch', 'Fan', 'Indicator'
 
 importCapability 'zwave/GenericZWaveFan'
 importCapability 'zwave/JascoZWaveSwitchAll'

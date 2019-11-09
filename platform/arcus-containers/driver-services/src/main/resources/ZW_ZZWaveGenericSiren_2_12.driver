@@ -39,7 +39,7 @@ model            "Siren"
 
 
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_BINARY, 'ZWAV:Specific':ZWaveSwitchBinarySpecificDevices.SPECIFIC_TYPE_SIREN  // 0x10, 0x05
-
+capabilities     'DevicePower', 'Alert'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

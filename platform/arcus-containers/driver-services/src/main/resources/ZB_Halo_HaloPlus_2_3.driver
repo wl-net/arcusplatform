@@ -39,7 +39,7 @@ matcher	 		'ZIGB:vendor': 'HaloSmartLabs', 'ZIGB:model': 'haloWX' // old name of
 matcher	 		'ZIGB:vendor': 'HaloSmartLabs', 'ZIGB:model': 'halo+'
 matcher	 		'ZIGB:vendor': 'HaloSmartLabs', 'ZIGB:model': 'SABDA1'
 
-capabilities	Smoke, CarbonMonoxide, Test, DeviceOta, Atmos, DevicePower, Switch, Light, Color, Dimmer, Identify, Temperature, RelativeHumidity, Halo, WeatherRadio
+capabilities	'Smoke', 'CarbonMonoxide', 'Test', 'DeviceOta', 'Atmos', 'DevicePower', 'Switch', 'Light', 'Color', 'Dimmer', 'Identify', 'Temperature', 'RelativeHumidity', 'Halo', 'WeatherRadio'
 
 uses "zigbee.GenericZigbeeDimmer"
 uses "zigbee.GenericZigbeeColorOnly"

@@ -15,8 +15,8 @@
  */
 import groovy.transform.Field
 
-capability		Color
-capability		ColorTemperature
+capability		"Color"
+capability		"ColorTemperature"
 description		"Default implementation for the Zigbee Color and Color Temperature capability"
 version			"1.0"
 

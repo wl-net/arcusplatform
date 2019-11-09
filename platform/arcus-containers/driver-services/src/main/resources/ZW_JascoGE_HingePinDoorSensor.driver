@@ -39,7 +39,7 @@ populations     []
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4953, 'ZWAV:ProductId': 0x3032
 
 
-capabilities	DevicePower, Contact
+capabilities	'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave battery handling
 importCapability 'zwave/GenericZWaveContact'		// use generic ZWave Contact handling

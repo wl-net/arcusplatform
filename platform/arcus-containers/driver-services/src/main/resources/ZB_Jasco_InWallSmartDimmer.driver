@@ -78,7 +78,7 @@ model 			"ZB3001"
 
 matcher			'ZIGB:manufacturer': 0x1124, 'ZIGB:vendor': 'Jasco Products', 'ZIGB:model': '45857'
 
-capabilities	DevicePower, Dimmer, Switch, PowerUse, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'PowerUse', 'Identify', 'DeviceOta'
 
 
 DevicePower.source               DevicePower.SOURCE_LINE

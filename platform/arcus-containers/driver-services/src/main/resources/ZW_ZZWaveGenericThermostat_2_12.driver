@@ -50,6 +50,7 @@ matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_THERMOSTAT, 'ZW
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_THERMOSTAT, 'ZWAV:Specific':ZWaveThermostatSpecificDevices.SPECIFIC_TYPE_SETPOINT_THERMOSTAT           // 0x08, 0x04
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_THERMOSTAT, 'ZWAV:Specific':ZWaveThermostatSpecificDevices.SPECIFIC_TYPE_THERMOSTAT_GENERAL_V2         // 0x08, 0x06
 
+capabilities     'DevicePower', 'Thermostat', 'Temperature'
 
 // 1.6 Thermostat Modes
 @Field static final byte MODE_OFF             = 0x00

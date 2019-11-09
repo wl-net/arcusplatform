@@ -61,7 +61,7 @@ model 			"HelpButton"
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3455'      // this is what the 1st & 2nd article devices send
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3455-L'
 
-capabilities	DevicePower, Button, Presence, Identify, DeviceOta
+capabilities	'DevicePower', 'Button', 'Presence', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 importCapability 'generic/PresenceDeviceConnection'

@@ -29,7 +29,7 @@ model 			"MotionSensor"
 matcher        'MOCK:Capability' : 'MotionSensor'
 matcher        'MOCK:ProductId'  : 'df44d5'
 
-capabilities	DevicePower, Motion, Temperature, DeviceMock
+capabilities	'DevicePower', 'Motion', 'Temperature', 'DeviceMock'
 
 
 

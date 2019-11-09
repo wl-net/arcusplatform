@@ -50,7 +50,7 @@ model            "DMMS1"
 matcher          'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0083
 
 
-capabilities     DevicePower, Motion, Illuminance
+capabilities     'DevicePower', 'Motion', 'Illuminance'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveVersion'

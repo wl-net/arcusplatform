@@ -26,7 +26,7 @@ model          "WHESCS5"
 
 matcher        'IPCD:vendor' : 'EcoWater', 'IPCD:model' : 'WHESCS5'
 
-capabilities   DevicePower, 'WaterSoftener', 'WaterHardness', 'Flow', 'WiFi', DeviceOta, 'ecowater'
+capabilities   'DevicePower', 'WaterSoftener', 'WaterHardness', 'Flow', 'WiFi', 'DeviceOta', 'EcowaterWaterSoftener'
 
 ///////////////// Constants ////////////////////////
 // -- Constant names --//

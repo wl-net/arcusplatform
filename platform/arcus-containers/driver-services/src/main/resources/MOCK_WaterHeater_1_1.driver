@@ -29,7 +29,7 @@ productId		"cf441c"
 matcher         'MOCK:Capability' : 'WaterHeater'
 matcher         'MOCK:ProductId'  : 'cf441c'
 
-capabilities    DevicePower, AOSmithWaterHeaterController, WaterHeater, DeviceMock
+capabilities    'DevicePower', 'AOSmithWaterHeaterController', 'WaterHeater', 'DeviceMock'
 
 importCapability 'mock/MOCK_WiFi'
 importCapability 'mock/MOCK_WiFiScan'

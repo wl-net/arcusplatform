@@ -41,7 +41,7 @@ model 			"Somfy"
 matcher        'MOCK:Capability' : 'SomfyV1Shade'
 matcher        'MOCK:ProductId'  : 'f05b37'
 
-capabilities	DevicePower, Somfyv1, DeviceMock
+capabilities	'DevicePower', 'Somfyv1', 'DeviceMock'
 
 
 

@@ -30,7 +30,7 @@ model 			"APA11-113808"			// Shows up with productId of 2048.
 
 matcher			'ZIGB:manufacturer': 0x0000, 'ZIGB:vendor': 'PetSafe', 'ZIGB:model': 'APA11-113808'
 
-capabilities	DevicePower, PetDoor, Identify
+capabilities	'DevicePower', 'PetDoor', 'Identify', 'PetToken' // TODO?
 
 /*
  * Cluster Declaration

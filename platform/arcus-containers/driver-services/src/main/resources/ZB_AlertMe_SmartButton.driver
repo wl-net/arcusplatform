@@ -32,7 +32,7 @@ vendor 			"Iris"
 model 			"BTN900"
 
 matcher         'ZIGB:vendor': 'AlertMe.com', 'ZIGB:model': 'Button Device'
-capabilities	DevicePower, Button, Temperature
+capabilities	'DevicePower', 'Button', 'Temperature'
 
 DevicePower.source               DevicePower.SOURCE_BATTERY
 DevicePower.linecapable          false

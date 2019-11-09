@@ -85,7 +85,7 @@ matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:
 matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3300-S'    // this matcher is included to work with SmartThings SmartSense Open/Closed Sensor
 
 
-capabilities    Identify, DeviceOta
+capabilities    'Identify', 'DeviceOta', 'DevicePower', 'Contact', 'Temperature'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

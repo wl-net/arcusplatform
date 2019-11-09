@@ -38,7 +38,7 @@ model          "WV-01"
 matcher          'ZWAV:Manufacturer': 0x0084, 'ZWAV:ProductType': 0x0213 //FortrezZ
 matcher          'ZWAV:Manufacturer': 0x0084, 'ZWAV:ProductType': 0x0243 //FortrezZ
 
-capabilities     DevicePower, Valve
+capabilities     'DevicePower', 'Valve'
 importCapability 'zwave/GenericZWaveVersion'
 
 // Command Classes:

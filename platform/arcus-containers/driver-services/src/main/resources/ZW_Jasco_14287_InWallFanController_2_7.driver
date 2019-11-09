@@ -34,7 +34,7 @@ model 			"14287"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3131	//GE
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3138	//Jasco
 
-capabilities	DevicePower, Switch, Fan
+capabilities	'DevicePower', 'Switch', 'Fan'
 
 importCapability 'zwave/GenericZWaveFan'
 importCapability 'zwave/GenericZWaveVersion'

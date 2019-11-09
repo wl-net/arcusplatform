@@ -28,7 +28,7 @@ model 			"WaterValve"
 matcher         'MOCK:Capability' : 'WaterValve'
 matcher         'MOCK:ProductId'  : '832217'
 
-capabilities    DevicePower, Valve, Test, Identify, DeviceMock
+capabilities    'DevicePower', 'Valve', 'Test', 'Identify', 'DeviceMock'
 
 def final long OPEN_CLOSE_DELAY_MSEC = 3000		// delay 3 seconds for Open/Close operation
 

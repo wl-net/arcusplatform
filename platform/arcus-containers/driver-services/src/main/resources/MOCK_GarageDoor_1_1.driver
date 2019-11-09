@@ -34,7 +34,7 @@ model 			"GarageDoor"
 matcher        'MOCK:Capability' : 'GarageDoor'
 matcher        'MOCK:ProductId'  : '73add4'
 
-capabilities	DevicePower, MotorizedDoor, DeviceMock
+capabilities	'DevicePower', 'MotorizedDoor', 'DeviceMock'
 
 importCapability 'mock/MOCK_MotorizedDoor'
 

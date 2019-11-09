@@ -28,7 +28,7 @@ model 			"Water Leak Detector"
 matcher        'MOCK:Capability' : 'WaterLeakDetector'
 matcher        'MOCK:ProductId'  : 'f80f79'
 
-capabilities   DevicePower, LeakH2O, DeviceMock
+capabilities   'DevicePower', 'LeakH2O', 'DeviceMock'
 
 
 // alarm states

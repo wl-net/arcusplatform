@@ -29,7 +29,7 @@ model 			"1811265"
 matcher			'ZWAV:Manufacturer': 0x0047, 'ZWAV:ProductType': 0x5A52, 'ZWAV:ProductId': 0x5400
 
 
-capabilities	DevicePower
+capabilities	'DevicePower'
 
 
 // set DevicePower

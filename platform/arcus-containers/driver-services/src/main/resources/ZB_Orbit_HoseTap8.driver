@@ -62,7 +62,7 @@ model 			"27087"
 
 matcher			'ZIGB:vendor': 'Orbit', 'ZIGB:model': 'HT8-ZB'
 
-capabilities	IrrigationController, IrrigationSchedulable, Identify, DevicePower, DeviceOta
+capabilities	'IrrigationController', 'IrrigationSchedulable', 'Identify', 'DevicePower', 'DeviceOta', 'IrrigationZone' // TODO?
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

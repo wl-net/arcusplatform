@@ -29,7 +29,7 @@ model 			'SmartCode Lock'  //Could be 910 or 912
 matcher			'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 1  //Could be any
 matcher			'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 1  //Could be any
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 importCapability 'zwave/GenericZWaveVersion'
 

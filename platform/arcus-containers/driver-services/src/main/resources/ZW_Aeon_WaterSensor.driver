@@ -43,7 +43,7 @@ model 			"DSB45-ZWUS"
 
 matcher			'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0002, 'ZWAV:ProductId': 0x002D
 
-capabilities	DevicePower, LeakH2O
+capabilities	'DevicePower', 'LeakH2O'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

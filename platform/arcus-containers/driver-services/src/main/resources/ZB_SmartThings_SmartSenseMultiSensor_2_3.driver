@@ -79,7 +79,7 @@ model           "STSS-MULT-001"
 matcher         'ZIGB:manufacturer': 4362, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': 'PGC313'
 
 
-capabilities    DeviceOta
+capabilities    'DevicePower', 'Contact', 'Tilt', 'DeviceOta'
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

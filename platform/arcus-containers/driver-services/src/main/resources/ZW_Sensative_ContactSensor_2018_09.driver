@@ -51,6 +51,7 @@ productId        "396984"
 vendor           "Uncertified"  //Sensative
 model            "1101011"
 
+capabilities     'DevicePower', 'Contact'
 
 matcher          'ZWAV:Manufacturer': 0x019A, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0003
 

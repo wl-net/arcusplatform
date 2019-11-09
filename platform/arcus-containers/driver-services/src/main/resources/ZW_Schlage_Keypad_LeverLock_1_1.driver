@@ -27,7 +27,7 @@ model 			"FE369IR"
 
 matcher			'ZWAV:Manufacturer': 0x003B, 'ZWAV:ProductType': 0x634B, 'ZWAV:ProductId': 0x504C
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 
 
 ////////////////////////////////////////////////////////////////////////////////

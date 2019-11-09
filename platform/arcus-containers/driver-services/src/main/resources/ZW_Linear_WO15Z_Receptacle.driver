@@ -33,7 +33,7 @@ model 			"WO15Z-1"
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x5252, 'ZWAV:ProductId': 0x3530
 
 
-capabilities	DevicePower, Switch, Indicator
+capabilities	'DevicePower', 'Switch', 'Indicator'
 
 importCapability 'zwave/GenericZWaveSwitch'
 importCapability 'zwave/GenericZWaveVersion'

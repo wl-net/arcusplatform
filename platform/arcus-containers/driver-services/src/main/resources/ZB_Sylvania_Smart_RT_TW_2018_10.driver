@@ -53,7 +53,7 @@ model            "71831"
 
 matcher          'ZIGB:manufacturer': 0x1189, 'ZIGB:vendor': 'LEDVANCE', 'ZIGB:model': 'RT TW'
 
-capabilities     Identify, DeviceOta
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Light', 'ColorTemperature', 'Identify', 'DeviceOta'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

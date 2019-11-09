@@ -87,7 +87,7 @@ matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3315-S'
 
 
-capabilities    Identify, DeviceOta
+capabilities    'Identify', 'DeviceOta', 'LeakH2O', 'Temperature'
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -67,7 +67,7 @@ model 			"Controllable Vent"
 
 matcher			'ZIGB:manufacturer': 0x115B 	// the vent does not report a ZIGB:vendor or ZIGB:model to match on
 
-capabilities	DevicePower, Identify, Vent, Temperature, DeviceOta
+capabilities	'DevicePower', 'Identify', 'Vent', 'Temperature', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

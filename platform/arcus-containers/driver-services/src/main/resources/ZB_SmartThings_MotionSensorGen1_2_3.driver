@@ -50,6 +50,8 @@ model           "Motion Sensor Gen 1"
 
 matcher         'ZIGB:manufacturer': 0x110A, 'ZIGB:vendor': 'SmartThings', 'ZIGB:model': 'PGC314'
 
+capabilities     'DevicePower', 'Motion'
+
 uses "zigbee.GenericZigbeeDeviceOta"
 
 

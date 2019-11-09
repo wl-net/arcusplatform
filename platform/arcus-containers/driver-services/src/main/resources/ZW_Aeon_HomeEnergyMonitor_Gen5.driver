@@ -45,7 +45,7 @@ model 			"ZW095-A"
 matcher         'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0102, 'ZWAV:ProductId': 0x005F		// matcher for Gen5 device
 matcher			'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0102, 'ZWAV:ProductId': 0x005F		// matcher for Gen5 device
 
-capabilities	DevicePower, PowerUse
+capabilities	'DevicePower', 'PowerUse'
 
 
 // Generic Device Class:    Meter

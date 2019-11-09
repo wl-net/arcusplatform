@@ -36,7 +36,7 @@ model 			"DSB28-ZWUS"
 matcher         'ZWAV:Manufacturer': 0x0086, 'ZWAV:ProductType': 0x0002, 'ZWAV:ProductId': 0x001C		// matcher for 2nd Edition (V2) device
 matcher			'ZWAV:Manufacturer':   -122, 'ZWAV:ProductType': 0x0002, 'ZWAV:ProductId': 0x001C		// matcher for 2nd Edition (V2) device
 
-capabilities	DevicePower, PowerUse
+capabilities	'DevicePower', 'PowerUse'
 
 
 // Generic Device Class:    Meter

@@ -24,7 +24,7 @@ model          "PresenceSensor"
 
 matcher        'IPCD:vendor' : 'Generic', 'IPCD:model' : 'PresenceSensor'
 
-capabilities   DevicePower, Presence
+capabilities   'DevicePower', 'Presence'
 
 DevicePower.source                 DevicePower.SOURCE_LINE
 DevicePower.linecapable            true

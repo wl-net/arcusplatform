@@ -39,7 +39,7 @@ matcher        'ZWAV:Manufacturer': 0x98, 'ZWAV:ProductType': 25857 //0x98, 0x65
 matcher        'ZWAV:Manufacturer': -104, 'ZWAV:ProductType': 25856 //0x98, 0x6500
 matcher        'ZWAV:Manufacturer': 0x98, 'ZWAV:ProductType': 25856 //0x98, 0x6500
 
-capabilities   DevicePower, Temperature, RelativeHumidity, Thermostat, Clock, Indicator
+capabilities   'DevicePower', 'Temperature', 'RelativeHumidity', 'Thermostat', 'Clock', 'Indicator'
 
 importCapability 'zwave/GenericZWaveBattery'
 

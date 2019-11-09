@@ -30,7 +30,7 @@ model 			"VRPD3"
 
 matcher			'ZWAV:Manufacturer': 0x001D, 'ZWAV:ProductType': 0x1706, 'ZWAV:ProductId': 0x0334
 
-capabilities	DevicePower, Switch, Dimmer
+capabilities	'DevicePower', 'Switch', 'Dimmer'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

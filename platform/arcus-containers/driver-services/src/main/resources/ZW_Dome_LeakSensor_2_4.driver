@@ -55,7 +55,7 @@ model            "DMWS1"
 matcher          'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0085
 
 
-capabilities     DevicePower, LeakH2O
+capabilities     'DevicePower', 'LeakH2O'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveVersion'

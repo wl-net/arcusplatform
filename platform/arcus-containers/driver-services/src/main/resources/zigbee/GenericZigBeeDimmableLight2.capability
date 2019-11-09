@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import groovy.transform.Field
-capability		Dimmer
-capability		Switch
+capability		"Dimmer"
+capability		"Switch"
 description		"Default implementation for the Zigbee Dimable Light capability"
 version			"1.0"
 

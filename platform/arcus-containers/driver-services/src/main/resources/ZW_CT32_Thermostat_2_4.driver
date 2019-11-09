@@ -31,7 +31,7 @@ matcher          'ZWAV:Manufacturer': 0x98, 'ZWAV:ProductType': 8194, 'ZWAV:Prod
 matcher          'ZWAV:Manufacturer': -104, 'ZWAV:ProductType': 8194 //0x98, 0x2002
 matcher          'ZWAV:Manufacturer': 0x98, 'ZWAV:ProductType': 8194 //0x98, 0x2002
 
-capabilities     DevicePower, Temperature, RelativeHumidity, Thermostat, Clock, Indicator
+capabilities     'DevicePower', 'Temperature', 'RelativeHumidity', 'Thermostat', 'Clock', 'Indicator'
 
 importCapability 'zwave/GenericZWaveThermostat'
 importCapability 'zwave/GenericZWaveCTxThermostat'

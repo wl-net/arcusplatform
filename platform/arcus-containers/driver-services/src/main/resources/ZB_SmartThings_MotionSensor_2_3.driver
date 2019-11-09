@@ -46,6 +46,8 @@ matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:
 matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3325-S'    // Samsung SmartThings Motion Sensor (SST-IRM-V2-1)
 matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3325'
 
+capabilities    'DevicePower', 'Motion', 'Temperature', 'Identify'
+
 uses "zigbee.GenericZigbeeDeviceOta"
 
 

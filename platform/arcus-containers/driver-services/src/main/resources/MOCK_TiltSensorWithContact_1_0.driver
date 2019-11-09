@@ -30,7 +30,7 @@ model 			"TiltSensorWithContact"
 matcher         'MOCK:Capability' : 'TiltSensorWithContact'
 matcher        'MOCK:ProductId'  : 'fbf00f'
 
-capabilities    DevicePower, Tilt, Contact, DeviceMock
+capabilities    'DevicePower', 'Tilt', 'Contact', 'DeviceMock'
 
 importCapability 'generic/GenericContact'
 importCapability 'generic/GenericTiltWithContact'

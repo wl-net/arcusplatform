@@ -31,7 +31,7 @@ model 			"KeyFob4Button"
 matcher         'MOCK:Capability' : 'KeyFob4Button'
 matcher         'MOCK:ProductId'  : '4fccbb'
 
-capabilities	DevicePower, Presence, DeviceMock
+capabilities	'DevicePower', 'Presence', 'DeviceMock', 'Button'
 
 importCapability 'generic/PresenceDeviceConnection'
 

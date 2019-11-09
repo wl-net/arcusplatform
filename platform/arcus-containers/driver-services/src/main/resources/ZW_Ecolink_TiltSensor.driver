@@ -40,7 +40,7 @@ model 			"TILT-ZWAVE2"
 matcher			'ZWAV:Manufacturer': 0x014A, 'ZWAV:ProductType': 0x0001, 'ZWAV:ProductId': 0x0003
 
 
-capabilities	DevicePower, Tilt, Contact
+capabilities	'DevicePower', 'Tilt', 'Contact'
 
 importCapability 'generic/GenericTiltWithContact'
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling

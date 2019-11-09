@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-capability		Contact
+capability		'Contact'
 description		"Defaults the contact type to UNKNOWN and handle setAttributes"
 version			"1.0"
 
@@ -25,7 +25,7 @@ onConnected {
 	}
 }
 
-setAttributes(Contact) {
+setAttributes('cont') {
 	log.debug "Generic Contact capability received 'Contact' setAttribute message:{}", message
 	def attributes = message.attributes
 	for(attribute in attributes) {

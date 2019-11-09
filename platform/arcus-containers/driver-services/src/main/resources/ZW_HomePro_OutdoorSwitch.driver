@@ -27,7 +27,7 @@ model 			"ZRP110"
 productId		"66a5a8"
 matcher			'ZWAV:Manufacturer': 0x0001, 'ZWAV:ProductType': 0x5250, 'ZWAV:ProductId': 0x3130
 
-capabilities	DevicePower, Switch
+capabilities	'DevicePower', 'Switch'
 
 importCapability 'zwave/GenericZWaveSwitch'
 

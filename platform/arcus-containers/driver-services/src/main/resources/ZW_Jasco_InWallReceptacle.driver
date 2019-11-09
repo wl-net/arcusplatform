@@ -29,7 +29,7 @@ model 			"ZW1001"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4952, 'ZWAV:ProductId': 0x3031
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x5252, 'ZWAV:ProductId': 0x3530
 
-capabilities	DevicePower, Switch, Indicator
+capabilities	'DevicePower', 'Switch', 'Indicator'
 
 importCapability 'zwave/JascoZWaveSwitchAll'
 importCapability 'zwave/GenericZWaveVersion'

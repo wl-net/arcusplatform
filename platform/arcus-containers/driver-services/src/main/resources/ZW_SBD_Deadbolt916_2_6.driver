@@ -29,7 +29,7 @@ model 			'916'
 matcher			'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0642  //Type 916 10 Key Touchscreen Deadbolt
 matcher			'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0642  //Type 916 10 Key Touchscreen Deadbolt
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 
 /////////////////////////////////////////////////////////////

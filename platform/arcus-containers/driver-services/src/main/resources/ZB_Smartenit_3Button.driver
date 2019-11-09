@@ -55,7 +55,7 @@ model 			"ZBWS3B (4037A)"
 
 matcher			'ZIGB:manufacturer': 0x1075, 'ZIGB:vendor': 'Compacta', 'ZIGB:model': 'ZBWS3B(4037A)'   
 
-capabilities	DevicePower, Identify
+capabilities	'DevicePower', 'Identify', 'Button'
 
 // declare multiple named instances of Button capability
 instance	'one',    Button

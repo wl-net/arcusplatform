@@ -31,7 +31,7 @@ model 			"Mock Dimmable Light Bulb with Color Temperature"
 matcher         'MOCK:Capability' : 'LightBulbWithDimmerAndColorTemp'
 matcher         'MOCK:ProductId'  : '9a73b2'
 
-capabilities	DevicePower, Switch, Dimmer, Light, ColorTemperature, 'devmock'
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Light', 'ColorTemperature', 'DeviceMock'
 
 importCapability 'mock/MOCK_Switch'
 importCapability 'mock/MOCK_Dimmer'

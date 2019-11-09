@@ -31,7 +31,7 @@ model 			"Somfy"
 matcher        'MOCK:Capability' : 'Shade'
 matcher        'MOCK:ProductId'  : 'b726df'
 
-capabilities	DevicePower, Shade, DeviceMock
+capabilities	'DevicePower', 'Shade', 'DeviceMock'
 
 
 // ########### driver lifecycle callbacks ##################

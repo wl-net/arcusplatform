@@ -28,7 +28,7 @@ model 			"Camera"
 matcher         'MOCK:Capability' : 'Camera'
 matcher         'MOCK:ProductId'  : '606501'
 
-capabilities	DevicePower, DeviceMock, WiFi, IpInfo, Camera, DayNightSensor, DeviceOta
+capabilities	'DevicePower', 'DeviceMock', 'WiFi', 'IpInfo', 'Camera', 'DayNightSensor', 'DeviceOta'
 
 def final long FIRMWARE_UPDATE_DELAY = 10000
 

@@ -32,7 +32,7 @@ matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4953, 'ZWAV:Product
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4953, 'ZWAV:ProductId': 0x3031 //Jasco Brand
 
 
-capabilities	DevicePower, Contact
+capabilities	'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave battery handling
 

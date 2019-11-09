@@ -54,7 +54,7 @@ model 			"KeyFob"
 
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3450-L2'
 
-capabilities	DevicePower, Presence, Identify, DeviceOta
+capabilities	'DevicePower', 'Presence', 'Identify', 'DeviceOta', 'Button'
 
 // declare multiple named instances of Button capability
 instance	'b',  Button
@@ -239,6 +239,17 @@ onDisconnected {
 
 onRemoved {
 	log.debug "CentraLite KeyFob V2 device removed."
+}
+
+Zigbee {
+    poll reflex {
+        on connected
+
+        set Presence.presence, Presence.PRESENCE_PRESENT
+        if (Presence.PRESENCE_PRESENT != Presence.presence.get()) {
+           Presence.presencechanged new Date()
+        }
+    }
 }
 
 

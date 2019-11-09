@@ -42,7 +42,7 @@ model 			"AN145-1"
 matcher			'ZWAV:Manufacturer': 0x0060, 'ZWAV:ProductType': 0x0004, 'ZWAV:ProductId': 0x0001
 
 
-capabilities	DevicePower, Switch, Light, Identify
+capabilities	'DevicePower', 'Switch', 'Light', 'Identify'
 
 // Generic Device Class:    GENERIC_TYPE_SWITCH_BINARY
 // Specific Device Class:   SPECIFIC_TYPE_POWER_SWITCH_BINARY

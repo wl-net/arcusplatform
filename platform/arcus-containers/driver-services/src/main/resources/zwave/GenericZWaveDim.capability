@@ -18,8 +18,8 @@ import groovy.transform.Field
 
 description		"Default implementation for the ZWave Dimmer capability"
 version			"1.0"
-capability       Dimmer
-capability		 Switch
+capability      "Dimmer"
+capability		"Switch"
 
 @Field final String DEFAULT_NAME     = 'Unknown Dimmer Device'
 

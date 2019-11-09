@@ -19,7 +19,7 @@
  */
 
 
-capability		Switch
+capability		"Switch"
 description		"Mock implementation for the switch capability"
 version			"1.0"
 

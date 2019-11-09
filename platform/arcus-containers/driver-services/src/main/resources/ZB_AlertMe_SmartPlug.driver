@@ -41,7 +41,7 @@ vendor 			"Iris"
 model 			"SmartPlug"
 
 matcher         'ZIGB:vendor': 'AlertMe.com', 'ZIGB:model': 'SmartPlug2.5'
-capabilities	DevicePower, Switch, PowerUse
+capabilities	'DevicePower', 'Switch', 'PowerUse'
 
 DevicePower.source               DevicePower.SOURCE_LINE
 DevicePower.linecapable          true

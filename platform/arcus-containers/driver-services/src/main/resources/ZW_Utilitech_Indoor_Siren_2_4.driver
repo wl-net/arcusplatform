@@ -26,6 +26,8 @@ model          "SE812"
 
 matcher        'ZWAV:Manufacturer': 0x0060, 'ZWAV:ProductType': 0x000C, 'ZWAV:ProductId': 0x0001
 
+capabilities   'DevicePower', 'Alert', 'Identify'
+
 DevicePower {
    source DevicePower.SOURCE_BATTERY
    linecapable false

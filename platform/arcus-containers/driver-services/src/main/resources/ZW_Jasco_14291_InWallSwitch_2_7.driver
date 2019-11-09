@@ -30,7 +30,7 @@ model 			"14291"
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4952, 'ZWAV:ProductId': 0x3036	//GE
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4952, 'ZWAV:ProductId': 0x3130	//Jasco
 
-capabilities	DevicePower, Switch, Indicator
+capabilities	'DevicePower', 'Switch', 'Indicator'
 
 importCapability 'zwave/GenericZWaveVersion'
 

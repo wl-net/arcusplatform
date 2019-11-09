@@ -51,7 +51,7 @@ matcher          'ZWAV:Manufacturer': 0x0258, 'ZWAV:ProductType': 0x0003, 'ZWAV:
 matcher          'ZWAV:Manufacturer': 0x021F, 'ZWAV:ProductType': 0x0003, 'ZWAV:ProductId': 0x0101 //production intent
 
 
-capabilities     DevicePower, Contact
+capabilities     'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'
 importCapability 'zwave/GenericZWaveContact'

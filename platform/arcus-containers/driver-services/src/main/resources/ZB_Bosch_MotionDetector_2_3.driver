@@ -41,6 +41,8 @@ model            "ISW-ZPR1-WP13,ISW-ZDL1-WP11G"
 matcher          'ZIGB:manufacturer': 0x0000, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'ISW-ZDL1-WP11G'
 matcher          'ZIGB:manufacturer': 0x0000, 'ZIGB:vendor': 'Bosch', 'ZIGB:model': 'ISW-ZPR1-WP13'
 
+capabilities     'DevicePower', 'Motion', 'Temperature'
+
 uses "zigbee.GenericZigbeeDeviceOta"
 
 

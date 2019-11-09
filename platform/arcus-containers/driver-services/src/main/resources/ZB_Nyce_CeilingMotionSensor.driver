@@ -49,7 +49,7 @@ model 			"NCZ-3043"
 
 matcher			'ZIGB:manufacturer': 0x10B9, 'ZIGB:vendor': 'NYCE', 'ZIGB:model': '3043'
 
-capabilities	DevicePower, Motion, Identify
+capabilities	'DevicePower', 'Motion', 'Identify'
 
 
 // Manufacturer ID:       0x10B9

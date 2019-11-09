@@ -68,7 +68,7 @@ model 				"CT30"
 
 // The device does not support cluster 0x0000 attribute manufacturer name (0x0004), model identifier (0x0005)
 matcher				'ZIGB:manufacturer': 0x10BE
-capabilities		DevicePower, Temperature, Thermostat, Identify
+capabilities		'DevicePower', 'Temperature', 'Thermostat', 'Identify'
 
 
 // ===========================================================

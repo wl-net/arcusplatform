@@ -48,7 +48,7 @@ model 			"ST-CEN-TEMP-1"
 
 matcher			'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3310-S'
 
-capabilities	DevicePower, Temperature, RelativeHumidity, Identify, DeviceOta
+capabilities	'DevicePower', 'Temperature', 'RelativeHumidity', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

@@ -58,7 +58,7 @@ model            "Z01-A19NAE26"
 
 matcher          'ZIGB:manufacturer': 0x1160, 'ZIGB:vendor': 'sengled', 'ZIGB:model': 'Z01-A19NAE26'
 
-capabilities     DeviceOta, Identify
+capabilities     'DeviceOta', 'Identify', 'Switch', 'Dimmer', 'Light', 'ColorTemperature'
 
 
 DevicePower {

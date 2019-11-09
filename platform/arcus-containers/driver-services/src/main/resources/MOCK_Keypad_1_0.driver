@@ -32,7 +32,7 @@ model 			"Keypad"
 matcher         'MOCK:Capability' : 'KeyPad'
 matcher         'MOCK:ProductId'  : '45b814'
 
-capabilities	DevicePower, Identify, KeyPad, Alert, DeviceMock
+capabilities	'DevicePower', 'Identify', 'KeyPad', 'Alert', 'DeviceMock'
 
 
 

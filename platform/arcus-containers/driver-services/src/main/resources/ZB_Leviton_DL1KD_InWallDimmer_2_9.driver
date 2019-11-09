@@ -32,7 +32,7 @@ model 			"DL1KD"
 matcher			'ZIGB:manufacturer' : LEVITON_MSP, 'ZIGB:vendor': 'DL1KD', 'ZIGB:model': 'DL1KD'
 matcher			'ZIGB:manufacturer' : LEVITON_MSP, 'ZIGB:vendor': 'Leviton', 'ZIGB:model': 'DL1KD'
 
-capabilities	DevicePower, Switch, Dimmer, Identify, DeviceOta
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

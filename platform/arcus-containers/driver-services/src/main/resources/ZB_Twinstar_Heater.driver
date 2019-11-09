@@ -54,7 +54,7 @@ model 			"Heater"
 
 matcher			'ZIGB:manufacturer': 0xDA77, 'ZIGB:vendor': 'Twin-Star International', 'ZIGB:model': '20QI071ARA'
 
-capabilities	DevicePower, Identify, DeviceOta, Temperature, SpaceHeater, TwinStar	//, PowerUse
+capabilities	'DevicePower', 'Identify', 'DeviceOta', 'Temperature', 'SpaceHeater', 'TwinStar'	//, PowerUse
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 //importCapability 'zigbee/GenericZigbeePowerUse'

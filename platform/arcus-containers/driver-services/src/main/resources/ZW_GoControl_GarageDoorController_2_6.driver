@@ -35,6 +35,8 @@ model           'GD00Z-4'
 
 matcher         'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4744, 'ZWAV:ProductId': 0x3531
 
+capabilities    'DevicePower', 'MotorizedDoor'
+
 uses 'zwave.GenericZWaveVersion'
 
 // Generic Device Class:    GENERIC_TYPE_ENTRY_CONTROL

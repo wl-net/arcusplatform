@@ -37,6 +37,8 @@ vendor         'First Alert'
 model          'ZSMOKE'
 
 matcher        'ZWAV:Manufacturer': 0x0138, 'ZWAV:ProductType': 0x0001, 'ZWAV:ProductId': 0x0001
+
+capabilities   'DevicePower', 'Smoke', 'Test'
 ////////////////////////////////////////////////////////////////////////////////
 
 

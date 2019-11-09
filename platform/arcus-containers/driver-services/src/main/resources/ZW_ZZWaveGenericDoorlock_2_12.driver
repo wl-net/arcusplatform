@@ -41,6 +41,7 @@ matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 'ZWAV:Specific':ZWaveEntryControlSpecificDevices.SPECIFIC_TYPE_SECURE_LOCKBOX                       // 0x40, 0x0A
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 'ZWAV:Specific':ZWaveEntryControlSpecificDevices.SPECIFIC_TYPE_SECURE_KEYPAD                        // 0x40, 0x0B
 
+capabilities     'DevicePower', 'DoorLock', 'DeviceAdvanced'
 
 final int MAX_SUPPORTED_PINS            = 0
 final int OFFLINE_TIMEOUT_SECS          = 44100     // 12 hours 15minutes

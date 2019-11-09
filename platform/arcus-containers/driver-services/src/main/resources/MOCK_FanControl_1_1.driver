@@ -30,7 +30,7 @@ model 			"FanControl"
 matcher        'MOCK:Capability' : 'FanControl'
 matcher        'MOCK:ProductId'  : '979695'
 
-capabilities	DevicePower, Switch, Fan, Indicator, DeviceMock
+capabilities	'DevicePower', 'Switch', 'Fan', 'Indicator', 'DeviceMock'
 
 
 @Field def final byte SWITCH_ON        = 0xff

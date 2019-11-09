@@ -26,7 +26,7 @@ import groovy.transform.Field
  *
  */
 
-capability		DoorLock
+capability		"DoorLock"
 description		"Default implementation for the Mock DoorLock capability"
 version			"1.0"
 

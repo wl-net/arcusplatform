@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability		Switch
+capability		"Switch"
 description		"Default implementation for the Switch capability"
 version			"1.0"
 

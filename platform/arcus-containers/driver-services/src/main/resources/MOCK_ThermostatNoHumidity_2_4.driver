@@ -30,7 +30,7 @@ model            "Thermostat Without Humidity Sensor"
 matcher          'MOCK:Capability' : 'ThermostatNoHumidity'
 matcher          'MOCK:ProductId'  : '840941'
 
-capabilities     DevicePower, Thermostat, Temperature, Clock, Indicator, DeviceMock
+capabilities     'DevicePower', 'Thermostat', 'Temperature', 'Clock', 'Indicator', 'DeviceMock'
 
 def byte SETPOINT_SCALE_C       = 0x00
 def byte SETPOINT_SCALE_F       = 0x01

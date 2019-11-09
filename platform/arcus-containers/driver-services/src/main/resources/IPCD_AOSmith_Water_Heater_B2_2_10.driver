@@ -25,7 +25,7 @@ model           "B2.00"
 productId       "cf441c"
 matcher         'IPCD:vendor' : 'A.O. Smith', 'IPCD:model' : 'B2.00'
 
-capabilities    DevicePower, 'WaterHeater', 'AOSmithWaterHeaterController', 'WiFi'
+capabilities    'DevicePower', 'WaterHeater', 'AOSmithWaterHeaterController', 'WiFi'
 
 
 /////////////////// Constants ///////////////////////

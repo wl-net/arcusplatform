@@ -56,7 +56,7 @@ model            "E11-G13"
 
 matcher          'ZIGB:manufacturer': 0x1160, 'ZIGB:vendor': 'sengled', 'ZIGB:model': 'E11-G13'
 
-capabilities     DeviceOta, Identify
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Light', 'DeviceOta', 'Identify'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

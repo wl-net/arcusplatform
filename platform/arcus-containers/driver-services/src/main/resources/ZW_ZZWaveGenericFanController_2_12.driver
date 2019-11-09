@@ -37,7 +37,7 @@ model            "Fan"
 
 
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_MULTILEVEL, 'ZWAV:Specific':ZWaveSwitchMultilevelSpecificDevices.SPECIFIC_TYPE_FAN_SWITCH   // 0x11, 0x05
-
+capabilities     'DevicePower', 'Switch', 'Fan'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

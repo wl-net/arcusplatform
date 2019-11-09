@@ -44,6 +44,7 @@ matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_BINARY, 
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_BINARY, 'ZWAV:Specific':ZWaveSwitchBinarySpecificDevices.SPECIFIC_TYPE_SCENE_SWITCH_BINARY           // 0x10, 0x03
 matcher          'ZWAV:Generic':ZWaveGenericDevices.GENERIC_TYPE_SWITCH_BINARY, 'ZWAV:Specific':ZWaveSwitchBinarySpecificDevices.SPECIFIC_TYPE_POWER_STRIP                   // 0x10, 0x04
 
+capabilities     'DevicePower', 'Switch'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

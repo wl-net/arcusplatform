@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability		IrrigationZone
+capability		"IrrigationZone"
 description		"Implementation of IrrigationZone for Orbit devices"
 version			"1.0"
 

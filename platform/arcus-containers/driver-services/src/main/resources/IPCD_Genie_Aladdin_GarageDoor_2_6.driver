@@ -29,7 +29,7 @@ model          "Aladdin"
 
 matcher        'IPCD:vendor' : 'Genie', 'IPCD:model' : 'Aladdin Door'
 
-capabilities   DevicePower, BridgeChild, MotorizedDoor
+capabilities   'DevicePower', 'BridgeChild', 'MotorizedDoor'
 
 @Field final String ERR_OBSTRUCTION_KEY = 'ERR_OBSTRUCTION'
 @Field final String ERR_OBSTRUCTION_VALUE = 'Garage door may be obstructed'

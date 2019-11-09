@@ -27,7 +27,7 @@ model 			"BE469xx"
 
 matcher			'ZWAV:Manufacturer': 0x003B, 'ZWAV:ProductType': 0x6341, 'ZWAV:ProductId': 0x5044
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 
 
 /////////////////////////////////////////////////////////////

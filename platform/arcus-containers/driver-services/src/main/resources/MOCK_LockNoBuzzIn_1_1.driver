@@ -31,7 +31,7 @@ model 			"Mock Door Lock, No Buzz-In"
 matcher        'MOCK:Capability' : 'LockNoBuzzin'
 matcher        'MOCK:ProductId'  : '9936b0'
 
-capabilities	DevicePower, DoorLock, 'devmock'
+capabilities	'DevicePower', 'DoorLock', 'DeviceMock'
 
 importCapability 'mock/MOCK_DoorLock'
 

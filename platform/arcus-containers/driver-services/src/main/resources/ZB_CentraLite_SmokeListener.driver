@@ -27,7 +27,7 @@
  * RE-PAIR
  *  - Remove the device.
  *  - The device LED will be back to blue, but not pairing.
- *  - Press the test button to start pairing
+ *  - Press the test buttoCapabilityEnvn to start pairing
  *  
  * INITIAL PAIRING
  *  - The device pair on powered 
@@ -71,7 +71,7 @@ vendor 			"Iris"
 model 			"4257020-S"
 
 matcher			'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '4257020-S'
-capabilities	DevicePower, Identify, DeviceOta, Alert, Smoke, Test
+capabilities	'DevicePower', 'Identify', 'DeviceOta', 'Alert', 'Smoke', 'Test'
 
 
 DevicePower.source               DevicePower.SOURCE_LINE

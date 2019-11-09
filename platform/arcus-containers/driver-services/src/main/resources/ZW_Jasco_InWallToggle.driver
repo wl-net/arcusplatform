@@ -28,7 +28,7 @@ model 			"ZW4001,ZW4005"
 
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4952, 'ZWAV:ProductId': 0x3033		// In-Wall Toggle Switch
 
-capabilities	DevicePower, Switch
+capabilities	'DevicePower', 'Switch'
 
 importCapability 'zwave/JascoZWaveSwitchAll'
 importCapability 'zwave/GenericZWaveVersion'

@@ -30,7 +30,7 @@ vendor 			'Gatehouse'
 model 			'TBD'
 
 matcher			'ZWAV:Manufacturer': 0x0262  //Temporary, will fill out before production
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock'
 
 /////////////////////////////////////////////////////////////

@@ -52,7 +52,7 @@ model            "74389"
 
 matcher          'ZIGB:manufacturer': 0x1189, 'ZIGB:vendor': 'LEDVANCE', 'ZIGB:model': 'PAR38 W 10 year'
 
-capabilities     Identify, DeviceOta
+capabilities     'DevicePower', 'Switch', 'Dimmer', 'Light', 'Identify', 'DeviceOta'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

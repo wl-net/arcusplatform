@@ -60,6 +60,8 @@ model           "TST01-1"
 
 matcher         'ZWAV:Manufacturer': 0x0060, 'ZWAV:ProductType': 0x000B, 'ZWAV:ProductId': 0x0001
 
+capabilities    'DevicePower', 'LeakH2O'
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Capability Reflex Declarations

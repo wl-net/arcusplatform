@@ -37,7 +37,7 @@ model 			"Motion Sensor"			// Shows up with productId of 2048.
 
 matcher			'ZWAV:Manufacturer': 0x010F, 'ZWAV:ProductType': 0x0800  // , 'ZWAV:ProductId': 0x2001
 
-capabilities	DevicePower, Motion, Temperature, Illuminance
+capabilities	'DevicePower', 'Motion', 'Temperature', 'Illuminance'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 

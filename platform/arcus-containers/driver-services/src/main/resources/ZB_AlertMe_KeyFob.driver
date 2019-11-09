@@ -35,7 +35,7 @@ vendor 			"Iris"
 model 			"KeyFob"
 
 matcher         'ZIGB:vendor': 'AlertMe.com', 'ZIGB:model': 'Keyfob Device'
-capabilities	DevicePower, Presence
+capabilities	'DevicePower', 'Presence', 'Button'
 
 importCapability 'generic/PresenceDeviceConnection'
 

@@ -59,7 +59,7 @@ model 			"Zen-01"
 
 matcher			'ZIGB:manufacturer': 0x110E, 'ZIGB:vendor': 'Zen Within', 'ZIGB:model': 'Zen-01'
 
-capabilities	DevicePower, Temperature, Thermostat, DeviceOta
+capabilities	'DevicePower', 'Temperature', 'Thermostat', 'DeviceOta'
 
 /* ========================================================================
  * Manufacturer ID:       0x110E

@@ -30,7 +30,7 @@ model            "ThermostatWithHumidity"
 matcher          'MOCK:Capability' : 'Thermostat'
 matcher        'MOCK:ProductId'  : '853022'
 
-capabilities     DevicePower, Thermostat, Temperature, Clock, Indicator, RelativeHumidity, DeviceMock
+capabilities     'DevicePower', 'Thermostat', 'Temperature', 'Clock', 'Indicator', 'RelativeHumidity', 'DeviceMock'
 
 final byte SETPOINT_SCALE_C        = 0x00
 final byte SETPOINT_SCALE_F        = 0x01

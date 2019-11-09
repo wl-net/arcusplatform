@@ -31,7 +31,7 @@ model 			"CentraLiteKeyFobV2"
 matcher         'MOCK:Capability' : 'CentraLiteKeyFobV2'
 matcher         'MOCK:ProductId'  : '4fcccc'
 
-capabilities	DevicePower, Presence, DeviceMock
+capabilities	'Button', 'DevicePower', 'Presence', 'DeviceMock'
 
 importCapability 'generic/PresenceDeviceConnection'
 

@@ -45,7 +45,7 @@ model           "WADWAZ-1"
 matcher         'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x2001, 'ZWAV:ProductId': 0x0102
 
 
-capabilities	DevicePower, Contact
+capabilities	'DevicePower', 'Contact'
 
 importCapability 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 importCapability 'zwave/GenericZWaveContact'		// use generic ZWave Contact handling

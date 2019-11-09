@@ -27,6 +27,8 @@ model 			"KeyPad"
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3405'
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3405-L'
 
+capabilities	'Identify', 'Temperature', 'DevicePower', 'DeviceOta', 'Alert', 'KeyPad'
+
 @Field def final byte ENDPOINT = 1;
 @Field def final dvcEndPoint = Zigbee.endpoint(ENDPOINT)
 @Field def final otaCluster = dvcEndPoint.Ota

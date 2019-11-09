@@ -29,7 +29,7 @@ model 			'912'
 matcher			'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0336  //Type 912 5 Key PB Lever
 matcher			'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0336  //Type 912 5 Key PB Lever
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 
 /////////////////////////////////////////////////////////////

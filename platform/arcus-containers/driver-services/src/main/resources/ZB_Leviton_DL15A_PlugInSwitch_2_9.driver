@@ -33,7 +33,7 @@ model 			"DL15A"
 matcher			'ZIGB:manufacturer': LEVITON_MSP, 'ZIGB:vendor': 'DL15A', 'ZIGB:model': 'DL15A'
 matcher			'ZIGB:manufacturer': LEVITON_MSP, 'ZIGB:vendor': 'Leviton', 'ZIGB:model': 'DL15A'
 
-capabilities	DevicePower, Switch, Identify, DeviceOta
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 importCapability 'zigbee/GenericZigbeeSwitch'

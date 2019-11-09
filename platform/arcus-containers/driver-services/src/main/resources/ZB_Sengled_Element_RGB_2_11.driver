@@ -64,7 +64,7 @@ model            "E11-N1EA"
 matcher          'ZIGB:manufacturer': 0x1160, 'ZIGB:vendor': 'sengled', 'ZIGB:model': ~/^E11-N1EA[\x00]*$/
 matcher          'ZIGB:manufacturer': 0x1160, 'ZIGB:vendor': 'sengled', 'ZIGB:model': 'E11-N1EA'
 
-capabilities     DeviceOta, Identify
+capabilities     'DeviceOta', 'Identify', 'Switch', 'Dimmer', 'Light', 'ColorTemperature', 'Color'
 
 
 @Field static final int MIN_COLOR_TEMP  = 2000     // in Kelvin

@@ -38,7 +38,7 @@ model 			"TBD"
 
 matcher			'ZIGB:manufacturer': 0x1002, 'ZIGB:vendor': 'Silabs_Reference', 'ZIGB:model': 'BR30'
 
-capabilities	DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

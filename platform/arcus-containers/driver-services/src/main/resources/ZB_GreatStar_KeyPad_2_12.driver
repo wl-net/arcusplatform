@@ -26,6 +26,8 @@ model 		"KeyPad"
 
 matcher		'ZIGB:vendor': 'iMagic by GreatStar', 'ZIGB:model': '1112-S'
 
+capabilities 'Identify', 'Temperature', 'DevicePower', 'Alert', 'KeyPad'
+
 @Field def final byte ENDPOINT = 1;
 @Field def final dvcEndPoint = Zigbee.endpoint(ENDPOINT)
 @Field def final otaCluster = dvcEndPoint.Ota

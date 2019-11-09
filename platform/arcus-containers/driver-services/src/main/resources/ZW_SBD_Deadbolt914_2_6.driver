@@ -29,7 +29,7 @@ model 			'914'
 matcher			'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0436  //Type 914 10 Key PB Deadbolt
 matcher			'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 1, 'ZWAV:ProductId': 0x0436  //Type 914 10 Key PB Deadbolt
 
-capabilities	DevicePower, DoorLock
+capabilities	'DevicePower', 'DoorLock'
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 
 /////////////////////////////////////////////////////////////

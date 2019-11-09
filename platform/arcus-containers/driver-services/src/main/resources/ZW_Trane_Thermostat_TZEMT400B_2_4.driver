@@ -32,7 +32,7 @@ model            "TZEMT400B"
 
 matcher          'ZWAV:Manufacturer': 139, 'ZWAV:ProductType': 21586, 'ZWAV:ProductId': 21555
 
-capabilities     DevicePower, Temperature, RelativeHumidity, Thermostat, Clock
+capabilities     'DevicePower', 'Temperature', 'RelativeHumidity', 'Thermostat', 'Clock'
 
 importCapability 'zwave/GenericZWaveThermostat'
 

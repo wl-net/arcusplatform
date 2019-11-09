@@ -20,7 +20,8 @@ import groovy.transform.Field
  */
 
 
-capability		MotorizedDoor
+capabilities    "MotorizedDoor", "DevicePower"
+capability      "MotorizedDoor"
 description		"Mock implementation for the MotorizedDoor capability"
 version			"1.0"
 

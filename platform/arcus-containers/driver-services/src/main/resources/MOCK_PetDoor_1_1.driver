@@ -30,7 +30,7 @@ model 			"Mock PetDoor"
 matcher        'MOCK:Capability' : 'PetDoor'
 matcher        'MOCK:ProductId'  : 'ca9471'
 
-capabilities	DevicePower, PetDoor, DeviceMock
+capabilities	'DevicePower', 'PetDoor', 'DeviceMock', 'PetToken'
 
 @Field def final String DEVICE_NAME = 'Mock Pet Door'
 @Field def final String	TOKEN_PREFIX			= 'pt'

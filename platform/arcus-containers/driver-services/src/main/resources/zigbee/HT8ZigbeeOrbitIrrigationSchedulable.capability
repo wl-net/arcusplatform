@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability     IrrigationSchedulable
+capability      "IrrigationSchedulable"
 description		"Implementation of IrrigationSchedulable for Orbit devices"
 version			"1.0"
 

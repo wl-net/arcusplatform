@@ -62,7 +62,7 @@ model 			"SmartButton"
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3460'
 matcher			'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3460-L'
 
-capabilities	DevicePower, Button, Temperature, Identify, DeviceOta
+capabilities	'DevicePower', 'Button', 'Temperature', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDeviceOta'
 

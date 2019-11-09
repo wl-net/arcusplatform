@@ -53,7 +53,7 @@ model            "73740"
 
 matcher          'ZIGB:manufacturer': 0x1189, 'ZIGB:vendor': 'LEDVANCE', 'ZIGB:model': 'BR30 TW'
 
-capabilities     Identify, DeviceOta
+capabilities     'Identify', 'DeviceOta', 'Switch', 'Dimmer', 'Light', 'ColorTemperature'
 
 DevicePower {
     source DevicePower.SOURCE_LINE

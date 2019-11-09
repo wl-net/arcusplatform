@@ -43,7 +43,7 @@ model           "GC-TBZ48"
 
 matcher         'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x5442, 'ZWAV:ProductId': 0x5431
 
-capabilities    DevicePower, Temperature, Thermostat, Clock
+capabilities    'DevicePower', 'Temperature', 'Thermostat', 'Clock'
 
 importCapability 'zwave/GenericZWaveThermostat'
 importCapability 'zwave/GenericZWaveBattery'

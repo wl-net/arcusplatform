@@ -37,7 +37,7 @@ model 			"Halo"
 matcher	 		'ZIGB:vendor': 'HaloSmartLabs', 'ZIGB:model': 'halo'			
 matcher	 		'ZIGB:vendor': 'HaloSmartLabs', 'ZIGB:model': 'SABCA1'
 
-capabilities	Smoke, CarbonMonoxide, Test, DeviceOta, Atmos, DevicePower, Switch, Light, Color, Dimmer, Identify, Temperature, RelativeHumidity, Halo
+capabilities	'Smoke', 'CarbonMonoxide', 'Test', 'DeviceOta', 'Atmos', 'DevicePower', 'Switch', 'Light', 'Color', 'Dimmer', 'Identify', 'Temperature', 'RelativeHumidity', 'Halo'
 
 uses "zigbee.GenericZigbeeDimmer"
 uses "zigbee.GenericZigbeeColorOnly"
@@ -53,7 +53,7 @@ uses "zigbee.GenericZigbeeDeviceOta"
 // Endpoint 1:
 // IN clusters
 // 0x0000 Basic
-// 0x0001 Power Configuration 
+// 0x0001 Power Configuration
 // 0x0003 Identify
 // 0x0402 Temperature
 // 0x0403 Pressure
@@ -103,7 +103,7 @@ uses "zigbee.GenericZigbeeDeviceOta"
 @Field final byte DEVICE_STATUS_LOW_BATTERY      = 0x01
 @Field final byte DEVICE_STATUS_EOL              = 0x02
 // no CO pre-alert any more, was 3
-@Field final byte DEVICE_STATUS_PRE_ALERT        = 0x04 
+@Field final byte DEVICE_STATUS_PRE_ALERT        = 0x04
 @Field final byte DEVICE_STATUS_WEATHER_RADIO    = 0x05
 @Field final byte DEVICE_STATUS_CO               = 0x06
 @Field final byte DEVICE_STATUS_SMOKE            = 0x07
@@ -134,13 +134,13 @@ uses "zigbee.GenericZigbeeDeviceOta"
 @Field final byte ROOM_GAME_ROOM      = 0x07
 @Field final byte ROOM_GUEST_BEDROOM  = 0x08
 @Field final byte ROOM_HALLWAY        = 0x09
-@Field final byte ROOM_KIDS_BEDROOM   = 0x0a 
+@Field final byte ROOM_KIDS_BEDROOM   = 0x0a
 @Field final byte ROOM_LIVING_ROOM    = 0x0b
 @Field final byte ROOM_MASTER_BEDROOM = 0x0c
 @Field final byte ROOM_OFFICE         = 0x0d
 @Field final byte ROOM_STUDY          = 0x0e
 @Field final byte ROOM_UPSTAIRS       = 0x0f
-@Field final byte ROOM_WORKOUT_ROOM   = 0x10 
+@Field final byte ROOM_WORKOUT_ROOM   = 0x10
 @Field final byte ROOM_NONE           = 0xff
 
 @Field final short ATTR_TEST_STATUS   = 0x0000
@@ -191,7 +191,7 @@ uses "zigbee.GenericZigbeeDeviceOta"
                                   (Halo.DEVICESTATE_SMOKE_TEST):DEVICE_STATUS_SMOKE_TEST,
                                   (Halo.DEVICESTATE_SMOKE_TEST_CLEAR):DEVICE_STATUS_SMOKE_TEST_CLEAR,
                                   (Halo.DEVICESTATE_CO_INTERCONNECT):DEVICE_STATUS_CO_INTERCONNECT,
-                                  (Halo.DEVICESTATE_SMOKE_INTERCONNECT):DEVICE_STATUS_SMOKE_INTERCONNECT,                                  
+                                  (Halo.DEVICESTATE_SMOKE_INTERCONNECT):DEVICE_STATUS_SMOKE_INTERCONNECT,
 */
 
 @Field final room_zigbee_map = [(Halo.ROOM_BASEMENT):ROOM_BASEMENT,
@@ -282,7 +282,7 @@ final int DFLT_COLOR_HUE                = 0
 final int DFLT_COLOR_SATURATION         = 100
 @Field final short DFLT_CLR_TRANS_SECS  = 2         // default transition seconds to use when color attributes are set, since there is no transition time attribute
 @Field final byte HUE_MOVE_DIR          = 0         // move mode when changing just hue value; 0=Shortest, 1=Longest, 2=Up, 3=Down
-@Field final long UNKNOWN_VALUE         = -1 
+@Field final long UNKNOWN_VALUE         = -1
 @Field final String KEY_LAST_HUE        = "lastHue"
 @Field final String KEY_LAST_SAT        = "lastSat"
 @Field final String KEY_LAST_MODE       = "lastMode"
@@ -299,7 +299,7 @@ final short IDENT_PERIOD_SECS           = 30        // number of seconds for dev
 @Field final short RC_MAX_WRITE_RETRIES       = 10
 // when to try a re-read, in case writes are working, but write responses are not coming
 // set to -1 for none
-@Field final short RC_READ_RETRY              = 5   
+@Field final short RC_READ_RETRY              = 5
 
 @Field final short RC_STATE_DONE      = -1
 @Field final short RC_STATE_SETUP     = 0
@@ -364,14 +364,14 @@ Zigbee {
       set Smoke.smoke, Smoke.SMOKE_DETECTED
       forward
    }
- 
+
    match reflex {
       on iaszone, endpoint: ENDPOINT_SMOKE, clear: ["test", "alarm1"]
       debug "Reflex smoke clear"
       set Smoke.smoke, Smoke.SMOKE_SAFE
       forward
    }
- 
+
    match reflex {
       on iaszone, endpoint: ENDPOINT_CO, clear: ["test"], set: ["alarm1"]
       debug "Reflex CO detected"
@@ -416,7 +416,7 @@ final Map roomNamesMap = [
 	"UPSTAIRS":"Upstairs",
 	"WORKOUT_ROOM":"Workout Room"
 	]
-								
+
 Halo.roomNames                      roomNamesMap
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -446,7 +446,7 @@ onAdded {
                 Zigbee.endpoint(ENDPOINT_HALO).bindServerCluster(CLUSTER_HALO),  // operational, msp
                 Zigbee.endpoint(ENDPOINT_HALO).bindServerCluster(CLUSTER_HALO_CONTROL),
                 Zigbee.endpoint(ENDPOINT_HALO).bindServerCluster(CLUSTER_HALO_SENSORS),
-                
+
                 basicCluster.bindServerCluster(),  // operational, power
 		powerCluster.bindServerCluster(),
 
@@ -460,7 +460,7 @@ onAdded {
                 )
 
    initIasStateMachines()
-   
+
    // write the IAS CIE Address now
    zoneSmokeCluster.zclWriteAttributes( [(zoneSmokeCluster.ATTR_IAS_CIE_ADDRESS): Zigbee.Data.encodeIeee(Zigbee.Hub.eui64)] )
    zoneCoCluster.zclWriteAttributes( [(zoneCoCluster.ATTR_IAS_CIE_ADDRESS): Zigbee.Data.encodeIeee(Zigbee.Hub.eui64)] )
@@ -498,7 +498,7 @@ onAdded {
    vars.'RC.co'      = [EP: ENDPOINT_HALO, Cluster:CLUSTER_HALO_SENSORS, Attribute:ATTR_CO_PPM,
                         Type:ZB_TYPE_SIGNED_16BIT, Min:5, Max:120, Delta:1]
 
-   // this keeps the device in pairing mode and delays the "halo is now configured" message. 
+   // this keeps the device in pairing mode and delays the "halo is now configured" message.
    // If the room name is set before this times out, it will say/confirm the room name ("in the den").
    //identCluster.identifyCmd( IDENT_PERIOD_SECS )
 }
@@ -513,7 +513,7 @@ onConnected {
       basicCluster.ATTR_MODEL_IDENTIFIER,
       basicCluster.ATTR_POWER_SOURCE )
    powerCluster.zclReadAttributes(
-      powerCluster.ATTR_BATTERY_VOLTAGE, 
+      powerCluster.ATTR_BATTERY_VOLTAGE,
       powerCluster.ATTR_BATTERY_VOLTAGE_PERCENT_REMAINING )
 
    // read current IAS Zone attributes after setting Address (to get current state and trigger async Enroll Response)
@@ -553,7 +553,7 @@ onConnected {
    // set recommended offline timeout interval
    Zigbee.setOfflineTimeout( OFFLINE_TIMEOUT_SECS )
 
-   vars.'alwaysSendBothColorAttr' = true        
+   vars.'alwaysSendBothColorAttr' = true
 }
 
 onDisconnected {
@@ -658,14 +658,14 @@ onEvent('RCStateMachine') {
       // state 1: send one read configuration
       // state 2: waiting for some response (either to read, or to configure)
       //          Response handler(s) move(s) us to:
-      //               -1 on success of read (done) 
+      //               -1 on success of read (done)
       //               3 on fail of read (config again)
       //               1 on success of config (read again)
       //               3 on fail of config (read again)
       //          calculate timeout here. Move to 3 on timeout.
       // state 3: send one configure attribute reporting message (with retries)
       //          (if we haven't send a read)
-      //    comments in this section help most to debug      
+      //    comments in this section help most to debug
       config.each() {
          if ( (!sent) && (CFG_STATE_READ==getConfigState(it)) ) {  // send only one per period, but leave state 1 for this attr
             def map = vars."${it}"
@@ -692,7 +692,7 @@ onEvent('RCStateMachine') {
             log.trace "RCStateMachine: SEND CONFIG ATTR. count:{}: state:{} timeout:{} ep:{} clus:{} att:{}",
                       getConfigRetries(it),getConfigState(it),getConfigTimer(it),
                       map['EP'],map['Cluster'],map['Attribute']
-            if ( 0 < (getConfigRetries(it) ) ) { 
+            if ( 0 < (getConfigRetries(it) ) ) {
                sendCnfAttrCommand(this,map['EP'],map['Cluster'],map['Attribute'],map['Type'],map['Min'],map['Max'],map['Delta'])
                setConfigState(it, CFG_STATE_WAIT)
                decrementConfigRetries(it)
@@ -772,7 +772,7 @@ setAttributes() {
            handledChanges.remove attribute.key
         }
     }
-   
+
    if(dimmerChanges) {
       GenericZigbeeDimmer.doSetAttributes(this, DEVICE_NAME, levelCluster, onOffCluster, message);
    }
@@ -791,7 +791,7 @@ onDimmer.IncrementBrightness {
    log.trace "{} driver received onDimmer.IncrementBrightness message: {}", DEVICE_NAME, message
    GenericZigbeeDimmer.doIncrementBrightness(this, DEVICE_NAME, levelCluster, onOffCluster, message)
 }
- 
+
 onDimmer.DecrementBrightness {
    log.trace "{} driver received onDimmer.decrementBrightness message: {}", DEVICE_NAME, message
    GenericZigbeeDimmer.doDecrementBrightness(this, DEVICE_NAME, levelCluster, onOffCluster, message)
@@ -822,7 +822,7 @@ onHalo.SendHush {
    def color = (message.attributes['color'] != null) ? message.attributes['color'] : HALO_HUSH_RED
    log.debug "halo:sendhush:{} color:({}) map:{}", message, color, hushcolor_zigbee_map[color]
    sendClusterSpecificCommand(this,ENDPOINT_HALO,CLUSTER_HALO_CONTROL,CMD_HALO_HUSH,hushcolor_zigbee_map[color])
-   sendResponse 'halo:SendHushResponse', [:]   
+   sendResponse 'halo:SendHushResponse', [:]
 }
 onHalo.CancelHush {
    log.debug "halohush:CANCEL:{} cmdId:{}", message, HALO_HUSH_STOP
@@ -958,7 +958,7 @@ void handleZoneMsg(Object endpoint, Object msg) {
          sendZoneEnrollment zoneSmokeCluster
       } else {
          setIasComplete('zoneSmokeEnrollCnt')
-      }  
+      }
       processZoneStatus zoneSmokeCluster, zoneStatus, endpoint
    } else if (ENDPOINT_CO == endpoint) {
       def zoneState = (attributes[zoneCoCluster.ATTR_ZONE_STATE] != null) ? attributes[zoneCoCluster.ATTR_ZONE_STATE] : ZONE_STATE_NOT_ENROLLED
@@ -970,7 +970,7 @@ void handleZoneMsg(Object endpoint, Object msg) {
          sendZoneEnrollment zoneCoCluster
       } else {
          setIasComplete('zoneCoEnrollCnt')
-      }  
+      }
       processZoneStatus zoneCoCluster, zoneStatus, endpoint
    } else {
       log.warn "Invalid endpoint for IAS Zone"
@@ -1014,7 +1014,7 @@ onZigbeeMessage.Zcl.iaszone.zclwriteattributesresponse() {
                         } else if (ENDPOINT_CO == endpoint) {
 			   setIasComplete('writeCoIasCieCnt')
                         } else {
-                           log.warn "Invalid endpoint for IAS Zone"                        
+                           log.warn "Invalid endpoint for IAS Zone"
                         }
 		} else {
 			log.warn "IAS Zone Write Attributes failed, unknown reason: {} (will retry)" data[0]
@@ -1038,7 +1038,7 @@ onZigbeeMessage.Zcl.iaszone.ZoneEnrollRequest() {
         } else if (ENDPOINT_CO == endpoint) {
    	   sendZoneEnrollment zoneCoCluster
         } else {
-           log.warn "Invalid endpoint for IAS Zone"        
+           log.warn "Invalid endpoint for IAS Zone"
         }
 }
 onZigbeeMessage.Zcl.iaszone.ZoneStatusChangeNotification() {
@@ -1117,7 +1117,7 @@ void handleHumidityMeasurement(Object cluster, Object msg) {
                  double tempH = tempVal
                  tempH /= 100
                  log.debug "Humidity received per spec: {} received; whole percent computed: ({}%)", tempVal, tempH
-                 RelativeHumidity.humidity tempH                 
+                 RelativeHumidity.humidity tempH
               } else {
                  log.info "Unexpected value in humidity sensor configuration (per spec (2) or whole percent (1) expected, received {})", config
                  return
@@ -1129,7 +1129,7 @@ void handleHumidityMeasurement(Object cluster, Object msg) {
            }
 	} else {
            log.debug "Humidity value null, bare read of humidity config! should never happen."
-        }        
+        }
 }
 onZigbeeMessage.Zcl.humiditymeasurement.zclreadattributesresponse() {
    log.trace "received humidity read response: {}", message
@@ -1373,12 +1373,12 @@ void processDeviceStatus(status) {
              break;
           case DEVICE_STATUS_CO_INTERCONNECT:
              log.info "Halo: INTERCONNECT CO, DOING NOTHING PENDING PM DISCUSSION!!!!!!: {}", status
-             // XXX removed 
+             // XXX removed
              // CarbonMonoxide.co CarbonMonoxide.CO_DETECTED
              break;
           case DEVICE_STATUS_SMOKE_INTERCONNECT:
              log.info "Halo: INTERCONNECT SMOKE, DOING NOTHING PENDING PM DISCUSSION!!!!!!: {}", status
-             // XXX removed 
+             // XXX removed
              // Smoke.smoke Smoke.SMOKE_DETECTED
              break;
          default:
@@ -1434,7 +1434,7 @@ void processAttributeInfo(ctx,ep,clus,cmdId,data) {
       log.warn "Message to set attribute not long enough: size: {} offset: {}", data.size(), offset
       return
    }
-   if ((CLUSTER_HALO == (short)clus) && (ATTR_ROOM == attr) && (ZB_TYPE_ENUM_8BIT==type) ) { 
+   if ((CLUSTER_HALO == (short)clus) && (ATTR_ROOM == attr) && (ZB_TYPE_ENUM_8BIT==type) ) {
       def roomentry = room_zigbee_map.find { it.value == data[offset] }
       // only read after attempt to write
       log.trace "Halo: set ROOM type to {} ({})", roomentry.key, data[offset]
@@ -1443,7 +1443,7 @@ void processAttributeInfo(ctx,ep,clus,cmdId,data) {
    else if ((CLUSTER_HALO == (short)clus) && (ATTR_DEVICE_STATUS == attr) && (ZB_TYPE_ENUM_8BIT==type)) {
       processDeviceStatus(data[offset])
    }
-   else if ((CLUSTER_HALO_CONTROL == (short)clus) && (ATTR_TEST_STATUS == attr) && (ZB_TYPE_ENUM_8BIT==type)) { 
+   else if ((CLUSTER_HALO_CONTROL == (short)clus) && (ATTR_TEST_STATUS == attr) && (ZB_TYPE_ENUM_8BIT==type)) {
       if (TEST_STATUS_STARTED == data[offset]) {
          // this will only come when actual test run...
          // Can we log this (the below test result) differently if this does not come?
@@ -1481,7 +1481,7 @@ void processAttributeInfo(ctx,ep,clus,cmdId,data) {
          }
       }
    }
-   else if ((CLUSTER_HALO_CONTROL == (short)clus) && (ATTR_HUSH_STATUS == attr)&& (ZB_TYPE_ENUM_8BIT==type)) { 
+   else if ((CLUSTER_HALO_CONTROL == (short)clus) && (ATTR_HUSH_STATUS == attr)&& (ZB_TYPE_ENUM_8BIT==type)) {
       def hushentry = hush_zigbee_map.find { it.value == data[offset] }
       if (null == hushentry) {
          log.warn "Halo received invalid hush status: {}", data[offset]
@@ -1506,7 +1506,7 @@ void processAttributeInfo(ctx,ep,clus,cmdId,data) {
 
 // default handler for ZCL messages, called if no other handlers handled the ZCL message
 onZigbeeMessage(Zigbee.TYPE_ZCL) {
-   log.trace "received zigbee ZCL message: {}", message 
+   log.trace "received zigbee ZCL message: {}", message
 
    def zclMsg = Zigbee.Message.toZcl(message)
    def profile = zclMsg.getProfileId()
@@ -1574,10 +1574,10 @@ void processCnfRptRsp(ctx,endpoint,cluster,data) {
          } else {
             if (ZB_STATUS_SUCCESS == data[0]) { // success
                log.trace "RCStateMachine (conf): SUCCESS config, moving clus: {} no attr! go BACK to READ", cluster
-               setConfigState(it, CFG_STATE_READ) 
+               setConfigState(it, CFG_STATE_READ)
             } else {
                log.trace "RCStateMachine (conf): FAIL config, retry. clus: {} no attr! response: {}", cluster, data[0]
-               setConfigState(it, CFG_STATE_CONFIG) 
+               setConfigState(it, CFG_STATE_CONFIG)
                setConfigResponse(it, data[0]) // keep track of response code, should this be our last try
             }
          }
@@ -1599,13 +1599,13 @@ void processReadCnfRptRsp(ctx,endpoint,cluster,data) {
          } else {
             if (ZB_STATUS_SUCCESS == data[0]) {
                log.trace "RCStateMachine (read): SUCCESS read config, moving clus: {} attr: {} to COMPLETE", cluster, attr
-               setConfigState(it, CFG_STATE_SUCCESS) 
+               setConfigState(it, CFG_STATE_SUCCESS)
             } else if (ZIGBEE_CNF_ATTR_REMOVE == map['Max']) { // this entry was to delete it so we treat any response as success
                log.trace "RCStateMachine (read): ERASE read config SUCCESSFUL, moving clus: {} attr: {} to COMPLETE", cluster, attr
-               setConfigState(it, CFG_STATE_SUCCESS) 
+               setConfigState(it, CFG_STATE_SUCCESS)
             } else {
                log.trace "RCStateMachine (read): FAIL read config, moving clus: {} attr: {} to config", cluster, attr
-               setConfigState(it, CFG_STATE_CONFIG) 
+               setConfigState(it, CFG_STATE_CONFIG)
             } // or is this just a failed write and we retry (up to 10 times)
          }
          return
@@ -1627,13 +1627,13 @@ void processWrtAttrRsp(ctx,endpoint,cluster,data) {
 void sendCnfAttrCommand(ctx,ep,clus,attr,type,min,max,delta) {
    byte[] payload = [ZIGBEE_CNF_ATTR_DIR_WRITE,attr&0xFF, attr>>8, type, min&0xFF, min>>8, max&0xFF, max>>8]
 
-   if (!isAnalogType((byte)type)) {  
-      sendGlobalCommand(ctx,ep,clus,CMD_CNF_RPT,payload)   
+   if (!isAnalogType((byte)type)) {
+      sendGlobalCommand(ctx,ep,clus,CMD_CNF_RPT,payload)
    } else { // is analog data type
       // uint8: 0x20 = 34 % 8 == 0... signed: 0x28 = 40 % 8 = 0.
       // unit16: 0x21 = 35 % 8 = 1... signed is the same, and so on.
       // so this number defines number of bytes needed in the configuration message.
-      def num_extra_bytes = type%8 
+      def num_extra_bytes = type%8
       if (num_extra_bytes==0) {
          payload = [ZIGBEE_CNF_ATTR_DIR_WRITE, attr&0xFF, attr>>8, type,  min&0xFF, min>>8, max&0xFF, max>>8, delta]
       } else if (num_extra_bytes==1) {
@@ -1650,7 +1650,7 @@ void sendCnfAttrCommand(ctx,ep,clus,attr,type,min,max,delta) {
          payload = [ZIGBEE_CNF_ATTR_DIR_WRITE, attr&0xFF, attr>>8, type,  min&0xFF, min>>8, max&0xFF, max>>8, delta&0xFF, delta>>8&0xFF, delta>>16&0xFF, delta>>24&0xFF, delta>>32&0xFF, delta>>40&0xFF, delta>>48]
       } else if (num_extra_bytes==7) {
          payload = [ZIGBEE_CNF_ATTR_DIR_WRITE, attr&0xFF, attr>>8, type,  min&0xFF, min>>8, max&0xFF, max>>8, delta&0xFF, delta>>8&0xFF, delta>>16&0xFF, delta>>24&0xFF, delta>>32&0xFF, delta>>40&0xFF, delta>>48&0xFF, delta>>56]
-      }      
+      }
       sendGlobalCommand(ctx,ep,clus,CMD_CNF_RPT,payload)
    }
 }
@@ -1670,7 +1670,7 @@ void sendGlobalCommand(ctx,endpoint,cluster,command,payload) {
          "defaultresponse" : true,
          "data" : payload as byte[]
          )
-   } else { 
+   } else {
       ctx.Zigbee.send(
          "cluster" : cluster,
          "command" : command,
@@ -1707,7 +1707,7 @@ void sendClusterSpecificCommand(ctx,endpoint,cluster,command,payload=null) {
             )
        }
    } else {
-      if (null == payload) {   
+      if (null == payload) {
          ctx.Zigbee.send(
             "cluster" : cluster,
             "command" : command,
@@ -1785,7 +1785,7 @@ boolean isAnalogType(byte v) {
    }
    if (v==ZB_TYPE_UNSIGNED_16BIT) {
       return true
-   }      
+   }
    if (v==ZB_TYPE_UNSIGNED_24BIT) {
       return true
    }
@@ -1892,7 +1892,7 @@ void setConfigState(id, state) {
    // if we're waiting, set how long
    if (CFG_STATE_WAIT == state) {
       (vars."${id+'.timeout'}")=RC_READ_TIMEOUT
-   }      
+   }
 }
 int decrementConfigTimer(id) {
    int cnt = vars."${id+'.timeout'}" ?: RC_READ_TIMEOUT

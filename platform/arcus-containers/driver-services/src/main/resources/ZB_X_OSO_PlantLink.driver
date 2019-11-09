@@ -47,7 +47,7 @@ model 			"PlantLink"				    // TODO:
 matcher			'ZIGB:manufacturer': 0x1002		// device does not send Vendor and Model strings, so we can only match on Manufacturer
 												// NOTE: this is Ember's generic Manufacture ID, likely to match with many devices built with Ember development tools.
 
-capabilities	DevicePower, SoilMoisture	    // device does not have any machanism to physically identify itself, so we do NOT support the Identify capability
+capabilities	'DevicePower', 'SoilMoisture'	    // device does not have any machanism to physically identify itself, so we do NOT support the Identify capability
 
 
 DevicePower.source               DevicePower.SOURCE_BATTERY

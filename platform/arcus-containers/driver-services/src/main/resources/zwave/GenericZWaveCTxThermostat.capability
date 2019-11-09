@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import groovy.transform.Field
-capability		Thermostat
+capability		'Thermostat'
 description		"Default implementation for the RTCoA CTx ZWave Thermostat capability"
 version			"1.0"
 

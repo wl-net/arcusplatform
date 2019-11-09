@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability		Switch
+capability		"Switch"
 description		"Special Implementation of Switch All for Jasco devices that freeze up and do not respond to basic get's."
 version			"1.0"
 

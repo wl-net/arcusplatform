@@ -30,7 +30,7 @@ model 			"WD500Z"
 
 matcher			'ZWAV:Manufacturer': 0x014F, 'ZWAV:ProductType': 0x4457, 'ZWAV:ProductId': 0x3034
 
-capabilities	DevicePower, Switch, Dimmer, Indicator
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Indicator'
 
 importCapability 'zwave/GenericZWaveDim'
 importCapability 'zwave/GenericZWaveVersion'

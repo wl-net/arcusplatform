@@ -37,7 +37,7 @@ model 			"iQBR30"
 
 matcher			'ZIGB:manufacturer': 0x110C, 'ZIGB:vendor': 'OSRAM SYLVANIA', 'ZIGB:model': 'iQBR30'
 
-capabilities	DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

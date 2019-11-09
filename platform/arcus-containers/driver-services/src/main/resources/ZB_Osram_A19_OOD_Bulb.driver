@@ -43,7 +43,7 @@ model           "A19 Dimmable"
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY A19 ON/OFF/DIM'
 matcher         'ZIGB:manufacturer': 0xBBAA, 'ZIGB:vendor': 'OSRAM', 'ZIGB:model': 'LIGHTIFY A19 ON/OFF/DIM 10 Year'
 
-capabilities    DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities    'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

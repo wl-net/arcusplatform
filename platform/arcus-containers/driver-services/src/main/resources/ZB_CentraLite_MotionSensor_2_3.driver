@@ -75,6 +75,7 @@ matcher         'ZIGB:manufacturer': 0xC2DF, 'ZIGB:vendor': 'CentraLite', 'ZIGB:
 matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3326'      // this is what should be sent if/when Manufacturer Code in Node Descriptor Response is fixed
 matcher         'ZIGB:manufacturer': 0x104E, 'ZIGB:vendor': 'CentraLite', 'ZIGB:model': '3326-L'
 
+capabilities    'DevicePower', 'Motion', 'Temperature', 'Identify'
 
 uses "zigbee.GenericZigbeeDeviceOta"
 

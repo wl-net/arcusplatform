@@ -15,7 +15,7 @@
  */
 import groovy.transform.Field
 
-capability		Dimmer
+capability		"Dimmer"
 description		"Default implementation for the ZWave Dimmer capability"
 version			"1.0"
 

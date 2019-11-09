@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import groovy.transform.Field
-capability      DoorLock
+capability      "DoorLock"
 description     "Default implementation for the ZWave DoorLock capability"
 version         "2.12"
 

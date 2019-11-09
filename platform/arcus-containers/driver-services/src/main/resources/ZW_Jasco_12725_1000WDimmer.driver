@@ -30,7 +30,7 @@ model 			"ZW3006"
 
 matcher			'ZWAV:Manufacturer': 0x0063, 'ZWAV:ProductType': 0x4944, 'ZWAV:ProductId': 0x3032
 
-capabilities	DevicePower, Switch, Dimmer, Indicator
+capabilities	'DevicePower', 'Switch', 'Dimmer', 'Indicator'
 
 importCapability 'zwave/JascoZWaveSwitchAll'
 importCapability 'zwave/GenericZWaveDim'

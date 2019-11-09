@@ -56,6 +56,7 @@ model           "34193"
 matcher         'ZWAV:Manufacturer': 0x63, 'ZWAV:ProductType': 0x4953, 'ZWAV:ProductId': 0x3133	//GE
 matcher         'ZWAV:Manufacturer': 0x63, 'ZWAV:ProductType': 0x4953, 'ZWAV:ProductId': 0x3134	//Jasco
 
+capabilities    'DevicePower', 'Motion'
 
 uses 'zwave/GenericZWaveBattery'		// use generic ZWave Battery handling
 uses 'zwave/GenericZWaveVersion'

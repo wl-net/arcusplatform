@@ -44,7 +44,7 @@ model 			"6eaee7"
 
 matcher			'ZIGB:manufacturer': 0x1014  // , 'ZIGB:vendor': '', 'ZIGB:model': ''
 
-capabilities	DevicePower, Dimmer, Switch, Light, Identify, DeviceOta
+capabilities	'DevicePower', 'Dimmer', 'Switch', 'Light', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDimmer'
 importCapability 'zigbee/GenericZigbeeDeviceOta'

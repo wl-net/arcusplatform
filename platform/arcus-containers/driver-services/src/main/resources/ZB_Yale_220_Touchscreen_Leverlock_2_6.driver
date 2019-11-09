@@ -83,7 +83,7 @@ matcher         'ZIGB:manufacturer': 0xAAAA, 'ZIGB:vendor': 'Yale', 'ZIGB:model'
 matcher         'ZIGB:manufacturer': 0x101D, 'ZIGB:vendor': 'Yale', 'ZIGB:model': 'YRL220 TS LL'
 
 
-capabilities    DevicePower, DoorLock, Identify, DeviceOta
+capabilities    'DevicePower', 'DoorLock', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDoorLock_2_6'
 importCapability 'zigbee/GenericZigbeeDoorLockPower'

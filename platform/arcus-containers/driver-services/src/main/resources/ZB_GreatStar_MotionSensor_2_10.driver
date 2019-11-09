@@ -38,7 +38,7 @@ model           "MotionSensor"
 
 matcher         'ZIGB:vendor': 'iMagic by GreatStar', 'ZIGB:model': '1117-S'
 
-capabilities    Identify, DeviceOta
+capabilities    'Identify', 'DeviceOta', 'Motion', 'RelativeHumidity'
 
 uses "zigbee.GenericZigbeeDeviceOta"
 

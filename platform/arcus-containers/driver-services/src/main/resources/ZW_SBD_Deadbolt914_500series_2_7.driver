@@ -54,7 +54,7 @@ matcher          'ZWAV:Manufacturer': 0x90, 'ZWAV:ProductType': 3, 'ZWAV:Product
 matcher          'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 3, 'ZWAV:ProductId': 0x4006
 matcher          'ZWAV:Manufacturer': -112, 'ZWAV:ProductType': 3, 'ZWAV:ProductId': 0x0440
 
-capabilities     DevicePower, DoorLock
+capabilities     'DevicePower', 'DoorLock'
 
 importCapability 'zwave/GenericZWaveDoorLock_2_6'
 importCapability 'zwave/GenericZWaveVersion'

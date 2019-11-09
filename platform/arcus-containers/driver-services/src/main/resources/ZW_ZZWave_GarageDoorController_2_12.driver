@@ -36,6 +36,7 @@ matcher 'ZWAV:Generic': ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 'ZWAV:Sp
 matcher 'ZWAV:Generic': ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 'ZWAV:Specific': ZWaveEntryControlSpecificDevices.SPECIFIC_TYPE_SECURE_BARRIER_CLOSE_ONLY
 matcher 'ZWAV:Generic': ZWaveGenericDevices.GENERIC_TYPE_ENTRY_CONTROL, 'ZWAV:Specific': ZWaveEntryControlSpecificDevices.SPECIFIC_TYPE_SECURE_BARRIER_OPEN_ONLY
 
+capabilities    'DevicePower', 'MotorizedDoor', 'DeviceAdvanced'
 
 @Field final int TILT_BATTERY_OK = 100           // indicate OK Battery by setting Battery Level to 100%
 @Field final int TILT_BATTERY_LOW = 10           // indicate LOW Battery by setting Battery Level to 10%

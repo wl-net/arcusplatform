@@ -84,7 +84,7 @@ model           "YRD226/246 TSDB"
 matcher         'ZIGB:manufacturer': 0x101D, 'ZIGB:vendor': 'Yale', 'ZIGB:model': 'YRD226/246 TSDB'
 
 
-capabilities    DevicePower, DoorLock, Identify, DeviceOta
+capabilities    'DevicePower', 'DoorLock', 'Identify', 'DeviceOta'
 
 importCapability 'zigbee/GenericZigbeeDoorLock_2_6'
 importCapability 'zigbee/GenericZigbeeDoorLockPower'
