@@ -26,5 +26,5 @@ vendor "Iris"
 model "nifty-002"
  
 matcher vendor: ~/(?i).*iris.*/, model:"nifty-002" // vendor is a regex, model is an exact match
-capabilities 'devpow', 'swit'
+capabilities 'DevicePower', 'Switch'
 
