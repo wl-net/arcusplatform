@@ -262,7 +262,13 @@ public class DriverBinding extends EnvironmentBinding {
                if (platformCaps.contains(capability.toString())) {
                   continue;
                }
-               CapabilityDefinition cd = capabilityRegistry.getCapabilityDefinitionByName(capability.toString());
+               CapabilityDefinition cd;
+               // assume namespace if lower case (e.g. 'swit' instead of Switch)MultiInstanceStrings
+               if (((String) capability).toLowerCase().equals(capability)) {
+                  cd = capabilityRegistry.getCapabilityDefinitionByNamespace(capability.toString());
+               } else {
+                  cd = capabilityRegistry.getCapabilityDefinitionByName(capability.toString());
+               }
 
                setProperty(cd.getCapabilityName(), new GroovyCapabilityDefinition(cd, getSelf()));
             }
