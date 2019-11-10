@@ -75,9 +75,17 @@ public class CapabilityEnvironmentBinding extends EnvironmentBinding {
       }
    }
 
+   public void capabilities(String arg1, String arg2) {
+      capability(arg1);
+      capability(arg2);
+   }
+
    public void capability(Object capability) {
       builder.withCapabilityDefinition(capability);
       CapabilityDefinition definition = builder.getCapabilityDefinition();
+
+      setProperty(definition.getCapabilityName(), new GroovyCapabilityDefinition(definition, this));
+
       if(definition != null) {
          // TODO special handler for onSetAttributes
          int namespaceOffset = definition.getNamespace().length() + 1;
