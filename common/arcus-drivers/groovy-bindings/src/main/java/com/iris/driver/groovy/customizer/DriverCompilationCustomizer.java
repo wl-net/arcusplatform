@@ -21,6 +21,7 @@ package com.iris.driver.groovy.customizer;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
@@ -81,13 +82,20 @@ public class DriverCompilationCustomizer extends CompilationCustomizer {
             );
          }
       }
-      
+
       ClassNode groovyCapabilityDefinition = new ClassNode(GroovyCapabilityDefinition.class);
       for(CapabilityDefinition definition: capabilityRegistry.listCapabilityDefinitions()) {
          if(classNode.getProperty(definition.getCapabilityName()) != null) {
             continue;
          }
-         
+
+         ImmutableSet<String> platformCaps = ImmutableSet.of("Base", "Device", "DeviceAdvanced", "DeviceConnection", "Halo",
+               "DevicePower", "Switch", "Light", "Identify", "DeviceOta", "Alert", "Temperature");
+
+         if (!platformCaps.contains(definition.getCapabilityName()) && !definition.getCapabilityName().equals(classNode)) {
+            continue;
+         }
+
          if(!isDeviceCapability(definition)) {
             continue;
          }

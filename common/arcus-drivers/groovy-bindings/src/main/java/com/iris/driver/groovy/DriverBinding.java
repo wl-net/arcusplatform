@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.iris.capability.registry.CapabilityRegistry;
 import com.iris.device.attributes.AttributeKey;
 import com.iris.device.model.AttributeDefinition;
@@ -110,6 +111,10 @@ public class DriverBinding extends EnvironmentBinding {
       for(CapabilityDefinition definition: capabilityRegistry.listCapabilityDefinitions()) {
          setProperty("on" + definition.getCapabilityName(), new OnCapabilityClosure(definition, this));
       }
+   }
+
+   private EnvironmentBinding getSelf() {
+      return this;
    }
 
    public CapabilityDefinition getCapabilityDefinition(String capabilityName) {
@@ -249,8 +254,18 @@ public class DriverBinding extends EnvironmentBinding {
 
    class SetCapabilities extends DriverBindingClosure {
       public void doCall(Object [] capabilities) {
+         ImmutableSet<String> platformCaps = ImmutableSet.of("Base", "Device", "DeviceAdvanced", "DeviceConnection");
+
          for(Object capability: capabilities) {
             getBuilder().addCapability(capability);
+            if (capability instanceof String) {
+               if (platformCaps.contains(capability.toString())) {
+                  continue;
+               }
+               CapabilityDefinition cd = capabilityRegistry.getCapabilityDefinitionByName(capability.toString());
+
+               setProperty(cd.getCapabilityName(), new GroovyCapabilityDefinition(cd, getSelf()));
+            }
          }
       }
    }
