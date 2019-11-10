@@ -80,6 +80,12 @@ public class CapabilityEnvironmentBinding extends EnvironmentBinding {
       capability(arg2);
    }
 
+   public void capabilities(String arg1, String arg2, String arg3) {
+      capability(arg1);
+      capability(arg2);
+      capability(arg3);
+   }
+
    public void capability(Object capability) {
       builder.withCapabilityDefinition(capability);
       CapabilityDefinition definition = builder.getCapabilityDefinition();
