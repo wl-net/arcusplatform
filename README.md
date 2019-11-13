@@ -2,6 +2,7 @@ Arcus is an open-source home automation and control system, based on the Iris by
 This project contains the files necessary to run Arcus Platform, including the backend services and portions of the hub (agent).
 
 ![Arcus Screenshot on Arcus Web Dashboard](docs/screenshot.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwl-net%2Farcusplatform.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwl-net%2Farcusplatform?ref=badge_shield)
 
 # Other Repositories
 
@@ -21,3 +22,7 @@ Please see [README.projects](docs/projects.md) for details on the layout of this
 # Support
 
 Please use http://forum.livingwithiris.com/forum/62-arcus/ for support and general questions.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwl-net%2Farcusplatform.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwl-net%2Farcusplatform?ref=badge_large)
