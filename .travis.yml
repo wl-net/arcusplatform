@@ -4,8 +4,13 @@ jdk:
 cache:
   directories:
   - $HOME/.gradle
-script: ./gradlew test
-
+script:
+- ./gradlew compileJava
+- fossa init
+- fossa analyze
+- ./gradlew test
+before_script:
+- "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
 deploy:
   - provider: script
     script: bash khakis/bin/release.sh
