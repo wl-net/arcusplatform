@@ -4,7 +4,7 @@ jdk:
 cache:
   directories:
   - $HOME/.gradle
-script: ./gradlew test
+script: ./gradlew tasks
 
 deploy:
   - provider: script
