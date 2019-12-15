@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.iris.model.Version
-import com.iris.protocol.ipcd.message.model.GetParameterValuesCommand
-import com.iris.protocol.ipcd.message.model.SetParameterValuesCommand
+import com.arcussmarthome.model.Version
+import com.arcussmarthome.protocol.ipcd.message.model.GetParameterValuesCommand
+import com.arcussmarthome.protocol.ipcd.message.model.SetParameterValuesCommand
 import groovy.transform.Field
 
 driver         "IPCDGenieAladdinGarageDoor"

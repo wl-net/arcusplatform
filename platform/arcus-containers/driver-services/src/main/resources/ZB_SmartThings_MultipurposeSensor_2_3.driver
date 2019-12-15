@@ -67,10 +67,10 @@
 
 import groovy.transform.Field                    // not needed to compile, but used in eclipse
 import static java.util.concurrent.TimeUnit.*    // needed when running Unit Tests
-import static com.iris.protocol.zigbee.zcl.Constants.*
-import static com.iris.protocol.zigbee.zcl.General.*
-import static com.iris.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
-import static com.iris.protocol.zigbee.zcl.PollControl.CheckInResponse.*
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*
+import static com.arcussmarthome.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
+import static com.arcussmarthome.protocol.zigbee.zcl.PollControl.CheckInResponse.*
 
 uses "generic.GenericContact"
 uses "generic.GenericTiltWithContact"

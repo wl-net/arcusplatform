@@ -41,8 +41,8 @@
  *
  * 
  */
-//import static com.iris.protocol.zwave.Configuration.ConfigurationSetV2.*
-//import static com.iris.protocol.zwave.Alarm.AlarmReportV2.*
+//import static com.arcussmarthome.protocol.zwave.Configuration.ConfigurationSetV2.*
+//import static com.arcussmarthome.protocol.zwave.Alarm.AlarmReportV2.*
 
 driver          "ZWJascoMotionSensorDriver"
 description     "Driver for a Jasco Motion Sensor"

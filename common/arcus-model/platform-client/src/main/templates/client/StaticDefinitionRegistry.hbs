@@ -1,5 +1,5 @@
 {{#file . "com/iris/capability/definition/StaticDefinitionRegistry.java"}}
-package com.iris.capability.definition;
+package com.arcussmarthome.capability.definition;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,19 +15,19 @@ public class StaticDefinitionRegistry extends BaseDefinitionRegistry {
        
       static {
          List<CapabilityDefinition> capabilities = new LinkedList<CapabilityDefinition>();
-         capabilities.add(com.iris.client.capability.Capability.DEFINITION);
+         capabilities.add(com.arcussmarthome.client.capability.Capability.DEFINITION);
          {{#capabilities}}
-         capabilities.add(com.iris.client.capability.{{name}}.DEFINITION);
+         capabilities.add(com.arcussmarthome.client.capability.{{name}}.DEFINITION);
          {{/capabilities}}
 
          List<TypeDefinition> types = new LinkedList<TypeDefinition>();
          {{#types}}
-         types.add(com.iris.client.bean.{{name}}.DEFINITION);
+         types.add(com.arcussmarthome.client.bean.{{name}}.DEFINITION);
          {{/types}}
           
          List<ServiceDefinition> services = new LinkedList<ServiceDefinition>();
          {{#services}}
-         services.add(com.iris.client.service.{{name}}.DEFINITION);
+         services.add(com.arcussmarthome.client.service.{{name}}.DEFINITION);
          {{/services}}
           
          INSTANCE = new StaticDefinitionRegistry(capabilities, types, services);

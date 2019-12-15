@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.iris.device.attributes.AttributeKey
-import com.iris.device.attributes.AttributeMap
-import com.iris.messages.MessageBody
-import com.iris.messages.address.Address
-import com.iris.messages.address.ProtocolDeviceId
-import com.iris.messages.capability.DeviceAdvancedCapability
-import com.iris.protocol.ipcd.message.IpcdMessage
-import com.iris.protocol.ipcd.message.model.IpcdEvent
-import com.iris.protocol.ipcd.message.model.IpcdReport
+import com.arcussmarthome.device.attributes.AttributeKey
+import com.arcussmarthome.device.attributes.AttributeMap
+import com.arcussmarthome.messages.MessageBody
+import com.arcussmarthome.messages.address.Address
+import com.arcussmarthome.messages.address.ProtocolDeviceId
+import com.arcussmarthome.messages.capability.DeviceAdvancedCapability
+import com.arcussmarthome.protocol.ipcd.message.IpcdMessage
+import com.arcussmarthome.protocol.ipcd.message.model.IpcdEvent
+import com.arcussmarthome.protocol.ipcd.message.model.IpcdReport
 
 import groovy.transform.Field
 

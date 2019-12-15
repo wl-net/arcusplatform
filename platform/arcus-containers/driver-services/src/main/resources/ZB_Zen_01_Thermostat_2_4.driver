@@ -45,8 +45,8 @@
   * */
  
 import groovy.transform.Field
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.zcl.General.ZclWriteAttributeRecord;
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.zcl.General.ZclWriteAttributeRecord;
 
 driver			"ZBZen01Thermostat"
 description		"Driver for the Zen Within Thermostat"

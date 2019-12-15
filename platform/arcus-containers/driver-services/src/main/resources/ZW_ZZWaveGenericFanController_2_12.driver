@@ -19,8 +19,8 @@
  *
  */
 import groovy.transform.Field
-import com.iris.protocol.zwave.ZWaveGenericDevices
-import com.iris.protocol.zwave.ZWaveSwitchMultilevelSpecificDevices
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices
+import com.arcussmarthome.protocol.zwave.ZWaveSwitchMultilevelSpecificDevices
 
 uses 'zwave.GenericZWaveFan'
 uses 'zwave.GenericZWaveVersion'

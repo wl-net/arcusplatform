@@ -1,5 +1,5 @@
    /** {{description}} */
-   public static class {{name}}Event extends com.iris.client.ClientEvent {
+   public static class {{name}}Event extends com.arcussmarthome.client.ClientEvent {
       public static final String NAME = "{{namespace}}:{{name}}";
 
 {{> client/parameters parameters}}
@@ -12,7 +12,7 @@
          super(NAME, sourceAddress, attributes);
       }
 
-      public {{name}}Event(com.iris.client.ClientEvent copy) {
+      public {{name}}Event(com.arcussmarthome.client.ClientEvent copy) {
          super(NAME, copy.getSourceAddress(), new java.util.HashMap<String, Object>(copy.getAttributes()));
       }
 

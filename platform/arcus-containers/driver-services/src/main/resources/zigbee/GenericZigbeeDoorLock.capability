@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import groovy.transform.Field
-import com.iris.protocol.zigbee.zcl.DoorLock.OperationEventNotification
-import com.iris.protocol.zigbee.zcl.DoorLock.ProgrammingEventNotification
+import com.arcussmarthome.protocol.zigbee.zcl.DoorLock.OperationEventNotification
+import com.arcussmarthome.protocol.zigbee.zcl.DoorLock.ProgrammingEventNotification
 
 capability		DoorLock
 description		"Default implementation for the Zigbee DoorLock capability"

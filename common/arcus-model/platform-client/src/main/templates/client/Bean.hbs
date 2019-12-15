@@ -1,5 +1,5 @@
 {{#file . "com/iris/client/bean/{{name}}.java"}}
-package com.iris.client.bean;
+package com.arcussmarthome.client.bean;
 
 import java.util.Map;
 
@@ -12,13 +12,13 @@ public class {{name}} {
    public static final String {{toUpperCase name}}_{{toUpperCase .}} = "{{.}}";{{/enumValues}}
    {{/attributes}}
    {{#attributes}}
-   public static final com.iris.capability.definition.AttributeType TYPE_{{toUpperCase name}} = 
+   public static final com.arcussmarthome.capability.definition.AttributeType TYPE_{{toUpperCase name}} =
    {{#if type.enum}}
-      com.iris.capability.definition.AttributeTypes.enumOf(
+      com.arcussmarthome.capability.definition.AttributeTypes.enumOf(
          java.util.Arrays.<String>asList({{#enumValues}}"{{.}}"{{#unless @last}}, {{/unless}}{{/enumValues}})
       );
    {{else}}
-      com.iris.capability.definition.AttributeTypes.parse("{{{type.representation}}}");
+      com.arcussmarthome.capability.definition.AttributeTypes.parse("{{{type.representation}}}");
    {{/if}}
    {{/attributes}}
 
@@ -92,15 +92,15 @@ public class {{name}} {
    }
    
 {{> client/ObjectType}}   
-  public static final com.iris.capability.definition.TypeDefinition DEFINITION =
-      com.iris.capability.definition.Definitions
+  public static final com.arcussmarthome.capability.definition.TypeDefinition DEFINITION =
+      com.arcussmarthome.capability.definition.Definitions
          .typeBuilder()
          .withName("{{name}}")
          .withDescription("{{description}}")
          .withVersion("{{version}}")
          {{#attributes}}
          .addAttribute(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .attributeBuilder()
                .withName("{{name}}")
                .withDescription("{{description}}")

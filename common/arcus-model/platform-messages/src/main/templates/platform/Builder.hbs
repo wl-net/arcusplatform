@@ -3,7 +3,7 @@
          return new Builder();
       }
       
-      public static Builder builder(com.iris.messages.MessageBody body) {
+      public static Builder builder(com.arcussmarthome.messages.MessageBody body) {
          return new Builder(body);
       }
       
@@ -15,7 +15,7 @@
          Builder() {
          }
 
-         Builder(com.iris.messages.MessageBody body) {
+         Builder(com.arcussmarthome.messages.MessageBody body) {
              this(body != null ? body.getAttributes() : null);
          }
 
@@ -38,18 +38,18 @@
          }
          {{/.}}
       
-         public com.iris.messages.MessageBody build() {
+         public com.arcussmarthome.messages.MessageBody build() {
             java.util.Map<String, Object> attributes = 
                new java.util.HashMap<String, Object>({{hashsize this}},0.75f);
             {{#.}}
             attributes.put(ATTR_{{toUpperCase name}}, _{{name}});
             {{/.}}
-            return com.iris.messages.MessageBody.buildMessage(NAME, attributes);
+            return com.arcussmarthome.messages.MessageBody.buildMessage(NAME, attributes);
          }
       }
 {{else}}
-      private static final com.iris.messages.MessageBody INSTANCE = 
-         com.iris.messages.MessageBody.buildMessage(NAME, java.util.Collections.<String, Object>emptyMap());
+      private static final com.arcussmarthome.messages.MessageBody INSTANCE =
+         com.arcussmarthome.messages.MessageBody.buildMessage(NAME, java.util.Collections.<String, Object>emptyMap());
          
-      public static com.iris.messages.MessageBody instance() { return INSTANCE; }
+      public static com.arcussmarthome.messages.MessageBody instance() { return INSTANCE; }
 {{/if}}

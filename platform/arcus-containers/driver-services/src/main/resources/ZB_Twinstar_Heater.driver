@@ -36,11 +36,11 @@
  *  
  */
 import groovy.transform.Field
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.zcl.ApplianceAlerts.GetAlertsResponse
-import com.iris.protocol.zigbee.zcl.General.ZclReadReportingConfigurationResponse
-import static com.iris.protocol.zigbee.zcl.Constants.*		// /arcus-protocol/build/generated-src/main/java/com/iris/protocol/zigbee/zcl/Constants.java
-import static com.iris.protocol.zigbee.zcl.General.*
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.zcl.ApplianceAlerts.GetAlertsResponse
+import com.arcussmarthome.protocol.zigbee.zcl.General.ZclReadReportingConfigurationResponse
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*		// /arcus-protocol/build/generated-src/main/java/com/iris/protocol/zigbee/zcl/Constants.java
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*
 
 
 driver			"ZBTwinstarHeater"

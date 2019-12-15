@@ -18,12 +18,12 @@
  *
  */
 
-import com.iris.protocol.zigbee.msg.ZigbeeMessage;
-import static com.iris.protocol.zigbee.zcl.General.*;
-import static com.iris.protocol.zigbee.zcl.Constants.*;
-import static com.iris.protocol.zigbee.zcl.Color.*;
-import static com.iris.protocol.zigbee.zcl.IasZone.*;
-import static com.iris.protocol.zigbee.zcl.IasWd.*;
+import com.arcussmarthome.protocol.zigbee.msg.ZigbeeMessage;
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.Color.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.IasZone.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.IasWd.*;
 
 driver			"ZBHaloPlus"
 description		"Driver for the Halo Plus Smoke Detector"

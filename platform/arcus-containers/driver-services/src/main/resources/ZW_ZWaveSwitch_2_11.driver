@@ -21,8 +21,8 @@
  *         SPECIFIC_TYPE_VALVE_OPEN_CLOSE		Per ZWave specs gets Basic UI.  They let valves get certified before defining if Set is open or closed.
  */
 import groovy.transform.Field
-import com.iris.protocol.zwave.ZWaveGenericDevices;
-import com.iris.protocol.zwave.ZWaveSwitchBinarySpecificDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveSwitchBinarySpecificDevices;
 
 uses 'zwave.GenericZWaveVersion'
 uses 'zwave.GenericZWaveSwitch'

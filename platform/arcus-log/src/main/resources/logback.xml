@@ -6,15 +6,15 @@
         <resetJUL>true</resetJUL>
     </contextListener> 
 
-  <conversionRule conversionWord="hst" converterClass="com.iris.log.IrisHostConverter" />
-  <conversionRule conversionWord="cnt" converterClass="com.iris.log.IrisContainerConverter" />
-  <conversionRule conversionWord="svc" converterClass="com.iris.log.IrisServiceConverter" />
-  <conversionRule conversionWord="ver" converterClass="com.iris.log.IrisVersionConverter" />
-  <conversionRule conversionWord="ix" converterClass="com.iris.log.IrisMdcConverter" />
+  <conversionRule conversionWord="hst" converterClass="com.arcussmarthome.log.IrisHostConverter" />
+  <conversionRule conversionWord="cnt" converterClass="com.arcussmarthome.log.IrisContainerConverter" />
+  <conversionRule conversionWord="svc" converterClass="com.arcussmarthome.log.IrisServiceConverter" />
+  <conversionRule conversionWord="ver" converterClass="com.arcussmarthome.log.IrisVersionConverter" />
+  <conversionRule conversionWord="ix" converterClass="com.arcussmarthome.log.IrisMdcConverter" />
 
-  <appender name="STDOUT" class="com.iris.log.IrisAppender">
+  <appender name="STDOUT" class="com.arcussmarthome.log.IrisAppender">
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="com.iris.log.IrisLayout">
+      <layout class="com.arcussmarthome.log.IrisLayout">
          <pattern>%.-1level%d{MMdd} %d{HH:mm:ss.SSS} &lt;%thread&gt; %ix{:target:system} %ix{place} %ix{from:from} %ix{to:to} %ix{id:id} %ix{ip:ip} %ix{loc:loc} %ix{slvl:slvl} [%logger{32}] %msg%n</pattern>
       </layout>
     </encoder>
@@ -24,7 +24,7 @@
     <encoder>
     </encoder>
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="com.iris.log.IrisLayout">
+      <layout class="com.arcussmarthome.log.IrisLayout">
          <pattern>%highlight(%.-1level%d{MMdd}) %gray(%d{HH:mm:ss.SSS} %6.6thread %32.32logger{32}]) %msg%n</pattern>
       </layout>
     </encoder>

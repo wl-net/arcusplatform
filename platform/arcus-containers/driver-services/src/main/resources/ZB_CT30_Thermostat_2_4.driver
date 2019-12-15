@@ -54,8 +54,8 @@
  */
 
 import groovy.transform.Field
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.zcl.General.ZclWriteAttributeRecord;
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.zcl.General.ZclWriteAttributeRecord;
  
 driver				"ZWRTCoACT30Thermostat"
 description			"Driver for a CT30 Radio Thermostat thermostat"

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.iris.protocol.zwave.ZWaveEntryControlSpecificDevices
-import com.iris.protocol.zwave.ZWaveGenericDevices
+import com.arcussmarthome.protocol.zwave.ZWaveEntryControlSpecificDevices
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices
 import groovy.transform.Field
 
 /**

@@ -1,6 +1,6 @@
 irpheader {
-import static com.iris.protocol.zigbee.zdp.Constants.*;
-import static com.iris.protocol.zigbee.zdp.General.*;
+import static com.arcussmarthome.protocol.zigbee.zdp.Constants.*;
+import static com.arcussmarthome.protocol.zigbee.zdp.General.*;
 }
 
 

@@ -1,10 +1,10 @@
 {{#file . "com/iris/protocol/ipcd/message/model/{{capitalize name}}Command.java"}}
-package com.iris.protocol.ipcd.message.model;
+package com.arcussmarthome.protocol.ipcd.message.model;
 
 import java.util.List;
 import java.util.Map;
 
-import com.iris.protocol.ipcd.message.Mapifier;
+import com.arcussmarthome.protocol.ipcd.message.Mapifier;
 
 public class {{capitalize name}}Command extends IpcdCommand {
 	{{#properties}}{{#unless def}}

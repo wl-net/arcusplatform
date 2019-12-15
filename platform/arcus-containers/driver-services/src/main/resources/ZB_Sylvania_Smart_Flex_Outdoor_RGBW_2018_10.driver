@@ -33,8 +33,8 @@
  *   
  */
 import groovy.transform.Field
-import static com.iris.protocol.zigbee.zcl.Constants.*
-import static com.iris.protocol.zigbee.zcl.General.*
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*
 
 uses "zigbee.GenericZigbeeDimmer"
 uses "zigbee.GenericZigbeeColor"

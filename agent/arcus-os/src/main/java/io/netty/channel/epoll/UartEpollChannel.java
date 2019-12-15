@@ -15,12 +15,11 @@
  */
 package io.netty.channel.epoll;
 
-import io.netty.channel.epoll.AbstractEpollStreamChannel;
 import io.netty.channel.unix.Socket;
 
 import java.net.SocketAddress;
 
-import com.iris.agent.os.serial.UartAddress;
+import com.arcussmarthome.agent.os.serial.UartAddress;
 
 public final class UartEpollChannel extends AbstractEpollStreamChannel {
     private static final UartAddress REMOTEADDR = new UartAddress("localhost");

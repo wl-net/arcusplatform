@@ -1,5 +1,5 @@
 {{#file . "com/iris/protocol/ipcd/message/serialize/{{capitalize name}}ParserAdapter.java"}}
-package com.iris.protocol.ipcd.message.serialize;
+package com.arcussmarthome.protocol.ipcd.message.serialize;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,9 +7,9 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.iris.protocol.ipcd.message.IpcdMessage;
-import com.iris.protocol.ipcd.message.ParserAdapter;
-import com.iris.protocol.ipcd.message.model.*;
+import com.arcussmarthome.protocol.ipcd.message.IpcdMessage;
+import com.arcussmarthome.protocol.ipcd.message.ParserAdapter;
+import com.arcussmarthome.protocol.ipcd.message.model.*;
 
 class {{capitalize name}}ParserAdapter extends ParserAdapter {
     private final static Set<String> requiredElements;

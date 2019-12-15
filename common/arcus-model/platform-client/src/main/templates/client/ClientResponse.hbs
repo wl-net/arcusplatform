@@ -1,4 +1,4 @@
-   public static class {{name}}Response extends com.iris.client.ClientEvent {
+   public static class {{name}}Response extends com.arcussmarthome.client.ClientEvent {
       public static final String NAME = "{{namespace}}:{{name}}Response";
 
       public {{name}}Response(String type, String sourceAddress) {
@@ -9,7 +9,7 @@
          super(type, sourceAddress, attributes);
       }
 
-      public {{name}}Response(com.iris.client.ClientEvent copy) {
+      public {{name}}Response(com.arcussmarthome.client.ClientEvent copy) {
          super(copy.getType(), copy.getSourceAddress(), new java.util.HashMap<String, Object>(copy.getAttributes()));
       }
 

@@ -2,8 +2,8 @@
 // Zigbee Home Automation Library Messages
 ////////////////////////////////////////////////////////////////////////////////
 irpheader {
-import com.iris.protocol.zigbee.alertme.General.AmeString;
-import static com.iris.protocol.zigbee.alertme.Constants.*;
+import com.arcussmarthome.protocol.zigbee.alertme.General.AmeString;
+import static com.arcussmarthome.protocol.zigbee.alertme.Constants.*;
 }
 
 include "ame-const.irp";

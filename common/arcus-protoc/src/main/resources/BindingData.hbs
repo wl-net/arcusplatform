@@ -7,10 +7,10 @@ package {{package}};
 
 import groovy.lang.GroovyObjectSupport;
 
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.{{subpackage}}.*;
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.*;
 {{#bindings}}
-import com.iris.protocol.zigbee.{{subpackage}}.{{classname}}.*;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}}.*;
 {{/bindings}}
 
 public class Zigbee{{capitalize subpackage}}DataBinding extends GroovyObjectSupport {

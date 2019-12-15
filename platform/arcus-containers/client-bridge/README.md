@@ -7,7 +7,7 @@ You can run a single instance of the client-bridge, or run multiple and configur
 How to run the server:
 =====================
   * Method 1:
-com.iris.bus.NettoSphereServer is the server class. If you are in Eclipse/STS, I just right click on it and choose "run as Java application". It was an example, and I haven't made it better yet, so to quit you just type "quit" in the Eclipse/STS console.
+com.arcussmarthome.bus.NettoSphereServer is the server class. If you are in Eclipse/STS, I just right click on it and choose "run as Java application". It was an example, and I haven't made it better yet, so to quit you just type "quit" in the Eclipse/STS console.
   * Method 2:
 I've added a gradle task, so type 'gradle run' to execute the server, and Ctrl-C to end it.
 

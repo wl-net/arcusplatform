@@ -19,9 +19,9 @@
  */
  
 import groovy.transform.Field
-import com.iris.protocol.zigbee.msg.ZigbeeMessage;
-import static com.iris.protocol.zigbee.zcl.General.*;
-import static com.iris.protocol.zigbee.zcl.Constants.*;
+import com.arcussmarthome.protocol.zigbee.msg.ZigbeeMessage;
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*;
 
 driver		"ZBGreatStarSmartPlug"
 description	"Driver for the GreatStar SmartPlug"

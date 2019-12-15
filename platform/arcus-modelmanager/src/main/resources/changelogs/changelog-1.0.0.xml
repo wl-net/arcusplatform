@@ -1490,8 +1490,8 @@
    <cl:changeset identifier="updateAccountOwnerAndPrimaryPlace" author="rob">
       <cl:description>Updates the account owner and place is_primary columns</cl:description>
       <cl:tracking>ITWO-2158</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.SetAccountOwner"/>
-      <cl:java class="com.iris.modelmanager.commands.SetPrimaryPlace"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.SetAccountOwner"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.SetPrimaryPlace"/>
    </cl:changeset>
    
    <cl:changeset identifier="addHistoryEntries" author="tweidling">
@@ -1602,13 +1602,13 @@
          <cl:update>ALTER TABLE person ADD hasLogin boolean</cl:update>
          <cl:rollback>ATLER TABLE person DROP hasLogin</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.SetPersonHasLoginFlag"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.SetPersonHasLoginFlag"/>
    </cl:changeset>
    
    <cl:changeset identifier="updateSafetyCallTree" author="rob">
       <cl:description>Updates the call tree structure for the safety subsystem to match security</cl:description>
       <cl:tracking>ITWOK-429</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.UpdateSafetyCallTreeStructure"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.UpdateSafetyCallTreeStructure"/>
    </cl:changeset>
    
    <cl:changeset identifier="addHubRegistrationState" author="rob">
@@ -1618,7 +1618,7 @@
          <cl:update>ALTER TABLE hub ADD registrationState varchar</cl:update>
          <cl:rollback>ALTER TABLE hub DROP registrationState</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.SetHubRegistrationState"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.SetHubRegistrationState"/>
    </cl:changeset>
    
    <cl:changeset identifier="addIpcdTable" author="elarson">
@@ -1760,7 +1760,7 @@
    <cl:changeset identifier="lowercaseLoginIndex" author="tweidling">
       <cl:description>Sets the login index entries to lower case to make logins case insensitive</cl:description>
       <cl:tracking>ITWOK-959</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.LowercaseLoginIndex"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.LowercaseLoginIndex"/>
    </cl:changeset>
    
    <cl:changeset identifier="addTzIdToPlace" author="tweidling">
@@ -1770,7 +1770,7 @@
          <cl:update>ALTER TABLE place ADD tzId varchar</cl:update>
          <cl:rollback>ALTER TABLE place DROP tzId</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.GenerateTimeZoneId"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.GenerateTimeZoneId"/>
    </cl:changeset>
 
    <cl:changeset identifier="updateChallangeQuestionData" author="tweidling">
@@ -1836,7 +1836,7 @@
               <cl:update>DELETE FROM resource_bundle WHERE bundle = 'security_question' AND locale = 'en' AND key = 'question15'</cl:update>
               <cl:rollback>INSERT INTO resource_bundle (bundle, locale, key, value) VALUES ('security_question', 'en', 'question15', 'What is the name of the place your wedding reception was held?')</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.UpdateSecurityQuestions" />
+      <cl:java class="com.arcussmarthome.modelmanager.commands.UpdateSecurityQuestions" />
    </cl:changeset>
 
    <cl:changeset identifier="addSceneRowsToRuleEnvironment" author="tweidling">
@@ -1884,7 +1884,7 @@
          <cl:update>ALTER TABLE account ADD trialEnd timestamp</cl:update>
          <cl:rollback>ALTER TABLE account DROP trialEnd</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.UpdateAccountTrialEnd"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.UpdateAccountTrialEnd"/>
    </cl:changeset>
 
    <cl:changeset identifier="addAttributesToLegacyIpDeviceTable" author="elarson">
@@ -1925,7 +1925,7 @@
       <cl:changeset identifier="populuateSceneEnabled" author="lparks">
       <cl:description>Add sceneenabled to the rule environment table</cl:description>
       <cl:tracking>ITWO-3837</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.SetSceneEnabled" />
+      <cl:java class="com.arcussmarthome.modelmanager.commands.SetSceneEnabled" />
    </cl:changeset>
    
    <cl:changeset identifier="addSubsystemActivityLogTable" author="elarson">
@@ -1966,7 +1966,7 @@
    <cl:changeset identifier="populatePlacePartition" author="tweidling">
       <cl:description>Populates the partition id for places</cl:description>
       <cl:tracking>ITWO-2997</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.GeneratePlacePartitionId"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.GeneratePlacePartitionId"/>
    </cl:changeset>
    
    
@@ -2050,7 +2050,7 @@
    <cl:changeset identifier="populateHubPartition" author="tweidling">
       <cl:description>Adds a partition index for hub</cl:description>
       <cl:tracking>ITWO-3002</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.GenerateHubPartitionId"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.GenerateHubPartitionId"/>
    </cl:changeset>
    
    
@@ -2325,7 +2325,7 @@
    <cl:changeset identifier="populateIpcdPartition" author="rob">
       <cl:description>Adds a partition index for ipcd</cl:description>
       <cl:tracking>ITWO-7816</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.GenerateIpcdPartitionId"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.GenerateIpcdPartitionId"/>
    </cl:changeset>
    
    
@@ -2351,7 +2351,7 @@
          <cl:update>ALTER TABLE ipcd_device ADD registrationState varchar</cl:update>
          <cl:rollback>ALTER TABLE ipcd_device DROP registrationState</cl:rollback>
       </cl:cql>
-      <cl:java class="com.iris.modelmanager.commands.UpdateIpcdStateColumns"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.UpdateIpcdStateColumns"/>
    </cl:changeset>
 
 </cl:changelog>

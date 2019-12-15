@@ -3,10 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 irpheader {
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.ZclDataUtil;
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.ZclDataUtil;
 
-import static com.iris.protocol.zigbee.zcl.Constants.*;
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*;
 }
 
 include "zcl-const.irp";

@@ -1,5 +1,5 @@
 {{#file . "com/iris/protocol/ipcd/adapter/aosmith/AosConstants.java"}}
-package com.iris.protocol.ipcd.adapter.aosmith;
+package com.arcussmarthome.protocol.ipcd.adapter.aosmith;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.iris.protocol.ipcd.message.model.ParameterInfo;
+import com.arcussmarthome.protocol.ipcd.message.model.ParameterInfo;
 
 public class AosConstants {
    {{#parameterDefs}}public final static String AOS_PARAM_{{toConstantName aosName}} = "{{aosName}}";

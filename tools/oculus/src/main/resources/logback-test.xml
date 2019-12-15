@@ -13,9 +13,9 @@
    <logger name="kafka" level="WARN" />
    <logger name="org.I0Itec.zkclient" level="WARN" />
 
-   <logger name="com.iris.client" level="DEBUG" />
-   <logger name="com.iris.oculus.session" level="DEBUG" />
-   <logger name="com.iris.oculus.message" level="DEBUG" />
+   <logger name="com.arcussmarthome.client" level="DEBUG" />
+   <logger name="com.arcussmarthome.oculus.session" level="DEBUG" />
+   <logger name="com.arcussmarthome.oculus.message" level="DEBUG" />
    
    <root level="WARN">
       <appender-ref ref="STDOUT" />

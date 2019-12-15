@@ -6,13 +6,13 @@
    This file documents the default log levels in use by the hub agent, but 
    these levels are configured at startup and dynamically by the class:
 
-      com.iris.agent.logging.IrisAgentLogging
+      com.arcussmarthome.agent.logging.IrisAgentLogging
 
    Please ensure any updates to this file are correctly correlated with
    the code in that class to ensure that logging is correctly setup.
    -->
 
-  <conversionRule conversionWord="sot" converterClass="com.iris.agent.logging.IrisAgentSotConverter" />
+  <conversionRule conversionWord="sot" converterClass="com.arcussmarthome.agent.logging.IrisAgentSotConverter" />
 
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
      <resetJUL>true</resetJUL>
@@ -29,9 +29,9 @@
   </appender>
 
 
-  <appender name="MEMORY" class="com.iris.agent.logging.IrisAgentAppender">
+  <appender name="MEMORY" class="com.arcussmarthome.agent.logging.IrisAgentAppender">
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="com.iris.agent.logging.IrisLayout"/>
+      <layout class="com.arcussmarthome.agent.logging.IrisLayout"/>
     </encoder>
   </appender>
 
@@ -57,9 +57,9 @@
   <logger name="oshi.util.FileUtil" level="OFF" />
   <logger name="org.fourthline.cling.transport.spi.DatagramIO" level="OFF" />
 
-  <logger name="com.iris.agent.zwave" level="DEBUG" />
-  <logger name="com.iris.agent.zigbee" level="DEBUG" />
-  <logger name="com.iris.agent.ble" level="DEBUG" />
+  <logger name="com.arcussmarthome.agent.zwave" level="DEBUG" />
+  <logger name="com.arcussmarthome.agent.zigbee" level="DEBUG" />
+  <logger name="com.arcussmarthome.agent.ble" level="DEBUG" />
 
   <logger name="driver" level="WARN" />
 

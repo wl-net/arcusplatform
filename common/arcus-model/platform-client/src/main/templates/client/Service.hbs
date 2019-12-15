@@ -1,7 +1,7 @@
 {{#file . "com/iris/client/service/{{name}}.java"}}
-package com.iris.client.service;
+package com.arcussmarthome.client.service;
 
-import com.iris.client.model.*;
+import com.arcussmarthome.client.model.*;
 
 public interface {{name}} extends Service {
    public static final String NAMESPACE = "{{namespace}}";
@@ -14,9 +14,9 @@ public interface {{name}} extends Service {
 
    {{#methods}}
    /** {{description}} */
-   {{#if restful }}@com.iris.client.annotation.RESTful{{/if}}
-   @com.iris.client.annotation.Command(value="{{namespace}}:{{name}}", parameters={ {{#parameters}}"{{name}}"{{#unless @last}}, {{/unless}}{{/parameters}} })
-   public com.iris.client.event.ClientFuture<{{name}}Response> {{uncapitalize name}}(
+   {{#if restful }}@com.arcussmarthome.client.annotation.RESTful{{/if}}
+   @com.arcussmarthome.client.annotation.Command(value="{{namespace}}:{{name}}", parameters={ {{#parameters}}"{{name}}"{{#unless @last}}, {{/unless}}{{/parameters}} })
+   public com.arcussmarthome.client.event.ClientFuture<{{name}}Response> {{uncapitalize name}}(
          {{#parameters}}{{{javaTypeOf type}}} {{name}}{{#unless @last}}, {{/unless}}{{/parameters}}
    );
    {{/methods}}
@@ -31,8 +31,8 @@ public interface {{name}} extends Service {
 {{> client/ClientEvent}}
    {{/events}}
 
-   public static final com.iris.capability.definition.ServiceDefinition DEFINITION =
-      com.iris.capability.definition.Definitions
+   public static final com.arcussmarthome.capability.definition.ServiceDefinition DEFINITION =
+      com.arcussmarthome.capability.definition.Definitions
          .serviceBuilder()
          .withName("{{name}}")
          .withNamespace("{{namespace}}")
@@ -40,7 +40,7 @@ public interface {{name}} extends Service {
          .withVersion("{{version}}")
          {{#attributes}}
          .addAttribute(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .attributeBuilder()
                .withName("{{name}}")
                .withDescription("{{{description}}}")
@@ -56,14 +56,14 @@ public interface {{name}} extends Service {
          ){{/attributes}}
          {{#methods}}
          .addMethod(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .methodBuilder()
                .withName("{{name}}")
                .withDescription("{{{description}}}")
                {{#if restful }}.isRestful(true){{/if}}
                {{#parameters}}
                .addParameter(
-                  com.iris.capability.definition.Definitions
+                  com.arcussmarthome.capability.definition.Definitions
                      .parameterBuilder()
                      .withName("{{name}}")
                      .withDescription("{{{description}}}")
@@ -74,7 +74,7 @@ public interface {{name}} extends Service {
                ){{/parameters}}
                {{#returnValues}}
                .addReturnValue(
-                  com.iris.capability.definition.Definitions
+                  com.arcussmarthome.capability.definition.Definitions
                      .parameterBuilder()
                      .withName("{{name}}")
                      .withDescription("{{{description}}}")
@@ -91,11 +91,11 @@ public interface {{name}} extends Service {
          ){{/methods}}
          {{#events}}
          .addEvent(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .eventBuilder()
                {{#parameters}}
                .addParameter(
-                  com.iris.capability.definition.Definitions
+                  com.arcussmarthome.capability.definition.Definitions
                      .parameterBuilder()
                      .withName("{{name}}")
                      .withDescription("{{{description}}}")

@@ -1,5 +1,5 @@
 {{#file . "com/iris/protocol/ipcd/message/serialize/IpcdSerDe.java"}}
-package com.iris.protocol.ipcd.message.serialize;
+package com.arcussmarthome.protocol.ipcd.message.serialize;
 
 import java.io.Reader;
 import java.util.Date;
@@ -7,11 +7,11 @@ import java.util.Date;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.iris.protocol.ipcd.message.DateTypeAdapter;
-import com.iris.protocol.ipcd.message.IpcdMessage;
-import com.iris.protocol.ipcd.message.IpcdMessageParser;
-import com.iris.protocol.ipcd.message.model.MessageType;
-{{#commands}}import com.iris.protocol.ipcd.message.model.{{capitalize name}}Command;
+import com.arcussmarthome.protocol.ipcd.message.DateTypeAdapter;
+import com.arcussmarthome.protocol.ipcd.message.IpcdMessage;
+import com.arcussmarthome.protocol.ipcd.message.IpcdMessageParser;
+import com.arcussmarthome.protocol.ipcd.message.model.MessageType;
+{{#commands}}import com.arcussmarthome.protocol.ipcd.message.model.{{capitalize name}}Command;
 {{/commands}}
 
 public class IpcdSerDe {

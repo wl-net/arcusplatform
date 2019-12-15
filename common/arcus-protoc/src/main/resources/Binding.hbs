@@ -9,16 +9,16 @@ import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.iris.driver.groovy.zigbee.ClusterBinding;
-import com.iris.driver.groovy.zigbee.ClusterDescriptor;
-import com.iris.driver.groovy.zigbee.MessageDecoder;
-import com.iris.driver.groovy.zigbee.MessageDescriptor;
-import com.iris.driver.groovy.zigbee.ZigbeeContext;
-import com.iris.protocol.Protocol;
-import com.iris.protocol.zigbee.msg.ZigbeeMessage;
-import com.iris.protocol.zigbee.{{subpackage}}.General.*;
-import com.iris.protocol.zigbee.{{subpackage}}.{{classname}};
-import com.iris.protocol.zigbee.{{subpackage}}.{{classname}}.*;
+import com.arcussmarthome.driver.groovy.zigbee.ClusterBinding;
+import com.arcussmarthome.driver.groovy.zigbee.ClusterDescriptor;
+import com.arcussmarthome.driver.groovy.zigbee.MessageDecoder;
+import com.arcussmarthome.driver.groovy.zigbee.MessageDescriptor;
+import com.arcussmarthome.driver.groovy.zigbee.ZigbeeContext;
+import com.arcussmarthome.protocol.Protocol;
+import com.arcussmarthome.protocol.zigbee.msg.ZigbeeMessage;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.General.*;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}};
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}}.*;
 
 public class {{classname}}Binding extends {{#if hasClusterId}}GeneralBinding{{else}}ClusterBinding{{/if}} {
    static {

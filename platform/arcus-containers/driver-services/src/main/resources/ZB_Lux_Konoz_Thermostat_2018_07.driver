@@ -35,10 +35,10 @@
  */
  
 import groovy.transform.Field
-import com.iris.protocol.zigbee.ZclData
-import static com.iris.protocol.zigbee.zcl.Constants.*
-import static com.iris.protocol.zigbee.zcl.General.*
-import static com.iris.protocol.zigbee.zcl.General.ZclWriteAttributeRecord
+import com.arcussmarthome.protocol.zigbee.ZclData
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*
+import static com.arcussmarthome.protocol.zigbee.zcl.General.ZclWriteAttributeRecord
 
 uses 'zigbee.GenericZigbeeIdentify'
 uses 'zigbee.GenericZigbeeDevicePower'

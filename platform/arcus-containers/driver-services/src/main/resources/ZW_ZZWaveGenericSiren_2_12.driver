@@ -21,8 +21,8 @@
  * 
  */
 import groovy.transform.Field
-import com.iris.protocol.zwave.ZWaveGenericDevices;
-import com.iris.protocol.zwave.ZWaveSwitchBinarySpecificDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveSwitchBinarySpecificDevices;
 
 uses 'zwave.GenericZWaveVersion'
 uses 'zwave.GenericZWaveBattery'

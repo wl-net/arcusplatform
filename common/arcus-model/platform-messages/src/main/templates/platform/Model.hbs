@@ -1,10 +1,10 @@
 {{#file . "com/iris/messages/model/{{packageOf .}}/{{name}}Model.java"}}
-package com.iris.messages.model.{{packageOf .}};
+package com.arcussmarthome.messages.model.{{packageOf .}};
 
-import com.iris.messages.model.DelegateModel;
-import com.iris.messages.model.Model;
+import com.arcussmarthome.messages.model.DelegateModel;
+import com.arcussmarthome.messages.model.Model;
 
-import static com.iris.messages.capability.{{name}}Capability.*;
+import static com.arcussmarthome.messages.capability.{{name}}Capability.*;
 
 public class {{name}}Model extends {{#if enhances}}{{enhances}}Model{{else}}DelegateModel{{/if}} {
    public static final String NAME = "{{name}}";

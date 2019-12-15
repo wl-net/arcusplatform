@@ -247,7 +247,7 @@ fi
 ################################################################################
 
 ulimit -n 4096 -s 4096
-${JAVA} -XX:OnOutOfMemoryError="kill -9 %p" -XX:ErrorFile=/tmp/hs_err.log ${JAVA_OPTS} ${JAVA_DBG_OPTS} -cp "${CP}" com.iris.agent.IrisAgent "${INSTALL_PATH}" "${INSTALL_PATH}/conf"
+${JAVA} -XX:OnOutOfMemoryError="kill -9 %p" -XX:ErrorFile=/tmp/hs_err.log ${JAVA_OPTS} ${JAVA_DBG_OPTS} -cp "${CP}" com.arcussmarthome.agent.IrisAgent "${INSTALL_PATH}" "${INSTALL_PATH}/conf"
 EC="$?"
 
 case "${EC}" in

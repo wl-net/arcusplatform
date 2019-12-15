@@ -3,16 +3,16 @@
  *
  * {{description}}
  */
- public static class {{name}}Exception extends com.iris.messages.errors.ErrorEventException {
+ public static class {{name}}Exception extends com.arcussmarthome.messages.errors.ErrorEventException {
 
    public static final String CODE_{{codeId}} = "{{code}}";
    
    public {{name}}Exception(String message) {
-      super(com.iris.messages.ErrorEvent.fromCode(CODE_{{codeId}}, message));
+      super(com.arcussmarthome.messages.ErrorEvent.fromCode(CODE_{{codeId}}, message));
    }
 
    public {{name}}Exception(String message, Throwable cause) {
-      super(com.iris.messages.ErrorEvent.fromCode(CODE_{{codeId}}, message), cause);
+      super(com.arcussmarthome.messages.ErrorEvent.fromCode(CODE_{{codeId}}, message), cause);
    }
 }
 

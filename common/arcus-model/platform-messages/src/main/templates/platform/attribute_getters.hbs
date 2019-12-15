@@ -6,13 +6,13 @@
    {{/enumValues}}{{/.}}
    {{#.}}
    /** {{description}} */
-   public static {{{javaTypeOf type}}} get{{capitalize name}}(com.iris.messages.MessageBody message) {
+   public static {{{javaTypeOf type}}} get{{capitalize name}}(com.arcussmarthome.messages.MessageBody message) {
       if(message == null) { 
          return null;
       }
       return ({{{javaTypeOf type}}}) TYPE_{{toUpperCase name}}.coerce(message.getAttributes().get(ATTR_{{toUpperCase name}}));
    }
-   public static {{{javaTypeOf type}}} get{{capitalize name}}(com.iris.messages.MessageBody message, {{{javaTypeOf type}}} dflt) {
+   public static {{{javaTypeOf type}}} get{{capitalize name}}(com.arcussmarthome.messages.MessageBody message, {{{javaTypeOf type}}} dflt) {
       if(message == null) { 
          return null;
       }

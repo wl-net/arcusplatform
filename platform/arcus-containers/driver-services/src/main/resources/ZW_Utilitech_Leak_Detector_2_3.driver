@@ -43,7 +43,7 @@
  */
 
 import static java.util.concurrent.TimeUnit.*        // needed when running Unit Tests
-import static com.iris.protocol.zwave.SensorAlarm.*
+import static com.arcussmarthome.protocol.zwave.SensorAlarm.*
 
 uses 'zwave.GenericZWaveBattery'
 

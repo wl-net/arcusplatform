@@ -42,8 +42,8 @@
  *  - Pressing the button on the front of the device one time while the hub is in "unpairing" mode.
  * 
  */
-import static com.iris.protocol.zwave.Alarm.AlarmReportV2.*;
-import static com.iris.protocol.zwave.SensorAlarm.SensorAlarmReportV1.*;
+import static com.arcussmarthome.protocol.zwave.Alarm.AlarmReportV2.*;
+import static com.arcussmarthome.protocol.zwave.SensorAlarm.SensorAlarmReportV1.*;
 import static java.util.concurrent.TimeUnit.*;  //temporary to support test harness
 
 driver          "ZWaveUtilitechGlassBreakSensorDriver"

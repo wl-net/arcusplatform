@@ -1,13 +1,13 @@
 {{#file . "com/iris/client/Types.java" }}
-package com.iris.client;
+package com.arcussmarthome.client;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.iris.client.capability.*;
-import com.iris.client.model.*;
+import com.arcussmarthome.client.capability.*;
+import com.arcussmarthome.client.model.*;
 
 public class Types {
 
@@ -27,11 +27,11 @@ public class Types {
      return ModelRegistry.INSTANCE.getModels();
   }
 
-  public static Class<? extends com.iris.client.service.Service> getService(String type) {
+  public static Class<? extends com.arcussmarthome.client.service.Service> getService(String type) {
      return ServiceRegistry.INSTANCE.get(type);
   }
   
-  public static Collection<Class<? extends com.iris.client.service.Service>> getServices() {
+  public static Collection<Class<? extends com.arcussmarthome.client.service.Service>> getServices() {
      return ServiceRegistry.INSTANCE.getModels();
   }
 
@@ -92,24 +92,24 @@ public class Types {
   private static class ServiceRegistry {
      private static final ServiceRegistry INSTANCE = new ServiceRegistry();
      
-     private final Map<String, Class<? extends com.iris.client.service.Service>> services;
+     private final Map<String, Class<? extends com.arcussmarthome.client.service.Service>> services;
      
      private ServiceRegistry() {
-        Map<String, Class<? extends com.iris.client.service.Service>> services = new LinkedHashMap<String, Class<? extends com.iris.client.service.Service>>();
+        Map<String, Class<? extends com.arcussmarthome.client.service.Service>> services = new LinkedHashMap<String, Class<? extends com.arcussmarthome.client.service.Service>>();
         {{#services}}
-        services.put("{{namespace}}", com.iris.client.service.{{capitalize name}}.class);
+        services.put("{{namespace}}", com.arcussmarthome.client.service.{{capitalize name}}.class);
         {{/services}}
         this.services = Collections.unmodifiableMap(services);
      }
      
-     public Collection<Class<? extends com.iris.client.service.Service>> getModels() {
+     public Collection<Class<? extends com.arcussmarthome.client.service.Service>> getModels() {
         return this.services.values();
      }
      
-     public Class<? extends com.iris.client.service.Service> get(String type) {
-        Class<? extends com.iris.client.service.Service> serviceType = this.services.get(type);
+     public Class<? extends com.arcussmarthome.client.service.Service> get(String type) {
+        Class<? extends com.arcussmarthome.client.service.Service> serviceType = this.services.get(type);
         if(serviceType == null) {
-           return com.iris.client.service.Service.class;
+           return com.arcussmarthome.client.service.Service.class;
         }
         return serviceType;
      }

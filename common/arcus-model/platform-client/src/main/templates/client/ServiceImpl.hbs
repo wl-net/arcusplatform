@@ -1,13 +1,13 @@
 {{#file . "com/iris/client/service/{{name}}Impl.java"}}
-package com.iris.client.service;
+package com.arcussmarthome.client.service;
 
 import com.google.common.base.Function;
-import com.iris.capability.util.Addresses;
-import com.iris.client.ClientEvent;
-import com.iris.client.IrisClient;
-import com.iris.client.event.ClientFuture;
-import com.iris.client.event.Futures;
-import com.iris.client.model.*;
+import com.arcussmarthome.capability.util.Addresses;
+import com.arcussmarthome.client.ClientEvent;
+import com.arcussmarthome.client.IrisClient;
+import com.arcussmarthome.client.event.ClientFuture;
+import com.arcussmarthome.client.event.Futures;
+import com.arcussmarthome.client.model.*;
 
 public class {{name}}Impl implements {{name}} {
    private IrisClient client;

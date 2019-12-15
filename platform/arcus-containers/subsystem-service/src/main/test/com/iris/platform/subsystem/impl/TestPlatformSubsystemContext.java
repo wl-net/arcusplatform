@@ -16,7 +16,7 @@
 /**
  * 
  */
-package com.iris.platform.subsystem.impl;
+package com.arcussmarthome.platform.subsystem.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,20 +34,20 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
-import com.iris.common.scheduler.Scheduler;
-import com.iris.core.platform.PlatformMessageBus;
-import com.iris.messages.PlatformMessage;
-import com.iris.messages.capability.Capability;
-import com.iris.messages.capability.SubsystemCapability;
-import com.iris.messages.event.Listener;
-import com.iris.messages.event.ScheduledEvent;
-import com.iris.messages.model.SimpleModelStore;
-import com.iris.messages.model.subs.SubsystemModel;
-import com.iris.messages.model.test.ModelFixtures;
-import com.iris.platform.model.ModelEntity;
-import com.iris.platform.subsystem.SubsystemDao;
-import com.iris.test.IrisMockTestCase;
-import com.iris.test.Mocks;
+import com.arcussmarthome.common.scheduler.Scheduler;
+import com.arcussmarthome.core.platform.PlatformMessageBus;
+import com.arcussmarthome.messages.PlatformMessage;
+import com.arcussmarthome.messages.capability.Capability;
+import com.arcussmarthome.messages.capability.SubsystemCapability;
+import com.arcussmarthome.messages.event.Listener;
+import com.arcussmarthome.messages.event.ScheduledEvent;
+import com.arcussmarthome.messages.model.SimpleModelStore;
+import com.arcussmarthome.messages.model.subs.SubsystemModel;
+import com.arcussmarthome.messages.model.test.ModelFixtures;
+import com.arcussmarthome.platform.model.ModelEntity;
+import com.arcussmarthome.platform.subsystem.SubsystemDao;
+import com.arcussmarthome.test.IrisMockTestCase;
+import com.arcussmarthome.test.Mocks;
 
 /**
  * 

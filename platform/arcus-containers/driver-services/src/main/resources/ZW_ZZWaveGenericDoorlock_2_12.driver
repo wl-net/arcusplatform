@@ -18,8 +18,8 @@
  *
  */
 import groovy.transform.Field
-import com.iris.protocol.zwave.ZWaveGenericDevices;
-import com.iris.protocol.zwave.ZWaveEntryControlSpecificDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveEntryControlSpecificDevices;
 
 uses 'zwave.GenericZWaveDoorLock_2_12'
 

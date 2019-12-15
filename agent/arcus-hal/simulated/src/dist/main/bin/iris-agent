@@ -16,4 +16,4 @@ done
 JAVA="/usr/bin/java"
 JAVA_OPTS="-Xmx16m -Xms16m"
 
-exec ${JAVA} ${JAVA_OPTS} ${JAVA_DBG_OPTS} -cp "${CP}" com.iris.agent.IrisAgent ${INSTALL_PATH}/conf
+exec ${JAVA} ${JAVA_OPTS} ${JAVA_DBG_OPTS} -cp "${CP}" com.arcussmarthome.agent.IrisAgent ${INSTALL_PATH}/conf

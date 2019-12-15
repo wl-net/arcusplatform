@@ -11,7 +11,7 @@
          name="day"
          type="enum"
          values="MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY"
-         description="The days that this window begins. Maps to com.iris.common.time.TimeOfDay" />
+         description="The days that this window begins. Maps to com.arcussmarthome.common.time.TimeOfDay" />
 
       <t:attribute
          name="startTime"

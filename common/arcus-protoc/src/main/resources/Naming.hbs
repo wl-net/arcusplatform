@@ -5,20 +5,20 @@
 
 package {{package}};
 
-import com.iris.protoc.runtime.ProtocStruct;
-import com.iris.protoc.runtime.ProtocNamingFields;
-import com.iris.protoc.runtime.ProtocNamingMessages;
-import com.iris.protoc.runtime.ProtocNamingGroups;
+import com.arcussmarthome.protoc.runtime.ProtocStruct;
+import com.arcussmarthome.protoc.runtime.ProtocNamingFields;
+import com.arcussmarthome.protoc.runtime.ProtocNamingMessages;
+import com.arcussmarthome.protoc.runtime.ProtocNamingGroups;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.iris.protocol.zigbee.ZclData;
-import com.iris.protocol.zigbee.{{subpackage}}.*;
-import com.iris.protocol.zigbee.{{subpackage}}.General.*;
-import com.iris.protocol.zigbee.{{subpackage}}.{{classname}};
-import com.iris.protocol.zigbee.{{subpackage}}.{{classname}}.*;
+import com.arcussmarthome.protocol.zigbee.ZclData;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.*;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.General.*;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}};
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}}.*;
 
 public enum {{classname}}Naming implements ProtocNamingMessages {
    INSTANCE;
@@ -61,7 +61,7 @@ public enum {{classname}}Naming implements ProtocNamingMessages {
    
    @Override
    public int getClusterId() {
-      return {{#if hasClusterId}}com.iris.protocol.zigbee.{{subpackage}}.{{classname}}.CLUSTER_ID & 0xFFFF{{else}}0{{/if}};
+      return {{#if hasClusterId}}com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{classname}}.CLUSTER_ID & 0xFFFF{{else}}0{{/if}};
    }
 
    {{#structs}}

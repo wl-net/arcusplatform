@@ -8,11 +8,11 @@ package {{package}};
 import java.util.HashMap;
 import java.util.Map;
 
-import com.iris.driver.groovy.zigbee.ClusterBinding;
-import com.iris.driver.groovy.zigbee.ClusterDescriptor;
-import com.iris.driver.groovy.zigbee.MessageDecoder;
-import com.iris.driver.groovy.zigbee.cluster.{{subpackage}}.*;
-import com.iris.protocol.zigbee.{{subpackage}}.*;
+import com.arcussmarthome.driver.groovy.zigbee.ClusterBinding;
+import com.arcussmarthome.driver.groovy.zigbee.ClusterDescriptor;
+import com.arcussmarthome.driver.groovy.zigbee.MessageDecoder;
+import com.arcussmarthome.driver.groovy.zigbee.cluster.{{subpackage}}.*;
+import com.arcussmarthome.protocol.zigbee.{{subpackage}}.*;
 
 public class Zigbee{{capitalize subpackage}}Clusters {
    public final static Map<String, ClusterDescriptor> descriptorsByName = new HashMap<>();

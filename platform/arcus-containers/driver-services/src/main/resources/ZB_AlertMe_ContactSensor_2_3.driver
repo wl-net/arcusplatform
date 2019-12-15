@@ -52,8 +52,8 @@
  */
 
 import static java.util.concurrent.TimeUnit.*    // needed when running Unit Tests
-import static com.iris.protocol.zigbee.alertme.AMGeneral.ModeChange.*
-import static com.iris.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
+import static com.arcussmarthome.protocol.zigbee.alertme.AMGeneral.ModeChange.*
+import static com.arcussmarthome.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
 
 
 uses "generic.GenericContact"

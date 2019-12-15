@@ -235,7 +235,7 @@
    {{/hasSizedArraySetter}}
 
    {{#isPayload}}
-         public Builder set{{methodName}}(ByteOrder order, com.iris.protoc.runtime.ProtocStruct payload) throws IOException {
+         public Builder set{{methodName}}(ByteOrder order, com.arcussmarthome.protoc.runtime.ProtocStruct payload) throws IOException {
             this.{{name}} = payload.toBytes(order);
             return this;
          }
@@ -263,33 +263,33 @@
       // SerDe accessor
       /////////////////////////////////////////////////////////////////////////////
 
-      public static com.iris.protoc.runtime.ProtocSerDe<{{classname}}> serde() {
+      public static com.arcussmarthome.protoc.runtime.ProtocSerDe<{{classname}}> serde() {
          return SerDe.INSTANCE;
       }
 
       @Override
-      public com.iris.protoc.runtime.ProtocSerDe<{{classname}}> getSerDe() {
+      public com.arcussmarthome.protoc.runtime.ProtocSerDe<{{classname}}> getSerDe() {
          return SerDe.INSTANCE;
       }
       
-      private static enum SerDe implements com.iris.protoc.runtime.ProtocSerDe<{{classname}}>, 
-                                           com.iris.protoc.runtime.ProtocSerDe.Io<{{classname}}>,
-                                           com.iris.protoc.runtime.ProtocSerDe.Nio<{{classname}}>,
-                                           com.iris.protoc.runtime.ProtocSerDe.Netty<{{classname}}> {
+      private static enum SerDe implements com.arcussmarthome.protoc.runtime.ProtocSerDe<{{classname}}>,
+                                           com.arcussmarthome.protoc.runtime.ProtocSerDe.Io<{{classname}}>,
+                                           com.arcussmarthome.protoc.runtime.ProtocSerDe.Nio<{{classname}}>,
+                                           com.arcussmarthome.protoc.runtime.ProtocSerDe.Netty<{{classname}}> {
          INSTANCE;
 
          @Override
-         public com.iris.protoc.runtime.ProtocSerDe.Io<{{classname}}> ioSerDe() {
+         public com.arcussmarthome.protoc.runtime.ProtocSerDe.Io<{{classname}}> ioSerDe() {
             return this;
          }
 
          @Override
-         public com.iris.protoc.runtime.ProtocSerDe.Nio<{{classname}}> nioSerDe() {
+         public com.arcussmarthome.protoc.runtime.ProtocSerDe.Nio<{{classname}}> nioSerDe() {
             return this;
          }
 
          @Override
-         public com.iris.protoc.runtime.ProtocSerDe.Netty<{{classname}}> nettySerDe() {
+         public com.arcussmarthome.protoc.runtime.ProtocSerDe.Netty<{{classname}}> nettySerDe() {
             return this;
          }
 

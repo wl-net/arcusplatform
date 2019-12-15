@@ -18,10 +18,10 @@
  *
  */
 
-import com.iris.model.Version
+import com.arcussmarthome.model.Version
 
-import static com.iris.protocol.zwave.BarrierOperator.BarrierOperatorReportV1.*;
-import static com.iris.protocol.zwave.Alarm.AlarmReportV2.*;
+import static com.arcussmarthome.protocol.zwave.BarrierOperator.BarrierOperatorReportV1.*;
+import static com.arcussmarthome.protocol.zwave.Alarm.AlarmReportV2.*;
 import groovy.transform.Field
 
 driver          'ZWGoControlGarageDoorControllerDriver'

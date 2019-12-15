@@ -5,9 +5,9 @@
 
 package {{package}};
 
-import com.iris.protoc.runtime.ProtocStruct;
-import com.iris.protoc.runtime.ProtocNamingGroups;
-import com.iris.protoc.runtime.ProtocNamingMessages;
+import com.arcussmarthome.protoc.runtime.ProtocStruct;
+import com.arcussmarthome.protoc.runtime.ProtocNamingGroups;
+import com.arcussmarthome.protoc.runtime.ProtocNamingMessages;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,16 +34,16 @@ public enum Zigbee{{capitalize subpackage}}Naming implements ProtocNamingGroups 
 
    @Override
    public ProtocStruct wrap(ProtocStruct msg, int profile, int endpoint, int cluster, int command, int manuf, boolean isClusterSpecific, boolean isFromServer, boolean isDisableDefaultResponse) {
-      return com.iris.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.wrap{{capitalize subpackage}}Message(msg, profile, endpoint, cluster, command, manuf, isClusterSpecific, isFromServer, isDisableDefaultResponse);
+      return com.arcussmarthome.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.wrap{{capitalize subpackage}}Message(msg, profile, endpoint, cluster, command, manuf, isClusterSpecific, isFromServer, isDisableDefaultResponse);
    }
 
    @Override
    public int getDefaultEndpoint() {
-      return com.iris.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.getDefault{{capitalize subpackage}}Endpoint();
+      return com.arcussmarthome.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.getDefault{{capitalize subpackage}}Endpoint();
    }
 
    @Override
    public int getDefaultProfile() {
-      return com.iris.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.getDefault{{capitalize subpackage}}Profile();
+      return com.arcussmarthome.driver.groovy.zigbee.ZigbeeNaming.INSTANCE.getDefault{{capitalize subpackage}}Profile();
    }
 }

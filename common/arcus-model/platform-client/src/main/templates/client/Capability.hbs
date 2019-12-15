@@ -1,5 +1,5 @@
 {{#file . "com/iris/client/capability/{{name}}.java"}}
-package com.iris.client.capability;
+package com.arcussmarthome.client.capability;
 
 public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability{{/if}} {
    public static final String NAMESPACE = "{{namespace}}";
@@ -13,19 +13,19 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
    {{/methods}}
 
    {{#attributes}}
-   @com.iris.client.annotation.GetAttribute("{{namespace}}:{{name}}")
+   @com.arcussmarthome.client.annotation.GetAttribute("{{namespace}}:{{name}}")
    public {{{javaTypeOf type}}} get{{capitalize name}}();
    {{#if writable}}
-   @com.iris.client.annotation.SetAttribute("{{namespace}}:{{name}}")
+   @com.arcussmarthome.client.annotation.SetAttribute("{{namespace}}:{{name}}")
    public void set{{capitalize name}}({{{javaTypeOf type}}} {{name}});
    {{/if}}
    {{/attributes}} 
    
    {{#methods}}
    /** {{description}} */
-   {{#if restful }}@com.iris.client.annotation.RESTful{{/if}}
-   @com.iris.client.annotation.Command(value="{{namespace}}:{{name}}", parameters={ {{#parameters}}"{{name}}"{{#unless @last}}, {{/unless}}{{/parameters}} })
-   public com.iris.client.event.ClientFuture<{{name}}Response> {{uncapitalize name}}(
+   {{#if restful }}@com.arcussmarthome.client.annotation.RESTful{{/if}}
+   @com.arcussmarthome.client.annotation.Command(value="{{namespace}}:{{name}}", parameters={ {{#parameters}}"{{name}}"{{#unless @last}}, {{/unless}}{{/parameters}} })
+   public com.arcussmarthome.client.event.ClientFuture<{{name}}Response> {{uncapitalize name}}(
          {{#parameters}}{{{javaTypeOf type}}} {{name}}{{#unless @last}}, {{/unless}}{{/parameters}}
    );
    {{/methods}}   
@@ -41,8 +41,8 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
 {{> client/ClientEvent}}
    {{/events}}
 
-   public static final com.iris.capability.definition.CapabilityDefinition DEFINITION =
-      com.iris.capability.definition.Definitions
+   public static final com.arcussmarthome.capability.definition.CapabilityDefinition DEFINITION =
+      com.arcussmarthome.capability.definition.Definitions
          .capabilityBuilder()
          .withName("{{name}}")
          .withNamespace("{{namespace}}")
@@ -51,7 +51,7 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
          {{#if enhances}}.enhances("{{enhances}}"){{/if}}
          {{#attributes}}
          .addAttribute(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .attributeBuilder()
                .withName("{{namespace}}:{{name}}")
                .withDescription("{{description}}")
@@ -67,7 +67,7 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
          ){{/attributes}}
          {{#methods}}
          .addMethod(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .methodBuilder()
                .withName("{{namespace}}:{{name}}")
                .withDescription("{{description}}")
@@ -88,7 +88,7 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
          ){{/methods}}
          {{#events}}
          .addEvent(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .eventBuilder()
                .withName("{{namespace}}:{{name}}")
                .withDescription("{{description}}")
@@ -100,7 +100,7 @@ public interface {{name}} extends {{#if enhances}}{{enhances}}{{else}}Capability
          ){{/events}}
          {{#methods}}
          .addEvent(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .eventBuilder()
                .withName("{{namespace}}:{{name}}Response")
                {{#returnValues}}

@@ -19,13 +19,13 @@
  */
 
 import groovy.transform.Field                    // not needed to compile, but used in eclipse
-import com.iris.protocol.zigbee.msg.ZigbeeMessage;
-import static com.iris.protocol.zigbee.zcl.General.*
-import static com.iris.protocol.zigbee.zcl.Constants.*
-import static com.iris.protocol.zigbee.zcl.IasZone.*
-import static com.iris.protocol.zigbee.zcl.PollControl.*
-import static com.iris.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
-import static com.iris.protocol.zigbee.zcl.PollControl.CheckInResponse.*
+import com.arcussmarthome.protocol.zigbee.msg.ZigbeeMessage;
+import static com.arcussmarthome.protocol.zigbee.zcl.General.*
+import static com.arcussmarthome.protocol.zigbee.zcl.Constants.*
+import static com.arcussmarthome.protocol.zigbee.zcl.IasZone.*
+import static com.arcussmarthome.protocol.zigbee.zcl.PollControl.*
+import static com.arcussmarthome.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
+import static com.arcussmarthome.protocol.zigbee.zcl.PollControl.CheckInResponse.*
 
 uses "generic.GenericContact"
 uses "zigbee.GenericZigbeeDeviceOta"

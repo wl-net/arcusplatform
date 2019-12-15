@@ -41,8 +41,8 @@
  */
  
 import groovy.transform.Field
-import com.iris.protocol.zigbee.zcl.OnOff
-import com.iris.protocol.zigbee.zcl.Thermostat
+import com.arcussmarthome.protocol.zigbee.zcl.OnOff
+import com.arcussmarthome.protocol.zigbee.zcl.Thermostat
 
 
 driver			"ZBOrbitWT15"

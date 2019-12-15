@@ -19,7 +19,7 @@
 
 import groovy.transform.Field                               // needed when running Unit Tests
 import static java.util.concurrent.TimeUnit.*               // needed when running Unit Tests
-import static com.iris.protocol.zwave.Alarm.AlarmReportV2   //note: driver is for AlarmV1 protocol
+import static com.arcussmarthome.protocol.zwave.Alarm.AlarmReportV2   //note: driver is for AlarmV1 protocol
 uses 'zwave.GenericZWaveBattery'                            // use generic ZWave Battery handling
 
 

@@ -26,8 +26,8 @@
  *      0x31    (49)   COMMAND_CLASS_SENSOR_MULTILEVEL
  */
 import groovy.transform.Field
-import com.iris.protocol.zwave.ZWaveGenericDevices;
-import com.iris.protocol.zwave.ZWaveThermostatSpecificDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveGenericDevices;
+import com.arcussmarthome.protocol.zwave.ZWaveThermostatSpecificDevices;
 
 uses 'zwave.GenericZWaveVersion'
 uses 'zwave.GenericZWaveThermostat'

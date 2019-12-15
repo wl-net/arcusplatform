@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.iris.messages.capability.DeviceOtaCapability;
+import com.arcussmarthome.messages.capability.DeviceOtaCapability;
 
 /**
  * Mock driver for a OTA Enabled device

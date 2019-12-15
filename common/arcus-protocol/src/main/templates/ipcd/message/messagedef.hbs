@@ -1,12 +1,12 @@
 {{#file . "com/iris/protocol/ipcd/message/model/Ipcd{{capitalize name}}.java"}}
-package com.iris.protocol.ipcd.message.model;
+package com.arcussmarthome.protocol.ipcd.message.model;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.iris.protocol.ipcd.message.IpcdMessage;
-import com.iris.protocol.ipcd.message.Mapifier;
+import com.arcussmarthome.protocol.ipcd.message.IpcdMessage;
+import com.arcussmarthome.protocol.ipcd.message.Mapifier;
 
 public {{#if virtual}}abstract{{/if}} class Ipcd{{capitalize name}} implements IpcdMessage {
 	{{#properties}}protected {{{type}}} {{name}};

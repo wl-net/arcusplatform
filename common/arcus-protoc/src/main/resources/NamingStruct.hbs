@@ -29,12 +29,12 @@
 
       @Override
       public int getMessageId() {
-         return {{#if hasMessageId}}com.iris.protocol.zigbee.{{../subpackage}}.{{../../classname}}.{{../classname}}.ID{{else}}0{{/if}};
+         return {{#if hasMessageId}}com.arcussmarthome.protocol.zigbee.{{../subpackage}}.{{../../classname}}.{{../classname}}.ID{{else}}0{{/if}};
       }
 
       @Override
       public ProtocStruct create(Map<String,Object> context) {
-         return com.iris.protocol.zigbee.{{subpackage}}.{{../../classname}}.{{classname}}.builder()
+         return com.arcussmarthome.protocol.zigbee.{{subpackage}}.{{../../classname}}.{{classname}}.builder()
           {{#fields}}{{#stored}}
             .set{{methodName}}(({{type}})context.get("{{name}}"))
           {{/stored}}{{/fields}}

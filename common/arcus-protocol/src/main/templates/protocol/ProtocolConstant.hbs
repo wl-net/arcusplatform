@@ -1,5 +1,5 @@
 {{#file . "com/iris/protocol/constants/{{name}}Constants.java"}}
-package com.iris.protocol.constants;
+package com.arcussmarthome.protocol.constants;
 
 public interface {{name}}Constants {
    public static final String NAME = "{{name}}";
@@ -13,8 +13,8 @@ public interface {{name}}Constants {
    {{/enumValues}}{{/if}}
    {{/attributes}}
    
-   public static final com.iris.capability.definition.ProtocolDefinition DEFINITION =
-      com.iris.capability.definition.Definitions
+   public static final com.arcussmarthome.capability.definition.ProtocolDefinition DEFINITION =
+      com.arcussmarthome.capability.definition.Definitions
          .protocolBuilder()
          .withName("{{name}}")
          .withNamespace("{{namespace}}")
@@ -22,7 +22,7 @@ public interface {{name}}Constants {
          .withVersion("{{version}}")
          {{#attributes}}
          .addAttribute(
-            com.iris.capability.definition.Definitions
+            com.arcussmarthome.capability.definition.Definitions
                .attributeBuilder()
                .withName("{{namespace}}:{{name}}")
                .withDescription("{{description}}")

@@ -5,7 +5,7 @@
    <cl:changeset identifier="suspendAlarmSubsystem" author="tweidlin">
       <cl:description>Removes alarm subsystems as part of rollback</cl:description>
       <cl:tracking>ITWO-0</cl:tracking>
-      <cl:java class="com.iris.modelmanager.commands.RemoveAlarmSubsystem"/>
+      <cl:java class="com.arcussmarthome.modelmanager.commands.RemoveAlarmSubsystem"/>
    </cl:changeset>
    
 	<cl:changeset author="rob" identifier="alarmIncidentTable">

@@ -58,7 +58,7 @@
  *
  */
 import groovy.transform.Field
-import com.iris.protocol.zigbee.ZclData
+import com.arcussmarthome.protocol.zigbee.ZclData
 
 
 driver			"ZBCentraLiteSmokeListener"
