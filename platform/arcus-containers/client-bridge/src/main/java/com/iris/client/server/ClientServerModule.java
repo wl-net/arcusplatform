@@ -176,7 +176,15 @@ public class ClientServerModule extends AbstractIrisModule {
 	@Inject(optional=true)
 	@Named("client.background.threadKeepAliveMs")
 	private long threadKeepAliveMs = 10000;
-	
+
+   @Inject(optional=true)
+   @Named("client.allow.createaccount")
+   private boolean allowCreateAccount = true;
+
+   @Inject(optional=true)
+   @Named("client.allow.sendpasswordreset")
+   private boolean allowSendPasswordReset = true;
+
    private ExecutorService executor;
    
    @Inject
@@ -262,11 +270,15 @@ public class ClientServerModule extends AbstractIrisModule {
       rhBindings.addBinding().to(ChangePinRESTHandler.class);
       rhBindings.addBinding().to(ChangePinV2RESTHandler.class);
       rhBindings.addBinding().to(VerifyPinRESTHandler.class);
-      rhBindings.addBinding().to(CreateAccountRESTHandler.class);
+      if (allowCreateAccount) {
+         rhBindings.addBinding().to(CreateAccountRESTHandler.class);
+      }
       rhBindings.addBinding().to(ChangePasswordRESTHandler.class);
       rhBindings.addBinding().to(LoadLocalizedStringsRESTHandler.class);
       rhBindings.addBinding().to(ResetPasswordRESTHandler.class);
-      rhBindings.addBinding().to(SendPasswordResetRESTHandler.class);
+      if (allowSendPasswordReset) {
+         rhBindings.addBinding().to(SendPasswordResetRESTHandler.class);
+      }
       rhBindings.addBinding().to(SessionLogout.class);
       rhBindings.addBinding().to(SessionLogRESTHandler.class);
       rhBindings.addBinding().to(ListTimezonesRESTHandler.class);
