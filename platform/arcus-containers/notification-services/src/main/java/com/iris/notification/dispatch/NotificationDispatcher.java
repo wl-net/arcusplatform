@@ -24,7 +24,8 @@ import com.iris.platform.notification.Notification;
 import com.iris.platform.notification.NotificationPriority;
 import com.iris.platform.notification.audit.AuditEventState;
 import com.iris.platform.notification.audit.NotificationAuditor;
-import com.netflix.governator.annotations.WarmUp;
+
+import javax.annotation.PostConstruct;
 
 @Singleton
 public class NotificationDispatcher implements Dispatcher {
@@ -45,7 +46,7 @@ public class NotificationDispatcher implements Dispatcher {
     private PriorityDispatchStrategy priorityDispatchStrategy;
     private CriticalPriorityDispatchStrategy criticalPriorityDispatchStrategy;
 
-    @WarmUp
+    @PostConstruct
     public void warmup() {
         methodDispatchStrategy = new MethodDispatchStrategy(audit, retryProcessor, retryManager, providerRegistry);
         priorityDispatchStrategy = new PriorityDispatchStrategy(audit, retryProcessor, retryManager, providerRegistry);

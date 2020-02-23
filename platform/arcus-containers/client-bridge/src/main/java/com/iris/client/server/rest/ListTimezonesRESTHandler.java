@@ -18,6 +18,8 @@ package com.iris.client.server.rest;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ import com.iris.messages.MessageBody;
 import com.iris.messages.errors.ErrorEventException;
 import com.iris.messages.service.PlaceService;
 import com.iris.platform.location.TimezonesManager;
-import com.netflix.governator.annotations.WarmUp;
+
 
 @Singleton
 @HttpPost("/" + PlaceService.NAMESPACE + "/ListTimezones")
@@ -51,7 +53,7 @@ public class ListTimezonesRESTHandler extends RESTHandler {
 		this.tzResourceManager = tzResourceManager;
 	}
 
-	@WarmUp
+	@PostConstruct
 	public void start() {
 
 	}

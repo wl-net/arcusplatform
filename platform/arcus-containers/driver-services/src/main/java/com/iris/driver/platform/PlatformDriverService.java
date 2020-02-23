@@ -86,7 +86,6 @@ import com.iris.protocol.control.DeviceOnlineEvent;
 import com.iris.protocol.reflex.ReflexProtocol;
 import com.iris.protocol.zigbee.ZigbeeProtocol;
 import com.iris.protocol.zwave.ZWaveProtocol;
-import com.netflix.governator.annotations.WarmUp;
 
 /**
  * Reads messages from the protocol bus and
@@ -157,7 +156,7 @@ public class PlatformDriverService implements DriverService {
 		});
 	}
 
-	@WarmUp
+	@PostConstruct
 	public void startup() {
 	   this.executor.prestartAllCoreThreads();
 	}

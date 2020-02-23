@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,6 @@ import com.iris.driver.service.registry.DriverScriptInfo;
 import com.iris.driver.service.registry.FilesystemDriverRegistry;
 import com.iris.messages.model.DriverId;
 import com.iris.validators.ValidationException;
-import com.netflix.governator.annotations.WarmUp;
 
 public class GroovyDriverRegistry extends FilesystemDriverRegistry {
    private final static Logger logger = LoggerFactory.getLogger(GroovyDriverRegistry.class);
@@ -48,7 +49,7 @@ public class GroovyDriverRegistry extends FilesystemDriverRegistry {
       this.factory = factory;
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
 	   if(StringUtils.isNotBlank(driverConfig.getDriverFilterPattern())) {
 		   filterPattern = Pattern.compile(driverConfig.getDriverFilterPattern());

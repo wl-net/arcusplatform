@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -44,7 +45,6 @@ import com.iris.metrics.IrisMetrics;
 import com.iris.platform.partition.Partitioner;
 import com.iris.platform.partition.PlatformPartition;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 @Singleton
 public class SessionHeartBeater {
@@ -83,7 +83,7 @@ public class SessionHeartBeater {
       this.heartbeatTimer = IrisMetrics.metrics("bridge.ipcd").timer("heartbeat");
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       executor.scheduleAtFixedRate(() -> heartbeat(), heartbeatIntervalMs, heartbeatIntervalMs, TimeUnit.MILLISECONDS);
    }
