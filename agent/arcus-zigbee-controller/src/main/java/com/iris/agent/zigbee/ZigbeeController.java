@@ -34,11 +34,11 @@ import com.iris.messages.capability.HubCapability;
 import com.iris.messages.errors.Errors;
 import com.iris.protocol.ProtocolMessage;
 import com.iris.protocol.zigbee.ZigbeeProtocol;
-import com.netflix.governator.annotations.WarmUp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -75,7 +75,7 @@ public class ZigbeeController implements PortHandler, LifeCycleListener {
      * It hooks up the Zigbee controller to the agent router
      * and the agent life cycle service.
      */
-    @WarmUp
+    @PostConstruct
     public void start() {
         logger.info("Starting Zigbee controller");
         port = router.connect("zigb", ADDRESS, this);

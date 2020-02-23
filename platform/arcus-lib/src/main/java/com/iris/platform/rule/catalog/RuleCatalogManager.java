@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,6 @@ import com.google.inject.name.Named;
 import com.iris.io.Deserializer;
 import com.iris.messages.type.Population;
 import com.iris.resource.Resource;
-import com.netflix.governator.annotations.WarmUp;
 
 /**
  *
@@ -56,7 +57,7 @@ public class RuleCatalogManager {
       this.deserializer = deserializer;
    }
 
-   @WarmUp
+   @PostConstruct
    public void init() {
       if(this.catalogResource.isWatchable()) {
          this.catalogResource.addWatch(() -> this.loadCatalog());

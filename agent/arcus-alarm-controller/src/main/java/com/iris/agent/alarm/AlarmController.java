@@ -79,7 +79,6 @@ import com.iris.messages.errors.Errors;
 import com.iris.protocol.ProtocolMessage;
 import com.iris.protocol.reflex.ReflexProtocol;
 import com.iris.util.IrisUUID;
-import com.netflix.governator.annotations.WarmUp;
 
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
@@ -220,7 +219,7 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
       LifeCycleService.addListener(this);
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       log.info("starting hub alarm controller...");
    }

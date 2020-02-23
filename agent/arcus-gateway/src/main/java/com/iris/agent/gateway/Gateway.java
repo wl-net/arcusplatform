@@ -63,7 +63,6 @@ import com.iris.messages.PlatformMessage;
 import com.iris.messages.address.Address;
 import com.iris.messages.capability.HubNetworkCapability;
 import com.iris.protocol.ProtocolMessage;
-import com.netflix.governator.annotations.WarmUp;
 
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -187,7 +186,7 @@ public class Gateway implements SnoopingPortHandler, LifeCycleListener, IrisAgen
       LifeCycleService.addListener(this);
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       log.info("attempting to start hub gateway...");
       networkChecker.start();

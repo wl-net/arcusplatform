@@ -32,6 +32,7 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +83,6 @@ import com.iris.protocol.ipcd.IpcdDevice.ConnState;
 import com.iris.protocol.ipcd.IpcdDeviceTypeRegistry;
 import com.iris.protocol.ipcd.IpcdProtocol;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 @Singleton
 public class IpcdRegistry implements PartitionListener {
@@ -137,7 +137,7 @@ public class IpcdRegistry implements PartitionListener {
       this.metrics = new IpcdRegistryMetrics(IrisMetrics.metrics("service.platform.ipcdregistry"));
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       partitioner.addPartitionListener(this);
       watchDogExecutor.scheduleWithFixedDelay(() -> timeout(), timeoutIntervalMs, timeoutIntervalMs, TimeUnit.MILLISECONDS);

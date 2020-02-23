@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,6 @@ import com.iris.i18n.DBResourceBundleControl;
 import com.iris.i18n.I18NBundle;
 import com.iris.messages.type.HistoryLog;
 import com.iris.platform.history.HistoryLogEntry;
-import com.netflix.governator.annotations.WarmUp;
 
 /**
  * 
@@ -49,7 +50,7 @@ public class HistoryLogEntryTransformer implements BeanAttributesTransformer<His
    public HistoryLogEntryTransformer() {
    }
    
-   @WarmUp
+   @PostConstruct
    public void initialize() {
       try {
          this.bundle = ResourceBundle.getBundle(I18NBundle.HISTORY_LOG.getBundleName(), new DBResourceBundleControl());

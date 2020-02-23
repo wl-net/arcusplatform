@@ -30,6 +30,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,6 @@ import com.iris.platform.hubbridge.HeartbeatMessage;
 import com.iris.platform.partition.Partitioner;
 import com.iris.platform.partition.PlatformPartition;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 /**
  *
@@ -109,7 +109,7 @@ public class HubSessionRegistry extends DefaultSessionRegistryImpl {
       this.hubDao = hubDao;
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       executor.scheduleAtFixedRate(() -> heartbeat(), heartbeatIntervalMs, heartbeatIntervalMs, TimeUnit.MILLISECONDS);
       cellDumpExecutor.scheduleAtFixedRate(() -> persistCellTimes(),

@@ -38,7 +38,6 @@ import com.iris.messages.errors.Errors;
 import com.iris.util.IrisCollections;
 import com.iris.util.Subscription;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 public abstract class AbstractMessageListener<T extends Message> implements MessageListener<T> {
    private static final Logger logger = LoggerFactory.getLogger(AbstractMessageListener.class);
@@ -78,7 +77,7 @@ public abstract class AbstractMessageListener<T extends Message> implements Mess
       onInit();
    }
 
-   @WarmUp
+   @PostConstruct
    public final void start() {
       logger.info("Starting message bus listener {}", this);
       onStart();

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.iris.driver.DeviceDriver;
 import com.iris.messages.model.DriverId;
-import com.netflix.governator.annotations.WarmUp;
 
 public abstract class FilesystemDriverRegistry extends AbstractSingleDriverRegistry {
    private static final Logger logger = LoggerFactory.getLogger(FilesystemDriverRegistry.class);
@@ -39,7 +39,7 @@ public abstract class FilesystemDriverRegistry extends AbstractSingleDriverRegis
    public FilesystemDriverRegistry() {
    }
 
-   @WarmUp
+   @PostConstruct
    public void warmUp() {
       watcher = new DriverWatcher(getDirectoryPath());
       watcher.addListener(new DriverWatcherListener() {

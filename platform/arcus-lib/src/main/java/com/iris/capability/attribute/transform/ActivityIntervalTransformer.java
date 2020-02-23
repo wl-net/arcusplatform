@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,6 @@ import com.google.inject.Singleton;
 import com.iris.i18n.DBResourceBundleControl;
 import com.iris.i18n.I18NBundle;
 import com.iris.messages.type.ActivityInterval;
-import com.netflix.governator.annotations.WarmUp;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class ActivityIntervalTransformer implements BeanAttributesTransformer<Ac
    public ActivityIntervalTransformer() {
    }
    
-   @WarmUp
+   @PostConstruct
    public void initialize() {
       try {
          this.bundle = ResourceBundle.getBundle(I18NBundle.HISTORY_LOG.getBundleName(), new DBResourceBundleControl());

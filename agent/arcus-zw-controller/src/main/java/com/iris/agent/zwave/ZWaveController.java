@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -87,7 +88,6 @@ import com.iris.protocol.control.DeviceOnlineEvent;
 import com.iris.protocol.zwave.Protocol;
 import com.iris.protocol.zwave.ZWaveExternalProtocol;
 import com.iris.protocol.zwave.ZWaveProtocol;
-import com.netflix.governator.annotations.WarmUp;
 
 import rx.Observable;
 import rx.subjects.ReplaySubject;
@@ -139,7 +139,7 @@ public class ZWaveController implements PortHandler, LifeCycleListener, SceneHan
     * It hooks up the Z/IP controller to the agent router
     * and the agent life cycle service.
     */
-   @WarmUp
+   @PostConstruct
    public void start() {
       logger.info("Starting ZIP controller");
       port = router.connect("zwav", ADDRESS, this);      

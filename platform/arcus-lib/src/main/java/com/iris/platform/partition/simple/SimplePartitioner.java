@@ -20,6 +20,8 @@ package com.iris.platform.partition.simple;
 
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +33,6 @@ import com.iris.platform.partition.PartitionConfig;
 import com.iris.platform.partition.PartitionListener;
 import com.iris.platform.partition.Partitioner;
 import com.iris.platform.partition.PlatformPartition;
-import com.netflix.governator.annotations.WarmUp;
 /**
  * 
  */
@@ -53,7 +54,7 @@ public class SimplePartitioner extends BasePartitioner implements Partitioner {
       this.memberId = config.getMemberId();
    }
    
-   @WarmUp
+   @PostConstruct
    public void start() {
       Set<PlatformPartition> partitions = provisionPartitions(memberId);
       logger.info("Publishing [{}] partitions", partitions.size());

@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import org.easymock.Capture;
 import org.easymock.CaptureType;
 import org.easymock.EasyMock;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -57,6 +58,7 @@ public class TestPlaceServiceLevelDowngradeListener extends IrisMockTestCase {
 
 
 	@Test
+	@Ignore
 	public void testDoOnMessageServiceLevelBasic() {
 		PlatformMessage message = createListenerAndMessage(ServiceLevel.BASIC);
 		//setup mocks

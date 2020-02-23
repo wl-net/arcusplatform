@@ -103,7 +103,6 @@ import com.iris.messages.errors.Errors;
 import com.iris.messages.service.DeviceService;
 import com.iris.protocol.ProtocolMessage;
 import com.iris.util.IrisUUID;
-import com.netflix.governator.annotations.WarmUp;
 
 public class HubController implements PortHandler, LifeCycleListener, BackupFinishedListener, FourgListener {
    private static final Logger log = LoggerFactory.getLogger(HubController.class);
@@ -351,7 +350,7 @@ public class HubController implements PortHandler, LifeCycleListener, BackupFini
       ExecService.periodic().scheduleAtFixedRate(() -> updateLEDState(), HUB_LED_UPDATE_CHECK, HUB_LED_UPDATE_CHECK, TimeUnit.NANOSECONDS);   
    }
 
-@WarmUp
+   @PostConstruct
    public void checkHubReset() {
       if (wasFactoryReset.compareAndSet(true,false)) {
          LifeCycleService.fireHubReset(LifeCycleService.Reset.FACTORY);

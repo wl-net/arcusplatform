@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +44,6 @@ import com.iris.messages.model.HubRegistration;
 import com.iris.messages.model.HubRegistration.RegistrationState;
 import com.iris.messages.model.HubRegistrationErrors;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 @Singleton
 public class HubRegistrationRegistry  {
@@ -72,7 +72,7 @@ public class HubRegistrationRegistry  {
 		hubTemplate.setModel("IH200");
 	}
 
-	@WarmUp
+	@PostConstruct
 	public void start() {
 		// 1. Load hub_registration into cache
 		initHubRegistrationCache();

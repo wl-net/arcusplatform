@@ -30,6 +30,7 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.collections.MapUtils;
@@ -55,7 +56,6 @@ import com.iris.platform.partition.PartitionListener;
 import com.iris.platform.partition.Partitioner;
 import com.iris.population.PlacePopulationCacheManager;
 import com.iris.util.ThreadPoolBuilder;
-import com.netflix.governator.annotations.WarmUp;
 
 @Singleton
 public class HubRegistry implements PartitionListener {
@@ -98,7 +98,7 @@ public class HubRegistry implements PartitionListener {
       this.hubs = new ConcurrentHashMap<>();
    }
 
-   @WarmUp
+   @PostConstruct
    public void start() {
       partitioner.addPartitionListener(this);
       executor.scheduleWithFixedDelay(() -> timeout(), timeoutIntervalMs, timeoutIntervalMs, TimeUnit.MILLISECONDS);
