@@ -149,6 +149,8 @@ ext.libraries << [
 		},
 		// metrics compile dependencies
 		metrics_core: "io.dropwizard.metrics:metrics-core:3.2.6",
+		metrics_health: "io.dropwizard.metrics:metrics-health:3.2.6",
+		metrics_servlets: "io.dropwizard.metrics:metrics-servlets:3.2.6",
 		metrics_hdr: "org.mpierce.metrics.reservoir:hdrhistogram-metrics-reservoir:1.1.0",
 		metrics_json: "io.dropwizard.metrics:metrics-json:3.2.6",
 		metrics_jvm: "io.dropwizard.metrics:metrics-jvm:3.2.6",

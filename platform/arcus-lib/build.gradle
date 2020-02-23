@@ -51,6 +51,7 @@ dependencies {
    compile libraries.shiro
    compile libraries.metrics_core
    compile libraries.metrics_json
+   compile libraries.metrics_servlets
    compile libraries.handlebars
    compile libraries.opencsv
    compile libraries.joda

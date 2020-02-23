@@ -17,6 +17,7 @@ package com.iris.core.metricsexporter.exporter;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.google.inject.Inject;
 import com.iris.core.metricsexporter.config.IrisMetricsExporterConfig;
 import com.iris.util.ThreadPoolBuilder;
@@ -65,6 +66,7 @@ public class IrisMetricsExporter {
          context.setContextPath("/");
          server.setHandler(context);
          context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+         context.addServlet(new ServletHolder(new HealthCheckServlet()), "/healthcheck");
 
          try {
             server.start();
