@@ -15,7 +15,6 @@
  */
 package com.iris.core.metricsexporter.exporter;
 
-import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.google.inject.Inject;
