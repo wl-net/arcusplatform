@@ -51,9 +51,9 @@ public final class ServiceLocator {
    	}
 
    	LOGGER.info("Received shutdown signal, shutting down modules");
+   	ServiceLocator.impl = null;
    	impl.destroy();
 
-   	ServiceLocator.impl = null;
    	LOGGER.info("Shutdown");
    }
 
