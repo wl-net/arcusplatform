@@ -24,8 +24,6 @@ class Libraries {
 ext.libraries = new Libraries();
 
 ext.libraries << [
-		ipcd: "ipcd-lib:ipcd-lib:1.0",
-
 // Zigbee
 		zsmartsystems_zigbee: "com.zsmartsystems.zigbee:com.zsmartsystems.zigbee:1.2.4",
 		zsmartsystems_zigbee_serial: "com.zsmartsystems.zigbee:com.zsmartsystems.zigbee.serial:1.2.4",
@@ -35,7 +33,7 @@ ext.libraries << [
 		openhab_zwave: "org.openhab.binding.zzsmartsystems_zigbeewave:org.openhab.binding.zwave:2.5.0-SNAPSHOT",
 
 // Cassandra
-		cassandraDriver: dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.0.8:shaded") {
+		cassandraDriver: dependencies.create("com.datastax.cassandra:cassandra-driver-core:3.8.0:shaded") {
 			exclude group: "com.codahale.metrics" // interferes with platform dropwizard metrics
 			exclude group: "io.netty"
 		},
@@ -111,9 +109,9 @@ ext.libraries << [
 		sqlite4java: "com.almworks.sqlite4java:sqlite4java:1.0.392",
 
 // guice dependencies
-		guiceCore: "com.google.inject:guice:4.0-beta5",
-		guiceServlet: "com.google.inject.extensions:guice-servlet:4.0-beta5",
-		guiceMultibindings: "com.google.inject.extensions:guice-multibindings:4.0-beta5",
+		guiceCore: "com.google.inject:guice:4.0",
+		guiceServlet: "com.google.inject.extensions:guice-servlet:4.0",
+		guiceMultibindings: "com.google.inject.extensions:guice-multibindings:4.0",
 
 // governator runtime dependencies
 		jacksonCore: "com.fasterxml.jackson.core:jackson-core:2.4.3",
@@ -122,16 +120,28 @@ ext.libraries << [
 		jacksonMapper: "org.codehaus.jackson:jackson-mapper-asl:1.9.11",
 
 // governator compile dependencies
-		governator: dependencies.create("com.netflix.governator:governator:1.3.3") {
+		governator: dependencies.create("com.netflix.governator:governator:1.12.15") {
 			exclude group: "com.google.inject.extensions", module: "guice-grapher"
 			exclude group: "asm"
 			exclude group: "com.google.code.findbugs", module: "annotations"
 			exclude group: "org.apache.xbean", module: "xbean-bundleutils"
 			exclude group: "com.netflix.archaius", module: "archaius-core"
 		},
-		
+		governator_api: dependencies.create("com.netflix.governator:governator-api:1.12.15") {
+			exclude group: "com.google.inject.extensions", module: "guice-grapher"
+			exclude group: "asm"
+			exclude group: "com.google.code.findbugs", module: "annotations"
+			exclude group: "org.apache.xbean", module: "xbean-bundleutils"
+			exclude group: "com.netflix.archaius", module: "archaius-core"
+		},
+
 // kafka dependencies
-		kafka: dependencies.create("org.apache.kafka:kafka_2.11:0.10.0.0") {
+		eyekatkafka: dependencies.create("org.apache.kafka:kafka_2.11:0.10.0.0") {
+			exclude group: "org.apache.zookeeper", module: "zookeeper"
+			exclude group: "log4j", module: "log4j"
+			exclude group: "org.slf4j", module: "slf4j-log4j12"
+		},
+		kafka: dependencies.create("org.apache.kafka:kafka_2.12:2.4.0") {
 			exclude group: "org.apache.zookeeper", module: "zookeeper"
 			exclude group: "log4j", module: "log4j"
 			exclude group: "org.slf4j", module: "slf4j-log4j12"
@@ -145,11 +155,14 @@ ext.libraries << [
 
 		},
 		// metrics compile dependencies
-		metrics_core: "io.dropwizard.metrics:metrics-core:3.1.1",
+		metrics_core: "io.dropwizard.metrics:metrics-core:3.2.6",
 		metrics_hdr: "org.mpierce.metrics.reservoir:hdrhistogram-metrics-reservoir:1.1.0",
-		metrics_json: "io.dropwizard.metrics:metrics-json:3.1.1",
-		metrics_jvm: "io.dropwizard.metrics:metrics-jvm:3.1.1",
-		metrics_logback: "io.dropwizard.metrics:metrics-logback:3.1.1",
+		metrics_json: "io.dropwizard.metrics:metrics-json:3.2.6",
+		metrics_jvm: "io.dropwizard.metrics:metrics-jvm:3.2.6",
+		metrics_logback: "io.dropwizard.metrics:metrics-logback:3.2.6",
+
+		prometheus_dropwizard: "io.prometheus:simpleclient_dropwizard:0.8.0",
+		prometheus_servlet: "io.prometheus:simpleclient_servlet:0.8.0",
 
 // misc dependencies
 		guava: "com.google.guava:guava:19.0",
@@ -213,7 +226,7 @@ ext.libraries << [
 		powermock_easymock: "org.powermock:powermock-api-easymock:1.7.3",
 
 //Junit
-		junit: "junit:junit:4.11",
+		junit: "junit:junit:4.13",
 
 // Apache Shiro
 		shiro: "org.apache.shiro:shiro-core:1.3.2",
@@ -241,7 +254,9 @@ ext.libraries << [
 		sendgridJava: "com.sendgrid:sendgrid-java:4.4.1",
 		sendgridJavaOld: 'com.sendgrid:sendgrid-java:2.2.0',
 		sendgridHTTP: "com.sendgrid:java-http-client:4.2.0",
-		pushy: "com.relayrides:pushy:0.4.3",
+		pushy: dependencies.create("com.relayrides:pushy:0.4.3") {
+                        exclude group: "io.netty", module: "netty-all"
+                },
 		smackCore: "org.igniterealtime.smack:smack-core:4.0.7",
 		smackTCP: "org.igniterealtime.smack:smack-tcp:4.0.7",
 		smackExt: "org.igniterealtime.smack:smack-extensions:4.0.7",
@@ -321,6 +336,7 @@ ext.netty_transport = "io.netty:netty-transport:${netty_version}"
 ext.netty_codec = "io.netty:netty-codec:${netty_version}"
 ext.netty_codec_http = "io.netty:netty-codec-http:${netty_version}"
 ext.netty_handler = "io.netty:netty-handler:${netty_version}"
+ext.netty_all = "io.netty:netty-all:${netty_version}"
 // handler proxy only exists in versions above 4.0
 if(!netty_version.startsWith("4."))
 	ext.netty_handler_proxy = "io.netty:netty-handler-proxy:${netty_version}"

@@ -1,5 +1,5 @@
-# Use the standard eyeris java image
-FROM eyeris/java
+# Use the standard arcus java image
+FROM arcus/java
 
 USER root
 
@@ -11,7 +11,7 @@ RUN \
     rm -rf /var/lib/apt/lists/*
 
 # Environment variables for configuration
-ENV ZOOKEEPER_VERSION 3.5.6
+ENV ZOOKEEPER_VERSION 3.5.7
 
 # Download and install the required version of Apache Zookeeper.
 RUN \

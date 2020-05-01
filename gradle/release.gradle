@@ -1,6 +1,8 @@
 apply plugin: 'org.ajoberstar.grgit'
 
-ext.repo = grgit.open()
+try {
+ ext.repo = grgit.open()
+} catch(e) { /* ignore (need to be in git repo root) */ }
 
 ext.buildTime = new Date ()
 def writeVersion(major, minor, patch, qualifier) {
@@ -23,7 +25,7 @@ def writeVersion(major, minor, patch, qualifier) {
 }
 
 def push(tags) {
-   if(is_build_server) {
+   if(is_build_server.toBoolean()) {
       println "Pushing changes..."
       repo.push(remote: 'mainline', tags: tags ? true : false)
    }
@@ -73,11 +75,6 @@ task tagRelease {
       writeVersion(version_major, version_minor, Integer.parseInt(version_patch)+1, version_qualifier)
       push()
    }
-}
-
-task install(overwrite: true) {
-   group "Build"
-   description "Installs a release into the build directory."
 }
 
 task release() {
