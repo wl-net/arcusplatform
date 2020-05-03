@@ -3604,6 +3604,23 @@
         <population name="beta"/>
       </populations>
     </product>
+    <product id="bbf1ca" name="Button" shortname="Button" screen="Button" description="" manufacturer="Samsung" vendor="SmartThings" cert="none" canbrowse="false" cansearch="false" helpurl="" pairvideourl="" batteryprimsize="CR2450" batteryprimnum="1" keywords="samsung, smartthings, button, sensor" ota="No" protofamily="ZigBee" added="2020-05-02T19:50:30-0700" lastchanged="2020-05-01T19:50:30-0700">
+      <categories>
+        <category name="Care"/>
+        <category name="Cameras &amp; Sensors"/>
+      </categories>
+      <pair>
+        <step1 type="text" img="" text="Remove the battery tab labeled &quot;Remove to Pair&quot;. The hub will beep when pairing is complete"/>
+      </pair>
+      <removal>
+        <step1 type="text" img="" text="The hub will beep when the device is successfully removed."/>
+      </removal>
+      <populations>
+        <population name="general"/>
+        <population name="qa"/>
+        <population name="beta"/>
+      </populations>
+    </product>
     <product id="7dce6d" name="Motion Sensor" shortname="Motion Sensor" screen="Motion" description="" manufacturer="Samsung" vendor="SmartThings" cert="none" canbrowse="false" cansearch="false" helpurl="" pairvideourl="https://youtu.be/LGW0bHpqlw8" batteryprimsize="CR2450" batteryprimnum="1" keywords="samsung, smartthings, motion, sensor" ota="No" protofamily="ZigBee" added="2015-10-21T14:00:30-0500" lastchanged="2016-04-26T10:39:59-0400">
       <categories>
         <category name="Care"/>
