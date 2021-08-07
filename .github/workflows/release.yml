@@ -40,3 +40,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: run release
         run: bash khakis/bin/release.sh
+        env:
+          REGISTRY_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          REGISTRY_SEPERATOR: -
