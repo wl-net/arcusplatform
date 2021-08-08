@@ -2,7 +2,8 @@ name: Release
 
 on:
   push:
-    branches: github-actions
+    tags:
+      - '*'
 
 env:
   REGISTRY: ghcr.io
@@ -51,6 +52,8 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: run clean
+        run: ./gradlew createApplicationInfo
       - name: run release
         run: bash khakis/bin/release.sh
         env:
