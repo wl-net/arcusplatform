@@ -95,6 +95,7 @@ task createApplicationInfo {
       f << "application.name=" + project.name + "\n"
       f << "application.version=" + platformVersion + "\n"
       f << "build.timestamp=" + new Date() + "\n"
+      println 'created application.properties for ' + project.name
    }
 }
 
