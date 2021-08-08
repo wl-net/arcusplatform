@@ -49,8 +49,8 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: run clean
-        run: ./gradlew createApplicationInfo
+      - name: run build
+        run: ./gradlew jar
       - name: run release
         run: bash khakis/bin/release.sh
         env:
