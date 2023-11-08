@@ -1,8 +1,7 @@
 # Use Debian as the base installation
-FROM debian:stretch
+FROM ubuntu:22.04
 
 # Install the latest updates.
-ADD sources.list /etc/apt/
 
 # Setup the default locale to be UTF-8
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
