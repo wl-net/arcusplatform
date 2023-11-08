@@ -10,14 +10,14 @@ RUN \
     apt-get update && \
     apt-get install -y \
       wget \
-      python \
+      python2 \
       dnsutils \
       unzip && \
     useradd -M -U -r -s /bin/false cassandra && \
     rm -rf /var/lib/apt/lists/*
 
 # Environment variables for configuration
-ENV CASSANDRA_VERSION 3.11.11
+ENV CASSANDRA_VERSION 3.11.16
 
 # Download and install the required version of Apache Cassandra. 
 RUN \
