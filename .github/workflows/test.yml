@@ -15,5 +15,7 @@ jobs:
            distribution: 'corretto'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: compile java
+        run: ./gradlew compileJava --no-daemon
       - name: run tests
         run: ./gradlew test --no-daemon
