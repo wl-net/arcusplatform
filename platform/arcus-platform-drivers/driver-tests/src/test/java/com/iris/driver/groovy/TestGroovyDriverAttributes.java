@@ -18,7 +18,6 @@
  */
 package com.iris.driver.groovy;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.iris.device.attributes.AttributeKey;
@@ -71,7 +70,6 @@ public class TestGroovyDriverAttributes extends GroovyDriverTestCase {
    }
 
    @Test
-   @Ignore
    public void testCapabilityConfiguredViaObjects() throws Exception {
       DeviceDriver driver = factory.load("CapabilityObjects.driver");
       AttributeMap attributes = driver.getBaseAttributes();
