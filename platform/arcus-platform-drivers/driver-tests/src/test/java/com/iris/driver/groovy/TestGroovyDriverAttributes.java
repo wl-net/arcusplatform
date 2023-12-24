@@ -75,6 +75,7 @@ public class TestGroovyDriverAttributes extends GroovyDriverTestCase {
       AttributeMap attributes = driver.getBaseAttributes();
 
       assertEquals("Iris", attributes.get(DeviceCapability.KEY_VENDOR));
+      assertEquals(attributes.keySet(), IrisCollections.setOf(DeviceCapability.KEY_DEVTYPEHINT, DeviceCapability.KEY_VENDOR, DevicePowerCapability.KEY_SOURCE));
       assertEquals(10, attributes.size());
       assertEquals(DevicePowerCapability.SOURCE_BATTERY, attributes.get(DevicePowerCapability.KEY_SOURCE));
       assertEquals(false, attributes.get(DevicePowerCapability.KEY_LINECAPABLE));
