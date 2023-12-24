@@ -62,6 +62,7 @@ public class TestGroovyDriverAttributes extends GroovyDriverTestCase {
       DeviceDriver driver = factory.load("CapabilityStrings.driver");
       AttributeMap attributes = driver.getBaseAttributes();
 
+      assertEquals("Iris", attributes.get(DeviceCapability.KEY_VENDOR));
       assertEquals(10, attributes.size());
       assertTrue(DevicePowerCapability.SOURCE_BATTERY.equalsIgnoreCase(attributes.get(DevicePowerCapability.KEY_SOURCE)));
       assertEquals(false, attributes.get(DevicePowerCapability.KEY_LINECAPABLE));
@@ -73,6 +74,7 @@ public class TestGroovyDriverAttributes extends GroovyDriverTestCase {
       DeviceDriver driver = factory.load("CapabilityObjects.driver");
       AttributeMap attributes = driver.getBaseAttributes();
 
+      assertEquals("Iris", attributes.get(DeviceCapability.KEY_VENDOR));
       assertEquals(10, attributes.size());
       assertEquals(DevicePowerCapability.SOURCE_BATTERY, attributes.get(DevicePowerCapability.KEY_SOURCE));
       assertEquals(false, attributes.get(DevicePowerCapability.KEY_LINECAPABLE));
