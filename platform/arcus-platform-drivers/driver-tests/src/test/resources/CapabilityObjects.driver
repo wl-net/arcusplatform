@@ -22,10 +22,7 @@ vendor 'Iris'
 model 'TestCase'
 deviceTypeHint Switch.namespace
 matcher vendor: ~/.*/
-capabilities DevicePower
-
-importCapability 'ZWaveSwitchHandler'
-importCapability 'ZWaveDoorLockHandler'
+capabilities DevicePower, DoorLock
 
 DevicePower.source 		DevicePower.SOURCE_BATTERY
 DevicePower.linecapable	false
