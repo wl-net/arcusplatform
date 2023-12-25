@@ -27,5 +27,5 @@ capabilities DevicePower, DoorLock
 DevicePower.source 		DevicePower.SOURCE_BATTERY
 DevicePower.linecapable	false
 
-DoorLock.type			'deadbolt'
+DoorLock.type			'deadbolt2'
 
