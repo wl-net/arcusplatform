@@ -24,8 +24,8 @@ deviceTypeHint Switch.namespace
 matcher vendor: ~/.*/
 capabilities DevicePower, DoorLock
 
-DevicePower.source 		DevicePower.SOURCE_BATTERY
+DevicePower.source 		DevicePower2.SOURCE_BATTERY
 DevicePower.linecapable	false
 
-DoorLock.type			'deadbolt2'
+DoorLock.type			'deadbolt'
 
