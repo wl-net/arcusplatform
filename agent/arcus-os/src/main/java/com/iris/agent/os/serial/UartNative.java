@@ -15,11 +15,8 @@
  */
 package com.iris.agent.os.serial;
 
-import java.io.Closeable;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 
@@ -60,13 +57,23 @@ public final class UartNative {
    }
 
    private static FileChannel toFileChannel(FileDescriptor fd, String path) {
-      return sun.nio.ch.FileChannelImpl.open(fd, path, true, true, false, null);
+      try {
+         RandomAccessFile raf = new RandomAccessFile(path, "rw");
+         Field fdField = RandomAccessFile.class.getDeclaredField("fd");
+         fdField.setAccessible(true);
+         fdField.set(raf, fd);
+         return raf.getChannel();
+      } catch (FileNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+          throw new RuntimeException(e);
+      }
    }
 
    private static FileDescriptor toFileDescriptor(int fd) {
       try {
          FileDescriptor fdesc = new FileDescriptor();
-         sun.misc.SharedSecrets.getJavaIOFileDescriptorAccess().set(fdesc, fd);
+         Field field = FileDescriptor.class.getDeclaredField("fd");
+         field.setAccessible(true);
+         field.set(fdesc, fd);
          return fdesc;
       } catch (Exception ex) {
          throw new UnsupportedOperationException(ex);

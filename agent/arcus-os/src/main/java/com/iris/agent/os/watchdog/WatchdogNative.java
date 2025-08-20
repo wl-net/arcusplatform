@@ -17,6 +17,7 @@ package com.iris.agent.os.watchdog;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import com.sun.jna.Platform;
@@ -92,8 +93,10 @@ public final class WatchdogNative {
 
    private static int fd(FileOutputStream os) {
       try {
-         return sun.misc.SharedSecrets.getJavaIOFileDescriptorAccess().get(os.getFD());
-      } catch (IOException ex) {
+         Field field = os.getFD().getClass().getDeclaredField("fd");
+         field.setAccessible(true);
+         return field.getInt(os.getFD());
+      } catch (IOException | IllegalAccessException | NoSuchFieldException ex) {
          throw new RuntimeException(ex);
       }
    }
