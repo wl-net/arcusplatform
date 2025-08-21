@@ -14,22 +14,32 @@
  * limitations under the License.
  */
 // project specific build settings, dependencies, etc.
-apply plugin: 'com.github.jacobono.jaxb'
+plugins {
+    id 'java'
+    id 'org.unbroken-dome.xjc'
+}
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
-// Support for JAXB bindings
-ext.generatedSrcDir = 'src/generated/java'
+ext {
+    generatedSrcDir = file('src/generated/java')
+    xsdDir = file('common/arcus-protocol/build/schema')
+    episodeDir = layout.buildDirectory.dir('common/arcus-protocol/build/schema')
+}
 
 dependencies {
-    jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
-    jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
-    jaxb 'javax.xml.bind:jaxb-api:2.2.7'
+    runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
+    compileOnly 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     
-    compile libraries.commons_lang
-    compile libraries.handlebars
-    compile libraries.jcommander
+    implementation libraries.commons_lang
+    implementation libraries.handlebars
+    implementation libraries.jcommander
 }
 
 sourceSets {
@@ -40,12 +50,26 @@ sourceSets {
     }
 }
 
-jaxb {
-   xsdDir = "common/arcus-protocol/src/main/resources/definition/ipcd/schema"
-   episodesDir = "common/arcus-protocol/build/schema"
-   xjc {
-      destinationDir = generatedSrcDir
-   }
+xjc {
+    ipcd {
+        schema          = fileTree(dir: xsdDir, include: '*.xsd')
+        outputDirectory = generatedSrcDir
+        generatePackage = 'com.iris.protocol.ipcd.xml.model'
+        generateEpisode = true
+        episodeFile     = episodeDir.map {
+            it.file('urn-com-iris-protocol-ipcd-xml-model.episode').asFile
+        }.get()
+    }
+
+    ipcdAos {
+        schema          = fileTree(dir: xsdDir, include: '*-aos.xsd')
+        outputDirectory = generatedSrcDir
+        generatePackage = 'com.iris.protocol.ipcd.aos.xml.model'
+        generateEpisode = true
+        episodeFile     = episodeDir.map {
+            it.file('urn-com-iris-protocol-ipcd-aos-xml-model.episode').asFile
+        }.get()
+    }
 }
 
 task cleanGeneratedSource(type: Delete) {

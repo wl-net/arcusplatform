@@ -95,11 +95,6 @@ ext.libraries << [
 		winzipaes: "de.idyl:winzipaes:1.0.1",
 		ziputils: "com.alutam:ziputils:1.4.0",
 
-// JAXB Dependencies
-		jaxb_xjc: "com.sun.xml.bind:jaxb-xjc:2.2.7-b41",
-		jaxb_impl: "com.sun.xml.bind:jaxb-impl:2.2.7-b41",
-		jaxb_api: "javax.xml.bind:jaxb-api:2.2.7",
-
 // Encryption via Bouncy Castle
 		bouncycastle: "org.bouncycastle:bcprov-jdk15on:1.65",
 		bouncycastle_pgp: "org.bouncycastle:bcpg-jdk15on:1.65",
@@ -266,9 +261,9 @@ ext.libraries << [
 
 
 // JAXB Dependencies
-		jaxb_xjc: "com.sun.xml.bind:jaxb-xjc:2.2.7-b41",
-		jaxb_impl: "com.sun.xml.bind:jaxb-impl:2.2.7-b41",
-		jaxb_api: "javax.xml.bind:jaxb-api:2.2.7",
+		jaxb_xjc: "org.glassfish.jaxb:jaxb-xjc:4.0.0",
+		jaxb_impl: "org.glassfish.jaxb:jaxb-runtime:4.0.0",
+		jaxb_api: "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0",
 
 // CXF Dependencies
 		cxf_gradle_plugin: "no.nils:wsdl2java:0.8", //cxf build plugin
