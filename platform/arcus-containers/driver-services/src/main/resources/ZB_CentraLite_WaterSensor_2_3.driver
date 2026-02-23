@@ -16,20 +16,26 @@
 /**
  * ZigBee Driver for the CentraLite Water Sensor
  * 
- *    05/08/17 - Version 2.3 for Reflexes.  If hub is OFFLINE, Diagnostics, Battery, and Temperature reporting are ignored, 
+ *    05/08/17 - Version 2.3 for Reflexes.  If hub is OFFLINE, Diagnostics, Battery, and Temperature reporting are ignored,
  *               and Identify feature is unavailable.
- * 
+ *
+ *    02/22/26 - Removed Poll Control cluster binding and check-in response to fix
+ *               disconnect/reconnect cycling.  The Poll Control check-in handshake
+ *               causes devices to enter conservation mode when the hub fails to ACK
+ *               within the device's timeout window.  Leak detection (IAS Zone) and
+ *               attribute reporting (battery, temperature) do not depend on Poll Control.
+ *               Offline timeout increased to 1440 minutes (24 hours) to match the
+ *               worst-case battery reporting interval (12h) with 2x buffer.
+ *               See: https://github.com/Koenkk/zigbee2mqtt/issues/16183
+ *
  * FACTORY RESET
  *  - Hold down the "connect" button (tamper switch) while inserting the battery and when LED glows amber release button.
- *  
+ *
  * IDENTIFY
  *  - Performing an Identify operation turns the LED on and cycles the color for 3 minutes (see IDENT_PERIOD_SECS).
- * 
+ *
  * OFFLINE TIMEOUT:
- *    195 minutes
- * 
- * CHECK-IN INTERVAL:
- *    60 minutes
+ *    1440 minutes (24 hours)
  * 
  * BATTERY LEVEL REPORTING:
  *  - At least every 12 hours, at most every 60 minutes
@@ -66,7 +72,6 @@ import static java.util.concurrent.TimeUnit.*    // needed when running Unit Tes
 import static com.iris.protocol.zigbee.zcl.Constants.*
 import static com.iris.protocol.zigbee.zcl.General.*
 import static com.iris.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
-import static com.iris.protocol.zigbee.zcl.PollControl.CheckInResponse.*
 
 uses "zigbee.GenericZigbeeDeviceOta"
 
@@ -132,7 +137,7 @@ final short IDENT_PERIOD_SECS = 180  // number of seconds (0-600) for device to 
 ////////////////////////////////////////////////////////////////////////////////
 
 Zigbee {
-    offlineTimeout 195, MINUTES
+    offlineTimeout 1440, MINUTES
 
     /////////////////////////////////////////////////////////////////////////////
     // Hub Local Lifecycle
@@ -143,7 +148,6 @@ Zigbee {
 
         bind endpoint: 1, profile: 0x0104, cluster: Zcl.Power.CLUSTER_ID, server: true
         bind endpoint: 1, profile: 0x0104, cluster: Zcl.IasZone.CLUSTER_ID, server: true
-        bind endpoint: 1, profile: 0x0104, cluster: Zcl.PollControl.CLUSTER_ID, server: true
         bind endpoint: 1, profile: 0x0104, cluster: Zcl.TemperatureMeasurement.CLUSTER_ID, server: true
         bind endpoint: 1, profile: 0x0104, cluster: Zcl.Diagnostics.CLUSTER_ID, server: true
         
@@ -164,11 +168,6 @@ Zigbee {
             // configure temperature reporting at most once every 60 minutes, at least once every 3 hours
             report endpoint: 1, cluster: Zcl.TemperatureMeasurement.CLUSTER_ID, attr: tempCluster.ATTR_MEASURED_VALUE, type: Data.TYPE_SIGNED_16BIT, min: 3600, max: 10800
   
-            send zcl.pollcontrol.setLongPollInterval, newLongPollInterval: 24
-            send zcl.pollcontrol.setShortPollInterval, newShortPollInterval: 4
-        
-            // Set Poll Control Check-In interval to 60 minutes (14400 1/4 seconds)
-            write endpoint: 1, cluster: Zcl.PollControl.CLUSTER_ID, attr:Zcl.PollControl.ATTR_CHECKIN_INTERVAL, value: Data.encode32BitUnsigned(14400)
         }
     }
 
@@ -199,15 +198,6 @@ Zigbee {
         send zcl.iaszone.zoneEnrollResponse, zoneId: 0xFF, enrollResponseCode: REPONSE_CODE_SUCCESS
     }
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Process Poll Control Check-Ins locally on the hub.
-    /////////////////////////////////////////////////////////////////////////////
-
-    match reflex {
-        on zcl.pollcontrol.checkIn
-        // tell device to resume without short polling
-        send zcl.pollcontrol.checkInResponse, startFastPolling: START_FAST_POLLING_DISABLED, fastPollTimeout: 0
-    }
 }
 
 
