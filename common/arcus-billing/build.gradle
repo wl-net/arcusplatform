@@ -22,7 +22,6 @@ dependencies {
 
    implementation libraries.guava
    implementation libraries.gson
-   implementation libraries.asyncHTTPClient
 }
 
 jaxb {

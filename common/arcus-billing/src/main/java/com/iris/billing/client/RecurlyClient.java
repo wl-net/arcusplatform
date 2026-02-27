@@ -17,16 +17,18 @@ package com.iris.billing.client;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.asynchttpclient.AsyncCompletionHandler;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.BoundRequestBuilder;
-import org.asynchttpclient.DefaultAsyncHttpClient;
-import org.asynchttpclient.DefaultAsyncHttpClientConfig;
-import org.asynchttpclient.Response;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.base.Strings;
@@ -68,8 +70,6 @@ import com.iris.metrics.IrisMetricSet;
 import com.iris.metrics.IrisMetrics;
 import com.iris.metrics.tag.TaggingAsyncTimer;
 
-import io.netty.handler.codec.http.QueryStringEncoder;
-
 public class RecurlyClient implements BillingClient {
     private final String baseURL;
     private final String APIKey;
@@ -91,7 +91,7 @@ public class RecurlyClient implements BillingClient {
     private static final IrisMetricSet metrics = IrisMetrics.metrics("recurly");
 
     private final RecurlyDeserializer deserializer = new RecurlyDeserializer();
-    private final AsyncHttpClient client;
+    private final HttpClient client;
 
     private final TaggingAsyncTimer requestTaggingAsyncTimer;
 
@@ -104,7 +104,7 @@ public class RecurlyClient implements BillingClient {
 
         this.baseURL = baseURL;
         this.APIKey = "Basic " + BaseEncoding.base64().encode(apiKey.getBytes());
-        client = new DefaultAsyncHttpClient(new DefaultAsyncHttpClientConfig.Builder().setMaxConnections(-1).build());
+        client = HttpClient.newHttpClient();
 
         requestTaggingAsyncTimer = metrics.taggingAsyncTimer("request");
     }
@@ -378,18 +378,19 @@ public class RecurlyClient implements BillingClient {
             throw new IllegalArgumentException(ACCOUNT_ID_NULL);
         }
 
-        QueryStringEncoder encoder =
-                new QueryStringEncoder(Account.Tags.URL_RESOURCE + "/" + accountID + Transaction.Tags.URL_RESOURCE);
+        StringBuilder path = new StringBuilder(Account.Tags.URL_RESOURCE + "/" + accountID + Transaction.Tags.URL_RESOURCE);
         DateFormat df = new SimpleDateFormat(ISO_8601_DATE_TIME_FORMAT);
+        String sep = "?";
         if (beginTime != null) {
-            encoder.addParam("begin_time", df.format(beginTime));
+            path.append(sep).append("begin_time=").append(URLEncoder.encode(df.format(beginTime), StandardCharsets.UTF_8));
+            sep = "&";
         }
         if (endTime != null) {
-            encoder.addParam("end_time", df.format(endTime));
+            path.append(sep).append("end_time=").append(URLEncoder.encode(df.format(endTime), StandardCharsets.UTF_8));
         }
 
         AsyncTimer requestAsyncTimer = requestTaggingAsyncTimer.tag("op", "getTransactionsForAccount");
-        return requestAsyncTimer.time(doGET(encoder.toString(), Transactions.class));
+        return requestAsyncTimer.time(doGET(path.toString(), Transactions.class));
     }
 
     @Override
@@ -473,36 +474,18 @@ public class RecurlyClient implements BillingClient {
         return requestAsyncTimer.time(doGET(Account.Tags.URL_RESOURCE, Accounts.class));
     }
 
-    BoundRequestBuilder setupCommonSettings(BoundRequestBuilder builder, @Nullable String apiVersion) {
-        builder.addHeader(HttpHeaders.AUTHORIZATION, APIKey)
-                .addHeader(HttpHeaders.ACCEPT, APPLICATION_XML_NO_CHARSET)
-                .addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+    HttpRequest.Builder requestBuilder(String url, @Nullable String apiVersion) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header(HttpHeaders.AUTHORIZATION, APIKey)
+                .header(HttpHeaders.ACCEPT, APPLICATION_XML_NO_CHARSET)
+                .header(HttpHeaders.USER_AGENT, USER_AGENT);
 
-        // Must include the "X-Api-Version" header for certain APIs (e.g. "Lookup Account Balance") that were added in a
-        // later release, or else Recurly will return a 400 error.  For now, we include the header lazily, only for those
-        // APIs that require it, until we have enough QA time in a future release to test a universal migration to the
-        // latest Recurly version for all our calls.
         if (!isEmpty(apiVersion)) {
-            builder.addHeader(HEADER_API_VERSION, apiVersion);
+            builder.header(HEADER_API_VERSION, apiVersion);
         }
 
         return builder;
-    }
-
-    BoundRequestBuilder post(String url, @Nullable String apiVersion) {
-        return setupCommonSettings(client.preparePost(url), apiVersion).addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_XML_WITH_CHARSET);
-    }
-
-    BoundRequestBuilder get(String url, @Nullable String apiVersion) {
-        return setupCommonSettings(client.prepareGet(url), apiVersion);
-    }
-
-    BoundRequestBuilder put(String url, @Nullable String apiVersion) {
-        return setupCommonSettings(client.preparePut(url), apiVersion).addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_XML_WITH_CHARSET);
-    }
-
-    BoundRequestBuilder delete(String url, @Nullable String apiVersion) {
-        return setupCommonSettings(client.prepareDelete(url), apiVersion);
     }
 
     /*
@@ -517,13 +500,17 @@ public class RecurlyClient implements BillingClient {
         final SettableFuture<T> future = SettableFuture.create();
 
         try {
-            post(baseURL + resourcePath, apiVersion)
-                    .setBody(serializer.serialize())
-                    .execute(new AsyncCompletionHandler<Void>() {
-                        @Override
-                        public Void onCompleted(Response response) throws Exception {
+            HttpRequest request = requestBuilder(baseURL + resourcePath, apiVersion)
+                    .header(HttpHeaders.CONTENT_TYPE, APPLICATION_XML_WITH_CHARSET)
+                    .POST(HttpRequest.BodyPublishers.ofString(serializer.serialize()))
+                    .build();
+
+            client.sendAsync(request, BodyHandlers.ofInputStream())
+                    .whenComplete((response, ex) -> {
+                        if (ex != null) {
+                            future.setException(ex);
+                        } else {
                             setResponse(response, future, clazz);
-                            return null;
                         }
                     });
         } catch (Exception ex) {
@@ -541,12 +528,16 @@ public class RecurlyClient implements BillingClient {
         final SettableFuture<T> future = SettableFuture.create();
 
         try {
-            get(baseURL + resourcePath, apiVersion)
-                    .execute(new AsyncCompletionHandler<Void>() {
-                        @Override
-                        public Void onCompleted(Response response) throws Exception {
+            HttpRequest request = requestBuilder(baseURL + resourcePath, apiVersion)
+                    .GET()
+                    .build();
+
+            client.sendAsync(request, BodyHandlers.ofInputStream())
+                    .whenComplete((response, ex) -> {
+                        if (ex != null) {
+                            future.setException(ex);
+                        } else {
                             setResponse(response, future, clazz);
-                            return null;
                         }
                     });
         } catch (Exception ex) {
@@ -571,14 +562,23 @@ public class RecurlyClient implements BillingClient {
         }
 
         try {
-            put(baseURL + resourcePath, apiVersion)
-                    .setBody(data).execute(new AsyncCompletionHandler<Void>() {
-                @Override
-                public Void onCompleted(Response response) throws Exception {
-                    setResponse(response, future, clazz);
-                    return null;
-                }
-            });
+            HttpRequest.BodyPublisher bodyPublisher = data != null
+                    ? HttpRequest.BodyPublishers.ofString(data)
+                    : HttpRequest.BodyPublishers.noBody();
+
+            HttpRequest request = requestBuilder(baseURL + resourcePath, apiVersion)
+                    .header(HttpHeaders.CONTENT_TYPE, APPLICATION_XML_WITH_CHARSET)
+                    .PUT(bodyPublisher)
+                    .build();
+
+            client.sendAsync(request, BodyHandlers.ofInputStream())
+                    .whenComplete((response, ex) -> {
+                        if (ex != null) {
+                            future.setException(ex);
+                        } else {
+                            setResponse(response, future, clazz);
+                        }
+                    });
         } catch (Exception ex) {
             future.setException(ex);
         }
@@ -594,25 +594,29 @@ public class RecurlyClient implements BillingClient {
         final SettableFuture<Boolean> future = SettableFuture.create();
 
         try {
-            delete(baseURL + resourcePath, apiVersion)
-                    .execute(new AsyncCompletionHandler<Void>() {
-                        @Override
-                        public Void onCompleted(Response response) throws Exception {
+            HttpRequest request = requestBuilder(baseURL + resourcePath, apiVersion)
+                    .DELETE()
+                    .build();
+
+            client.sendAsync(request, BodyHandlers.ofInputStream())
+                    .whenComplete((response, ex) -> {
+                        if (ex != null) {
+                            future.setException(ex);
+                        } else {
                             // TODO: Validate this is the only response type to a DELETE (save for an error instance...)
                             try {
-                                if (response.getStatusCode() == 204) {
+                                if (response.statusCode() == 204) {
                                     future.set(true);
                                 } else {
-                                    if (response.getStatusCode() > 300) {
+                                    if (response.statusCode() > 300) {
                                         parseErrorResponse(response, future);
                                     } else {
                                         future.set(false);
                                     }
                                 }
-                            } catch (Exception ex) {
-                                future.setException(ex);
+                            } catch (Exception e) {
+                                future.setException(e);
                             }
-                            return null;
                         }
                     });
         } catch (Exception ex) {
@@ -622,22 +626,22 @@ public class RecurlyClient implements BillingClient {
         return future;
     }
 
-    private <T extends BaseRecurlyModel> void setResponse(Response response, SettableFuture<T> future,  Class<T> clazz) {
+    private <T extends BaseRecurlyModel> void setResponse(HttpResponse<InputStream> response, SettableFuture<T> future,  Class<T> clazz) {
         try {
-            if (response.getStatusCode() > 300) {
+            if (response.statusCode() > 300) {
                 parseErrorResponse(response, future);
             } else {
-                future.set(deserializer.parse(response.getResponseBodyAsStream(), clazz));
+                future.set(deserializer.parse(response.body(), clazz));
             }
         } catch (Exception ex) {
             future.setException(ex);
         }
     }
 
-    private void parseErrorResponse(final Response response, final SettableFuture<?> future) {
+    private void parseErrorResponse(final HttpResponse<InputStream> response, final SettableFuture<?> future) {
         try {
             RecurlyErrors errors = new RecurlyErrors();
-            errors = deserializer.parse(response.getResponseBodyAsStream(), RecurlyErrors.class);
+            errors = deserializer.parse(response.body(), RecurlyErrors.class);
             if (!errors.isEmpty()) {
                 // If we encountered a transaction error, the deserializer only puts that error in the object.
                 // So we can safely call get(0) since the errors object is not empty.
@@ -645,18 +649,17 @@ public class RecurlyClient implements BillingClient {
                     future.setException(new TransactionErrorException(errors.getTransactionErrors().get(0)));
                 } else {
                     RecurlyAPIErrorException reculryException = new RecurlyAPIErrorException("APIError", errors);
-                    if(response.getStatusCode()==404){
+                    if(response.statusCode()==404){
                         future.setException(new BillingEntityNotFoundException("Recurly account or subscription not found",reculryException));
                     }else{
                         future.setException(reculryException);
                     }
                 }
             } else {
-                future.setException(new UnknownError("Unknown error. Received " + response.getStatusCode() + " From Recurly"));
+                future.setException(new UnknownError("Unknown error. Received " + response.statusCode() + " From Recurly"));
             }
         } catch (Exception e) {
             future.setException(e);
         }
     }
 }
-

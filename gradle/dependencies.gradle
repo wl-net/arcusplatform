@@ -65,8 +65,6 @@ ext.libraries << [
 			exclude group: "org.slf4j", module: "slf4j-log4j12"
 			exclude group: "log4j", module: "log4j"
 		},
-		asyncHTTPClient: "org.asynchttpclient:async-http-client:2.12.4",
-
 // Apache Lucene
 		luceneCore: "org.apache.lucene:lucene-core:5.4.0",
 		luceneAnalyzer: "org.apache.lucene:lucene-analyzers-common:5.4.0",

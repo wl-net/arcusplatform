@@ -21,7 +21,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -36,8 +35,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.asynchttpclient.AsyncCompletionHandler;
-import org.asynchttpclient.Response;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
@@ -309,60 +306,60 @@ public final class IrisUpnpService {
          return;
       }
 
-      AsyncHttpService.get(location).execute(new AsyncCompletionHandler<Response>() {
-         @Override
-         public Response onCompleted(@Nullable Response response) throws Exception {
-            if (response == null || response.getStatusCode() != 200) {
-               return response;
-            }
+      AsyncHttpService.getAsync(location).whenComplete((response, ex) -> {
+         if (ex != null) {
+            log.debug("failed to fetch upnp descriptor:", ex);
+            return;
+         }
 
-            try {
-               XmlPullParser parser = xmlFactory.newPullParser();
-               parser.setInput(new StringReader(response.getResponseBody(StandardCharsets.UTF_8)));
+         if (response.statusCode() != 200) {
+            return;
+         }
 
-               String manuf = device.manuf;
-               String model = device.model;
+         try {
+            XmlPullParser parser = xmlFactory.newPullParser();
+            parser.setInput(new StringReader(response.body()));
 
-               do {
-                  switch (parser.getEventType()) {
-                  case XmlPullParser.START_TAG:
-                     switch (parser.getName().toLowerCase()) {
-                     case "manufacturer":
-                        String nmanuf = parser.nextText();
-                        if (!nmanuf.trim().isEmpty() && manuf == null) {
-                           manuf = nmanuf;
-                        }
-                        break;
-                     case "modelnumber":
-                        String nmodel = parser.nextText();
-                        if (!nmodel.trim().isEmpty() && model == null) {
-                           model = nmodel;
-                        }
-                        break;
-                     default:
-                        // ignore
-                        break;
+            String manuf = device.manuf;
+            String model = device.model;
+
+            do {
+               switch (parser.getEventType()) {
+               case XmlPullParser.START_TAG:
+                  switch (parser.getName().toLowerCase()) {
+                  case "manufacturer":
+                     String nmanuf = parser.nextText();
+                     if (!nmanuf.trim().isEmpty() && manuf == null) {
+                        manuf = nmanuf;
+                     }
+                     break;
+                  case "modelnumber":
+                     String nmodel = parser.nextText();
+                     if (!nmodel.trim().isEmpty() && model == null) {
+                        model = nmodel;
                      }
                      break;
                   default:
                      // ignore
                      break;
                   }
-
-                  //log.info("xml: {} -> {}", parser.getName(), parser.nextText());
-               } while (parser.next() != XmlPullParser.END_DOCUMENT);
-
-               device.manuf = manuf;
-               device.model = model;
-               if ((manuf != null) && (model != null)) {
-                  device.discovered = true;
-                  added(device);
+                  break;
+               default:
+                  // ignore
+                  break;
                }
-            } catch (Exception ex) {
-               log.debug("failed to parse upnp descriptor:", ex);
-            }
 
-            return response;
+               //log.info("xml: {} -> {}", parser.getName(), parser.nextText());
+            } while (parser.next() != XmlPullParser.END_DOCUMENT);
+
+            device.manuf = manuf;
+            device.model = model;
+            if ((manuf != null) && (model != null)) {
+               device.discovered = true;
+               added(device);
+            }
+         } catch (Exception parseEx) {
+            log.debug("failed to parse upnp descriptor:", parseEx);
          }
       });
    }
