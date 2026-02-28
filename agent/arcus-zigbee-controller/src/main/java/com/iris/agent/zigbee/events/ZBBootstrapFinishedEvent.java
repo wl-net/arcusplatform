@@ -16,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.events;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+public class ZBBootstrapFinishedEvent implements ZBEvent {
+   @Override
+   public ZBEventType getType() {
+      return ZBEventType.BOOTSTRAPPED;
+   }
 }

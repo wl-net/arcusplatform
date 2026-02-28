@@ -16,10 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.events;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+public class ZBNodeGoneOfflineEvent implements ZBEvent {
+   private final long ieeeAddr;
+
+   public ZBNodeGoneOfflineEvent(long ieeeAddr) {
+      this.ieeeAddr = ieeeAddr;
+   }
+
+   @Override
+   public ZBEventType getType() {
+      return ZBEventType.GONE_OFFLINE;
+   }
+
+   public long getIeeeAddr() {
+      return ieeeAddr;
+   }
 }

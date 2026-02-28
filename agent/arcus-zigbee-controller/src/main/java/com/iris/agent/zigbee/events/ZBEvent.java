@@ -16,10 +16,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.events;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+public interface ZBEvent {
+
+   enum ZBEventType {
+      BOOTSTRAPPED,
+      NODE_ADDED,
+      NODE_REMOVED,
+      NODE_COMMAND,
+      HEARD_FROM,
+      GONE_ONLINE,
+      GONE_OFFLINE,
+      OFFLINE_TIMEOUT,
+      START_PAIRING,
+      STOP_PAIRING,
+      START_UNPAIRING,
+      STOP_UNPAIRING
+   }
+
+   ZBEventType getType();
 }

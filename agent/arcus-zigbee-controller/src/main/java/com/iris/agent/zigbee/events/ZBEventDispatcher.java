@@ -16,10 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.events;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+public class ZBEventDispatcher {
+
+   public static final ZBEventDispatcher INSTANCE = new ZBEventDispatcher();
+
+   private ZBEventDispatcher() {}
+
+   private final Set<ZBEventListener> listeners = new CopyOnWriteArraySet<>();
+
+   public void dispatch(final ZBEvent event) {
+      listeners.forEach(l -> l.onZBEvent(event));
+   }
+
+   public void register(final ZBEventListener listener) {
+      listeners.add(listener);
+   }
+
+   public void unregister(final ZBEventListener listener) {
+      listeners.remove(listener);
+   }
 }

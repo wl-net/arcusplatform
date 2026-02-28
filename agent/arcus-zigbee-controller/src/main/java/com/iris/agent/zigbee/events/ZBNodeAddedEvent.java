@@ -16,10 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.events;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+import com.iris.agent.zigbee.node.ZBNode;
+
+public class ZBNodeAddedEvent implements ZBEvent {
+   private final ZBNode node;
+
+   public ZBNodeAddedEvent(ZBNode node) {
+      this.node = node;
+   }
+
+   @Override
+   public ZBEventType getType() {
+      return ZBEventType.NODE_ADDED;
+   }
+
+   public ZBNode getNode() {
+      return node;
+   }
 }

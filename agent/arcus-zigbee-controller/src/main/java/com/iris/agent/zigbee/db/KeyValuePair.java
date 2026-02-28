@@ -16,10 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.agent.zigbee;
 
-import com.iris.agent.zigbee.ember.ZigbeeDriver;
+package com.iris.agent.zigbee.db;
 
-public abstract class ZigbeeDriverFactory {
-   public abstract ZigbeeDriver create();
+public class KeyValuePair {
+   private final String key;
+   private final String value;
+
+   public KeyValuePair(String key, String value) {
+      this.key = key;
+      this.value = value;
+   }
+
+   public String getKey() {
+      return key;
+   }
+
+   public String getValue() {
+      return value;
+   }
 }
