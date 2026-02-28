@@ -73,13 +73,12 @@ public class BindClientContextHandler extends ChannelInboundHandlerAdapter {
             String sessionId = extractSessionId((FullHttpRequest) msg);
             logger.debug("Extracted Session Id in BindClientContext: {}", sessionId);
             Client.bind(ctx.channel(), registry.load(sessionId));
-            BridgeMdcUtil.bindHttpContext(registry, ctx.channel(), (FullHttpRequest) msg);
          }
          catch(Exception ex) {
-            logger.warn("Exception while retrieving client session", ex);
-            requestAuthorizer.handleFailedAuth(ctx, (FullHttpRequest) msg);
-            return;
+            logger.warn("Exception while retrieving client session, falling back to unauthenticated client", ex);
+            Client.bind(ctx.channel(), registry.create());
          }
+         BridgeMdcUtil.bindHttpContext(registry, ctx.channel(), (FullHttpRequest) msg);
       }
 
       super.channelRead(ctx, msg);
