@@ -106,7 +106,6 @@ public class IrisNettyCorsConfig {
          .allowedRequestHeaders(allowRequest)
          .allowedRequestMethods(allowMethods)
          .maxAge(1209600)
-         .shortCurcuit()
          .build();
    }
 }
