@@ -183,35 +183,41 @@ public class ShiroAuthenticator implements Authenticator {
       String password = null;
 
       // the body here is username/password DON'T LOG THE CONTENTS
-      HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), req);
-
-      List<InterfaceHttpData> datas = decoder.getBodyHttpDatas();
-      for (InterfaceHttpData data : datas) {
-         if (data.getHttpDataType() == HttpDataType.Attribute) {
-            try {
-               String name = data.getName();
-               String value = ((Attribute)data).getString();
-               switch(name) {
-               case "user":
-                  username = value;
-                  break;
-               case "password":
-                  password = value;
-                  break;
-               case "token":
-                  token = value;
-                  break;
-               case "public":
-                  isPublic = "true".equalsIgnoreCase(value);
-                  break;
+      try {
+         HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), req);
+         try {
+            List<InterfaceHttpData> datas = decoder.getBodyHttpDatas();
+            for (InterfaceHttpData data : datas) {
+               if (data.getHttpDataType() == HttpDataType.Attribute) {
+                  try {
+                     String name = data.getName();
+                     String value = ((Attribute)data).getString();
+                     switch(name) {
+                     case "user":
+                        username = value;
+                        break;
+                     case "password":
+                        password = value;
+                        break;
+                     case "token":
+                        token = value;
+                        break;
+                     case "public":
+                        isPublic = "true".equalsIgnoreCase(value);
+                        break;
+                     }
+                  }
+                  catch (IOException e) {
+                     logger.error("Error getting HTTP attribute from POST request", e);
+                  }
                }
             }
-            catch (IOException e) {
-               logger.error("Error getting HTTP attribute from POST request", e);
-            }
+         } finally {
+            decoder.destroy();
          }
+      } catch (Exception e) {
+         logger.debug("Could not decode POST body as form data, will try JSON", e);
       }
-      decoder.destroy();
 
       // Fallback to JSON decode
       if (username == null && password == null && token == null) {
