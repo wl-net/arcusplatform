@@ -18,8 +18,10 @@ package com.iris.agent.reflex;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -56,6 +58,7 @@ public final class ReflexDao {
 
    private static final String CONFIG_REFLEXDB = "reflexdb";
    private static final String CONFIG_REFLEXDB_PINS = "reflexdbpins";
+   private static final String CONFIG_CHIME_ENABLED_DEVICES = "chimeenableddevices";
 
    private static final Map<String,String> config = Collections.synchronizedMap(new HashMap<>());
    private static boolean reflexStarted = false;
@@ -113,6 +116,26 @@ public final class ReflexDao {
 
       String json = JSON.toJson(put);
       put(CONFIG_REFLEXDB_PINS, json);
+   }
+
+   public static Set<String> getChimeEnabledDevices() {
+      try {
+         String json = get(CONFIG_CHIME_ENABLED_DEVICES);
+         if (json == null || json.isEmpty()) {
+            return Collections.emptySet();
+         }
+
+         List<String> list = JSON.fromJson(json, TypeMarker.listOf(String.class));
+         return new HashSet<>(list);
+      } catch (Exception ex) {
+         log.warn("failed to load chime enabled devices: ", ex);
+         return Collections.emptySet();
+      }
+   }
+
+   public static void putChimeEnabledDevices(Set<String> devices) {
+      String json = JSON.toJson(new ArrayList<>(devices));
+      put(CONFIG_CHIME_ENABLED_DEVICES, json);
    }
 
    public static void putReflexDB(@Nullable String reflexesBase64) {

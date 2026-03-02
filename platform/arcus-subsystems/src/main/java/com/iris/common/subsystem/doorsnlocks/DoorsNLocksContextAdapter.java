@@ -36,6 +36,7 @@ import com.iris.common.subsystem.SubsystemContext;
 import com.iris.common.subsystem.SubsystemUtils;
 import com.iris.messages.MessageBody;
 import com.iris.messages.address.Address;
+import com.iris.messages.capability.DeviceAdvancedCapability;
 import com.iris.messages.capability.DoorLockCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.PersonAuthorizedEvent;
@@ -45,6 +46,7 @@ import com.iris.messages.capability.KeyPadCapability;
 import com.iris.messages.capability.PersonCapability;
 import com.iris.messages.capability.SubsystemCapability;
 import com.iris.messages.model.Model;
+import com.iris.messages.model.dev.DeviceAdvancedModel;
 import com.iris.messages.model.serv.AccountModel;
 import com.iris.messages.model.serv.PersonModel;
 import com.iris.messages.model.subs.DoorsNLocksSubsystemModel;
@@ -158,6 +160,12 @@ class DoorsNLocksContextAdapter {
    }
 
    void chime(Model chime) {
+      if (DoorsNLocksPredicates.IS_HUB_CHIME.apply(chime)) {
+         Boolean supportsLocal = (Boolean) chime.getAttribute(HubChimeCapability.ATTR_SUPPORTSLOCALCHIME);
+         if (Boolean.TRUE.equals(supportsLocal)) {
+            return;
+         }
+      }
       context.request(chime.getAddress(), getChimeMessage(chime));
    }
 
@@ -435,6 +443,34 @@ class DoorsNLocksContextAdapter {
          currentConfig.remove(toRemove);
          context.model().setChimeConfig(Collections.unmodifiableSet(currentConfig));
       }
+   }
+
+   void pushChimeConfigToHub() {
+      Set<String> enabledDevices = new HashSet<>();
+      for (DoorChimeConfig config : getChimeConfig()) {
+         if (!config.getEnabled()) {
+            continue;
+         }
+
+         Model device = context.models().getModelByAddress(Address.fromString(config.getDevice()));
+         if (device == null) {
+            continue;
+         }
+
+         String protocol = DeviceAdvancedModel.getProtocol(device);
+         String protocolid = DeviceAdvancedModel.getProtocolid(device);
+         if (protocol == null || protocolid == null) {
+            continue;
+         }
+
+         enabledDevices.add(protocol + ":" + protocolid);
+      }
+
+      logger().info("pushing chime config to hub: {} enabled devices", enabledDevices.size());
+      MessageBody syncMsg = HubChimeCapability.SyncChimeConfigRequest.builder()
+         .withEnabledDevices(enabledDevices)
+         .build();
+      SubsystemUtils.sendToHub(context, syncMsg);
    }
 
    private boolean addToAddressSet(String attribute, Address address) {

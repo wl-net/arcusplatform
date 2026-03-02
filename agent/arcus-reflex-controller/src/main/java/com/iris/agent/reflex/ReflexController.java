@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +55,7 @@ import com.iris.agent.addressing.HubAddressUtils;
 import com.iris.agent.attributes.HubAttributesService;
 import com.iris.agent.device.HubDeviceService;
 import com.iris.agent.hal.IrisHal;
+import com.iris.agent.hal.SounderMode;
 import com.iris.agent.lifecycle.LifeCycle;
 import com.iris.agent.lifecycle.LifeCycleListener;
 import com.iris.agent.lifecycle.LifeCycleService;
@@ -80,8 +82,10 @@ import com.iris.messages.PlatformMessage;
 import com.iris.messages.address.Address;
 import com.iris.messages.address.DeviceProtocolAddress;
 import com.iris.messages.address.ProtocolDeviceId;
+import com.iris.messages.capability.ContactCapability;
 import com.iris.messages.capability.DeviceAdvancedCapability;
 import com.iris.messages.capability.HubCapability;
+import com.iris.messages.capability.HubChimeCapability;
 import com.iris.messages.capability.HubReflexCapability;
 import com.iris.messages.errors.Errors;
 import com.iris.messages.service.DeviceService;
@@ -165,6 +169,13 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
       }
    });
 
+   @SuppressWarnings("unused")
+   private final HubAttributesService.Attribute<Boolean> supportsLocalChimeAttr = HubAttributesService.ephemeral(Boolean.class, HubChimeCapability.ATTR_SUPPORTSLOCALCHIME, Boolean.TRUE);
+
+   private static volatile ReflexController INSTANCE;
+
+   private volatile Set<String> chimeEnabledDevices = Collections.emptySet();
+
    private Map<String,UUID> pinToUser;
    private Map<UUID,String> userToPin;
 
@@ -206,8 +217,17 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
       this.processors = new HashMap<>();
    }
 
+   public static void updateChimeEnabledDevices(Set<String> devices) {
+      ReflexController instance = INSTANCE;
+      if (instance != null) {
+         instance.chimeEnabledDevices = (devices != null) ? devices : Collections.emptySet();
+         log.info("updated chime enabled devices: {} devices", instance.chimeEnabledDevices.size());
+      }
+   }
+
    @PostConstruct
    public void initialize() {
+      INSTANCE = this;
       ReflexDao.start();
       this.port = router.connect("rflx", this, ADDRESS, new PortHandler() {
          @Override @Nullable public Object recv(Port port, PlatformMessage message) throws Exception { return recvDirect(port,message); }
@@ -226,6 +246,13 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
                updateReflexPins(ReflexDao.getReflexDBPins());
             } catch (Exception ex) {
                log.warn("failed to load user pin codes during startup:", ex);
+            }
+
+            try {
+               chimeEnabledDevices = ReflexDao.getChimeEnabledDevices();
+               log.info("loaded {} chime enabled devices from db", chimeEnabledDevices.size());
+            } catch (Exception ex) {
+               log.warn("failed to load chime enabled devices during startup:", ex);
             }
 
             try {
@@ -1025,11 +1052,26 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
 
       boolean consumed = false;
       if (processor != null) {
+         Object contactBefore = null;
+         boolean checkChime = !chimeEnabledDevices.isEmpty()
+            && processor.getCapabilities().contains(ContactCapability.NAMESPACE);
+         if (checkChime) {
+            contactBefore = processor.getAttribute(ContactCapability.ATTR_CONTACT);
+         }
+
          if (forwarded != null) {
             processor.handle(forwarded);
             consumed = true;
          } else {
             consumed = processor.handle(message);
+         }
+
+         if (checkChime) {
+            Object contactAfter = processor.getAttribute(ContactCapability.ATTR_CONTACT);
+            if (ContactCapability.CONTACT_OPENED.equals(contactAfter)
+                  && !ContactCapability.CONTACT_OPENED.equals(contactBefore)) {
+               checkAndPlayChime(device);
+            }
          }
       }
 
@@ -1050,6 +1092,25 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
          } catch (Exception ex) {
             log.info("task failed:", ex);
          }
+      }
+   }
+
+   /////////////////////////////////////////////////////////////////////////////
+   // Local chime support
+   /////////////////////////////////////////////////////////////////////////////
+
+   private void checkAndPlayChime(Address device) {
+      try {
+         if (device instanceof DeviceProtocolAddress) {
+            DeviceProtocolAddress dpa = (DeviceProtocolAddress) device;
+            String key = dpa.getProtocolName() + ":" + dpa.getProtocolDeviceId().getRepresentation();
+            if (chimeEnabledDevices.contains(key)) {
+               log.info("local chime triggered by contact open on {}", device);
+               IrisHal.setSounderMode(SounderMode.CHIME);
+            }
+         }
+      } catch (Exception ex) {
+         log.warn("failed to check/play local chime:", ex);
       }
    }
 
