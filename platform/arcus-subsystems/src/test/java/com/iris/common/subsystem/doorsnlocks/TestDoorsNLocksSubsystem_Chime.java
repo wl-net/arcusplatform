@@ -19,12 +19,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.iris.messages.MessageBody;
 import com.iris.messages.capability.ContactCapability;
+import com.iris.messages.capability.HubChimeCapability;
+import com.iris.messages.capability.KeyPadCapability;
 import com.iris.messages.type.DoorChimeConfig;
 
 public class TestDoorsNLocksSubsystem_Chime extends DoorsNLocksSubsystemTestCase {
@@ -91,7 +94,12 @@ public class TestDoorsNLocksSubsystem_Chime extends DoorsNLocksSubsystemTestCase
       updateModel(sensorAddr, update);
       assertSensorOpened(sensorAddr);
       List<MessageBody> bodies = requests.getValues();
-      assertEquals(2, bodies.size());
+      // Filter for actual chime requests (exclude SyncChimeConfig requests pushed to hub)
+      List<MessageBody> chimeRequests = bodies.stream()
+         .filter(b -> HubChimeCapability.chimeRequest.NAME.equals(b.getMessageType())
+                   || KeyPadCapability.ChimeRequest.NAME.equals(b.getMessageType()))
+         .collect(Collectors.toList());
+      assertEquals(2, chimeRequests.size());
    }
 }
 

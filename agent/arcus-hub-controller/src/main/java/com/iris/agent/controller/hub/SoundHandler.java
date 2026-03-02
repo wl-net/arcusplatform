@@ -19,8 +19,13 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.Set;
+
 import com.iris.agent.hal.IrisHal;
 import com.iris.agent.hal.SounderMode;
+import com.iris.agent.reflex.ReflexController;
+import com.iris.agent.reflex.ReflexDao;
 import com.iris.agent.router.Port;
 import com.iris.agent.router.PortHandler;
 import com.iris.messages.MessageBody;
@@ -41,6 +46,7 @@ enum SoundHandler implements PortHandler {
       parent.delegate(
          this,
          HubChimeCapability.chimeRequest.NAME,
+         HubChimeCapability.SyncChimeConfigRequest.NAME,
          HubSoundsCapability.PlayToneRequest.NAME,
          HubSoundsCapability.QuietRequest.NAME
       );
@@ -53,6 +59,9 @@ enum SoundHandler implements PortHandler {
       switch (type) {
       case HubChimeCapability.chimeRequest.NAME:
          return handleChimeRequest();
+
+      case HubChimeCapability.SyncChimeConfigRequest.NAME:
+         return handleSyncChimeConfig(message);
 
       case  HubSoundsCapability.PlayToneRequest.NAME:
          return handleHubSoundsPlayTone(message);
@@ -77,6 +86,19 @@ enum SoundHandler implements PortHandler {
    private Object handleChimeRequest() {
       IrisHal.setSounderMode(SounderMode.CHIME);
       return HubChimeCapability.chimeResponse.instance();
+   }
+
+   private Object handleSyncChimeConfig(PlatformMessage message) {
+      MessageBody body = message.getValue();
+      Set<String> enabledDevices = HubChimeCapability.SyncChimeConfigRequest.getEnabledDevices(body);
+      if (enabledDevices == null) {
+         enabledDevices = Collections.emptySet();
+      }
+
+      log.info("syncing chime config: {} enabled devices", enabledDevices.size());
+      ReflexDao.putChimeEnabledDevices(enabledDevices);
+      ReflexController.updateChimeEnabledDevices(enabledDevices);
+      return HubChimeCapability.SyncChimeConfigResponse.instance();
    }
    
    private Object handleHubSoundsPlayTone(PlatformMessage message) {

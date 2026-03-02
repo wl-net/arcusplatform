@@ -57,6 +57,7 @@ import com.iris.messages.capability.DoorLockCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.AuthorizePeopleRequest;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.SynchAuthorizationRequest;
+import com.iris.messages.capability.HubConnectionCapability;
 import com.iris.messages.capability.MotorizedDoorCapability;
 import com.iris.messages.capability.NotificationCapability;
 import com.iris.messages.capability.PersonCapability;
@@ -150,6 +151,7 @@ public class DoorsNLocksSubsystem extends BaseSubsystem<DoorsNLocksSubsystemMode
       syncDevices(adapter);
       syncChimeConfig(adapter);
       adapter.updateAvailable();
+      adapter.pushChimeConfigToHub();
    }
 
    @OnAdded(query=DoorsNLocksPredicates.QUERY_DOORLOCK_DEVICES)
@@ -385,6 +387,21 @@ public class DoorsNLocksSubsystem extends BaseSubsystem<DoorsNLocksSubsystemMode
             adapter.updateOffline(m);
          }
       }
+   }
+
+   @OnValueChanged(attributes={HubConnectionCapability.ATTR_STATE})
+   public void onHubConnectionStateChange(ModelChangedEvent event, SubsystemContext<DoorsNLocksSubsystemModel> context) {
+      if (HubConnectionCapability.STATE_ONLINE.equals(event.getAttributeValue())) {
+         DoorsNLocksContextAdapter adapter = new DoorsNLocksContextAdapter(context);
+         adapter.logger().info("hub reconnected, pushing chime config");
+         adapter.pushChimeConfigToHub();
+      }
+   }
+
+   @OnValueChanged(attributes={DoorsNLocksSubsystemCapability.ATTR_CHIMECONFIG})
+   public void onChimeConfigChanged(ModelChangedEvent event, SubsystemContext<DoorsNLocksSubsystemModel> context) {
+      DoorsNLocksContextAdapter adapter = new DoorsNLocksContextAdapter(context);
+      adapter.pushChimeConfigToHub();
    }
 
    @OnMessage(types = { DoorLockCapability.PersonAuthorizedEvent.NAME })
