@@ -51,6 +51,10 @@ public class ZBNode {
    // Device capability from Device Announce
    private int deviceCapability;
 
+   // Basic cluster attributes (for driver matching)
+   private String vendor;
+   private String model;
+
    private boolean online;
    private int offlineTimeout;
    private int strikes;
@@ -62,7 +66,8 @@ public class ZBNode {
                  int maximumIncomingTransferSize, int maximumOutgoingTransferSize,
                  int nodeFlags, int serverMask, int manufacturerCode,
                  int descriptorCapability, int maximumBufferSize, int macCapabilityFlags,
-                 int powerDescriptor, int deviceCapability, boolean online, int offlineTimeout) {
+                 int powerDescriptor, int deviceCapability, boolean online, int offlineTimeout,
+                 String vendor, String model) {
       this.ieeeAddr = ieeeAddr;
       this.nwkAddr = nwkAddr;
       this.parentAddr = parentAddr;
@@ -79,6 +84,8 @@ public class ZBNode {
       this.deviceCapability = deviceCapability;
       this.online = online;
       this.offlineTimeout = offlineTimeout;
+      this.vendor = vendor;
+      this.model = model;
       this.strikes = 0;
       this.lastCall = 0;
       this.deviceId = computeDeviceId(ieeeAddr);
@@ -89,14 +96,14 @@ public class ZBNode {
    }
 
    public static ProtocolDeviceId computeDeviceId(long ieeeAddr) {
-      ByteBuffer buf = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN);
+      ByteBuffer buf = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN);
       buf.putLong(ieeeAddr);
       return ProtocolDeviceId.fromBytes(buf.array());
    }
 
    public Address getProtocolAddress() {
       return Address.hubProtocolAddress(
-            com.iris.agent.hal.IrisHal.getHubId(), "ZBIG", deviceId);
+            com.iris.agent.hal.IrisHal.getHubId(), "ZIGB", deviceId);
    }
 
    public long getIeeeAddr() {
@@ -131,32 +138,64 @@ public class ZBNode {
       return maximumIncomingTransferSize;
    }
 
+   public void setMaximumIncomingTransferSize(int maximumIncomingTransferSize) {
+      this.maximumIncomingTransferSize = maximumIncomingTransferSize;
+   }
+
    public int getMaximumOutgoingTransferSize() {
       return maximumOutgoingTransferSize;
+   }
+
+   public void setMaximumOutgoingTransferSize(int maximumOutgoingTransferSize) {
+      this.maximumOutgoingTransferSize = maximumOutgoingTransferSize;
    }
 
    public int getNodeFlags() {
       return nodeFlags;
    }
 
+   public void setNodeFlags(int nodeFlags) {
+      this.nodeFlags = nodeFlags;
+   }
+
    public int getServerMask() {
       return serverMask;
+   }
+
+   public void setServerMask(int serverMask) {
+      this.serverMask = serverMask;
    }
 
    public int getManufacturerCode() {
       return manufacturerCode;
    }
 
+   public void setManufacturerCode(int manufacturerCode) {
+      this.manufacturerCode = manufacturerCode;
+   }
+
    public int getDescriptorCapability() {
       return descriptorCapability;
+   }
+
+   public void setDescriptorCapability(int descriptorCapability) {
+      this.descriptorCapability = descriptorCapability;
    }
 
    public int getMaximumBufferSize() {
       return maximumBufferSize;
    }
 
+   public void setMaximumBufferSize(int maximumBufferSize) {
+      this.maximumBufferSize = maximumBufferSize;
+   }
+
    public int getMacCapabilityFlags() {
       return macCapabilityFlags;
+   }
+
+   public void setMacCapabilityFlags(int macCapabilityFlags) {
+      this.macCapabilityFlags = macCapabilityFlags;
    }
 
    public int getPowerDescriptor() {
@@ -217,5 +256,21 @@ public class ZBNode {
     */
    public boolean isSleepyDevice() {
       return (macCapabilityFlags & 0x08) == 0;
+   }
+
+   public String getVendor() {
+      return vendor;
+   }
+
+   public void setVendor(String vendor) {
+      this.vendor = vendor;
+   }
+
+   public String getModel() {
+      return model;
+   }
+
+   public void setModel(String model) {
+      this.model = model;
    }
 }

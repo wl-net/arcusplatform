@@ -29,7 +29,6 @@ dependencies {
    implementation libraries.guava
    implementation 'com.google.code.findbugs:jsr305:3.0.1'
    implementation libraries.zsmartsystems_zigbee
-   implementation libraries.zsmartsystems_zigbee_serial
    implementation libraries.zsmartsystems_zigbee_ember
 
    testImplementation project(':agent:arcus-test-agent')

@@ -51,10 +51,12 @@ public class ZBPairing implements ZBEventListener {
          return;
       }
 
-      driver.permitJoin(pairingTimeoutInSecs);
+      // ZigBee spec limits permit join to 254 seconds
+      int permitDuration = Math.min(pairingTimeoutInSecs, 254);
+      driver.permitJoin(permitDuration);
       isPairing = true;
       ZBScheduler.INSTANCE.startProcess(this::stopPairing, pairingTimeoutInSecs);
-      logger.info("ZigBee pairing started for {} seconds", pairingTimeoutInSecs);
+      logger.info("ZigBee pairing started for {} seconds (permit join {}s)", pairingTimeoutInSecs, permitDuration);
    }
 
    public synchronized void stopPairing() {

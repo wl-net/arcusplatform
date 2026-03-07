@@ -37,6 +37,8 @@ public interface ZigbeeDriver {
 
    void send(ZigBeeCommand command);
 
+   void sendApsFrame(com.zsmartsystems.zigbee.aps.ZigBeeApsFrame apsFrame);
+
    ZigBeeNetworkManager getNetworkManager();
 
    long getCoordinatorEui64();

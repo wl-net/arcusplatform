@@ -51,7 +51,7 @@ public class ZBDao {
 
    private static final String READ_NODE = NODES_QUERY + " WHERE ieeeAddr=?";
 
-   private static final String CREATE_NODE = "INSERT INTO zigbee_node(ieeeAddr, nwkAddr, parentAddr, state, " +
+   private static final String CREATE_NODE = "INSERT OR REPLACE INTO zigbee_node(ieeeAddr, nwkAddr, parentAddr, state, " +
          "maximumIncomingTransferSize, maximumOutgoingTransferSize, nodeFlags, serverMask, " +
          "manufacturerCode, descriptorCapability, maximumBufferSize, macCapabilityFlags, " +
          "powerDescriptor, deviceCapability, online, offlineTimeout) " +

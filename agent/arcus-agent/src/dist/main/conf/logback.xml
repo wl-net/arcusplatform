@@ -61,6 +61,10 @@
   <logger name="com.iris.agent.zigbee" level="DEBUG" />
   <logger name="com.iris.agent.ble" level="DEBUG" />
 
+  <logger name="com.zsmartsystems.zigbee.dongle.ember.internal.ash" level="INFO" />
+  <logger name="com.zsmartsystems.zigbee.dongle.ember" level="INFO" />
+  <logger name="com.zsmartsystems.zigbee" level="INFO" />
+
   <logger name="driver" level="WARN" />
 
   <root level="DEBUG">

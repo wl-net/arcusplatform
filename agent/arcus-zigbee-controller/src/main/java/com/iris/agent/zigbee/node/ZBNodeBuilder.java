@@ -36,6 +36,8 @@ public class ZBNodeBuilder {
    private int deviceCapability = 0;
    private boolean online = true;
    private int offlineTimeout = 0;
+   private String vendor;
+   private String model;
 
    public ZBNodeBuilder(long ieeeAddr) {
       this.ieeeAddr = ieeeAddr;
@@ -116,11 +118,22 @@ public class ZBNodeBuilder {
       return this;
    }
 
+   public ZBNodeBuilder setVendor(String vendor) {
+      this.vendor = vendor;
+      return this;
+   }
+
+   public ZBNodeBuilder setModel(String model) {
+      this.model = model;
+      return this;
+   }
+
    public ZBNode build() {
       return new ZBNode(ieeeAddr, nwkAddr, parentAddr, state,
             maximumIncomingTransferSize, maximumOutgoingTransferSize,
             nodeFlags, serverMask, manufacturerCode,
             descriptorCapability, maximumBufferSize, macCapabilityFlags,
-            powerDescriptor, deviceCapability, online, offlineTimeout);
+            powerDescriptor, deviceCapability, online, offlineTimeout,
+            vendor, model);
    }
 }

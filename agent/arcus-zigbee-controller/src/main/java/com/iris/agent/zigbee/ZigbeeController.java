@@ -65,6 +65,7 @@ import com.iris.messages.MessageBody;
 import com.iris.messages.MessageConstants;
 import com.iris.messages.PlatformMessage;
 import com.iris.messages.address.Address;
+import com.iris.messages.address.ProtocolDeviceId;
 import com.iris.messages.capability.DeviceAdvancedCapability;
 import com.iris.messages.capability.HubAdvancedCapability;
 import com.iris.messages.capability.HubCapability;
@@ -81,7 +82,7 @@ import com.iris.bootstrap.annotations.WarmUp;
 public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEventListener {
    private static final Logger logger = LoggerFactory.getLogger(ZigbeeController.class);
 
-   public static final HubBridgeAddress ADDRESS = HubAddressUtils.bridge("zigbee", "ZBIG");
+   public static final HubBridgeAddress ADDRESS = HubAddressUtils.bridge("zigbee", "ZIGB");
    private static final int ADD_REMOVE_DEVICE_TTL = (int) TimeUnit.MILLISECONDS.convert(30, TimeUnit.MINUTES);
    private static final Address DEVICE_SERVICE = Address.platformService(PlatformConstants.SERVICE_DEVICES);
 
@@ -116,6 +117,7 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
       ZBEventDispatcher.INSTANCE.register(this);
 
       // Create driver and bootstrap
+      new ZBLEDsAndSounds();
       driver = driverFactory.create();
       ZBBootstrapper.INSTANCE.bootstrap(driver);
       zbNetwork = ZBServices.INSTANCE.getNetwork();
@@ -194,8 +196,16 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
             if (node != null) {
                ProtocolMessage smsg = ZBMessageTranslator.createProtocolMessage(node, cmdEvent.getMessage());
                if (smsg != null) {
+                  logger.info("Forwarding protocol message for IEEE={} from={} to={}",
+                        String.format("%016X", node.getIeeeAddr()), smsg.getSource(), smsg.getDestination());
                   port.send(smsg);
+               } else {
+                  logger.warn("createProtocolMessage returned null for IEEE={}",
+                        String.format("%016X", node.getIeeeAddr()));
                }
+            } else {
+               logger.warn("NODE_COMMAND: node not found for IEEE={}",
+                     String.format("%016X", cmdEvent.getIeeeAddr()));
             }
             break;
          }
@@ -297,7 +307,37 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
       switch (action) {
          case HubCapability.UnpairingRequestRequest.ACTIONTYPE_START_UNPAIRING:
             long timeoutInMillis = HubCapability.UnpairingRequestRequest.getTimeout(body);
-            ZBPairing.INSTANCE.startRemoval((int) (timeoutInMillis / 1000));
+            String protocolId = HubCapability.UnpairingRequestRequest.getProtocolId(body);
+            Boolean force = HubCapability.UnpairingRequestRequest.getForce(body, false);
+
+            if (protocolId != null && !protocolId.isEmpty()) {
+               // Targeted removal of a specific device
+               ProtocolDeviceId devId = ProtocolDeviceId.fromRepresentation(protocolId);
+               ZBNode node = zbNetwork.getNode(devId);
+               if (node != null) {
+                  long ieee = node.getIeeeAddr();
+                  logger.info("Removing ZigBee device IEEE={}", String.format("%016X", ieee));
+                  ZBPairing.INSTANCE.removeDevice(ieee);
+                  zbNetwork.deregisterNode(ieee);
+
+                  // Also remove from zsmartsystems so it triggers full
+                  // onNodeAdded discovery if the device rejoins
+                  com.zsmartsystems.zigbee.ZigBeeNetworkManager nwkMgr = driver.getNetworkManager();
+                  if (nwkMgr != null) {
+                     com.zsmartsystems.zigbee.IeeeAddress zsIeee = new com.zsmartsystems.zigbee.IeeeAddress(
+                           String.format("%016X", ieee));
+                     nwkMgr.removeNode(nwkMgr.getNode(zsIeee));
+                  }
+
+                  ZBEventDispatcher.INSTANCE.dispatch(
+                        new ZBNodeRemovedEvent(ieee));
+               } else {
+                  logger.warn("Cannot remove device: protocolId {} not found", protocolId);
+               }
+            } else {
+               // General removal mode
+               ZBPairing.INSTANCE.startRemoval((int) (timeoutInMillis / 1000));
+            }
             return null;
          case HubCapability.UnpairingRequestRequest.ACTIONTYPE_STOP_UNPAIRING:
             ZBPairing.INSTANCE.stopRemoval();
@@ -336,6 +376,12 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
       attributes.set(AttributeKey.create(ZigbeeConstants.ATTR_MAXBUF, Integer.class), node.getMaximumBufferSize());
       attributes.set(AttributeKey.create(ZigbeeConstants.ATTR_MCAP, Integer.class), node.getMacCapabilityFlags());
       attributes.set(AttributeKey.create(ZigbeeConstants.ATTR_PDESC, Integer.class), node.getPowerDescriptor());
+      if (node.getVendor() != null) {
+         attributes.set(AttributeKey.create(ZigbeeConstants.ATTR_VENDOR, String.class), node.getVendor());
+      }
+      if (node.getModel() != null) {
+         attributes.set(AttributeKey.create(ZigbeeConstants.ATTR_MODEL, String.class), node.getModel());
+      }
 
       Map<String, Object> attrs = new HashMap<>();
       attrs.put(DeviceConstants.ACCOUNT_ATTR, HubAttributesService.getAccountId());
