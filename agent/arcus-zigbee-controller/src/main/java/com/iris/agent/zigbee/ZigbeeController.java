@@ -111,7 +111,7 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
 
    @WarmUp
    public void start() {
-      logger.info("Starting Zigbee controller");
+      logger.info("Starting Zigbee controller (open-source zsmartsystems implementation)");
       port = router.connect("zigb", ADDRESS, this);
       LifeCycleService.addListener(this);
       ZBEventDispatcher.INSTANCE.register(this);
