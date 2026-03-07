@@ -839,4 +839,4 @@ When building **without** external jars, the open-source stubs are used instead.
 | `arcus-hue-controller` | Not started | Philips Hue bridge integration — would need reimplementation |
 | `arcus-sercomm-controller` | Not started | Camera integration — would need reimplementation |
 
-The open-source code includes several compatibility shims (marked with TODO) to bridge Netty 4.0→4.1 and Governator→Iris lifecycle annotation differences in the iris2 jars. These can be removed once open-source replacements are complete.
+The `external_jars_dir` build property allows including closed-source iris2 jars for controllers that don't yet have open-source replacements. See [build.md](build.md#building-with-closed-source-controller-jars) for details.
