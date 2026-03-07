@@ -185,7 +185,7 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
          case NODE_REMOVED: {
             ZBNodeRemovedEvent removedEvent = (ZBNodeRemovedEvent) event;
             MessageBody req = makeRemoveDeviceMessage(removedEvent);
-            logger.info("sending remove device request: {}", req);
+            logger.debug("sending remove device request: {}", req);
             port.send(DEVICE_SERVICE, req, ADD_REMOVE_DEVICE_TTL);
             break;
          }
@@ -196,7 +196,7 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
             if (node != null) {
                ProtocolMessage smsg = ZBMessageTranslator.createProtocolMessage(node, cmdEvent.getMessage());
                if (smsg != null) {
-                  logger.info("Forwarding protocol message for IEEE={} from={} to={}",
+                  logger.debug("Forwarding protocol message for IEEE={} from={} to={}",
                         String.format("%016X", node.getIeeeAddr()), smsg.getSource(), smsg.getDestination());
                   port.send(smsg);
                } else {

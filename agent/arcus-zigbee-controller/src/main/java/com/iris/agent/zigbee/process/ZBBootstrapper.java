@@ -90,7 +90,7 @@ public class ZBBootstrapper {
          ZBNetwork network = ZBServices.INSTANCE.getNetwork();
          ZBNode node = network.getNode(ieeeAddr);
          if (node != null) {
-            logger.info("Node descriptor received for IEEE={} mfr=0x{}",
+            logger.debug("Node descriptor received for IEEE={} mfr=0x{}",
                   String.format("%016X", ieeeAddr),
                   String.format("%04X", node.getManufacturerCode()));
             if (!pendingBasicReads.contains(ieeeAddr)) {
@@ -238,13 +238,13 @@ public class ZBBootstrapper {
                   Long lastSend = lastResendTime.get(ieeeAddr);
                   if (lastSend == null || now - lastSend > RESEND_THROTTLE_MS) {
                      lastResendTime.put(ieeeAddr, now);
-                     logger.info("Re-sending discovery requests for IEEE={} NWK={}",
+                     logger.debug("Re-sending discovery requests for IEEE={} NWK={}",
                            String.format("%016X", ieeeAddr), String.format("%04X", nwkAddr));
                      resendDiscoveryRequests(driver, nwkAddr);
                   }
                } else if (bootstrapComplete && !knownAtStartup.contains(ieeeAddr)) {
                   // Node exists but wasn't loaded from DB — incomplete discovery, restart
-                  logger.info("Restarting discovery for IEEE={} NWK={} (not in knownAtStartup)",
+                  logger.debug("Restarting discovery for IEEE={} NWK={} (not in knownAtStartup)",
                         String.format("%016X", ieeeAddr), String.format("%04X", nwkAddr));
                   startDeviceDiscovery(driver, nwkAddr, ieeeAddr, network);
                } else {
@@ -335,7 +335,7 @@ public class ZBBootstrapper {
          ZBNode currentNode = network.getNode(ieeeAddr);
          int currentNwk = currentNode != null ? currentNode.getNwkAddr() : nwkAddr;
 
-         logger.info("Sending discovery requests for IEEE={} NWK={}",
+         logger.debug("Sending discovery requests for IEEE={} NWK={}",
                String.format("%016X", ieeeAddr), String.format("%04X", currentNwk));
          lastResendTime.put(ieeeAddr, System.currentTimeMillis());
          sendDiscoveryRequests(driver, currentNwk);
@@ -417,7 +417,7 @@ public class ZBBootstrapper {
       apsFrame.setPayload(zclFrame);
       driver.sendApsFrame(apsFrame);
 
-      logger.info("Sent AlertMe HelloRequest to NWK={}", String.format("%04X", nwkAddr));
+      logger.debug("Sent AlertMe HelloRequest to NWK={}", String.format("%04X", nwkAddr));
    }
 
    /**
@@ -461,7 +461,7 @@ public class ZBBootstrapper {
       apsFrame2.setPayload(zclFrame.clone());
       driver.sendApsFrame(apsFrame2);
 
-      logger.info("Requested Basic cluster attributes from NWK={} (endpoints 1 and 2)",
+      logger.debug("Requested Basic cluster attributes from NWK={} (endpoints 1 and 2)",
             String.format("%04X", nwkAddr));
    }
 
@@ -489,7 +489,7 @@ public class ZBBootstrapper {
             lastResendTime.put(ieeeAddr, now);
             ZigbeeDriver driver = ZBServices.INSTANCE.getDriver();
             if (driver != null) {
-               logger.info("Device IEEE={} heard from with {} descriptor, resending requests to NWK={}",
+               logger.debug("Device IEEE={} heard from with {} descriptor, resending requests to NWK={}",
                      String.format("%016X", ieeeAddr),
                      incompleteDescriptor ? "incomplete" : "pending",
                      String.format("%04X", nwkAddr));

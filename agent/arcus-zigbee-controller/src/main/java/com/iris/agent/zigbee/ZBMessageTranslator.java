@@ -79,7 +79,7 @@ public class ZBMessageTranslator {
     * Translates an outbound Arcus ProtocolMessage and sends it via the ZigBee network manager.
     */
    public static void handleOutboundMessage(ProtocolMessage msg) {
-      logger.info("Outbound message: type={} src={} dst={}", msg.getMessageType(), msg.getSource(), msg.getDestination());
+      logger.debug("Outbound message: type={} src={} dst={}", msg.getMessageType(), msg.getSource(), msg.getDestination());
       ZigbeeMessage.Protocol pmsg = msg.getValue(ZigbeeProtocol.INSTANCE);
       if (pmsg == null) {
          logger.warn("Could not decode zigbee protocol message, dropping: {}", msg);
@@ -258,7 +258,7 @@ public class ZBMessageTranslator {
       apsFrame.setAddressMode(com.zsmartsystems.zigbee.ZigBeeNwkAddressMode.DEVICE);
       apsFrame.setPayload(byteArrayToIntArray(rawFrame));
 
-      logger.info("Outbound ZCL: NWK={} cluster=0x{} profile=0x{} ep={} cmd=0x{}",
+      logger.debug("Outbound ZCL: NWK={} cluster=0x{} profile=0x{} ep={} cmd=0x{}",
             String.format("%04X", node.getNwkAddr()),
             String.format("%04X", zcl.getClusterId()),
             String.format("%04X", profileId),
@@ -342,7 +342,7 @@ public class ZBMessageTranslator {
       apsFrame.setAddressMode(com.zsmartsystems.zigbee.ZigBeeNwkAddressMode.DEVICE);
       apsFrame.setPayload(byteArrayToIntArray(rawFrame));
 
-      logger.info("Outbound IAS Zone Enroll Response: NWK={} cluster=0x{} profile=0x{} ep={}",
+      logger.debug("Outbound IAS Zone Enroll Response: NWK={} cluster=0x{} profile=0x{} ep={}",
             String.format("%04X", node.getNwkAddr()),
             String.format("%04X", clusterId),
             String.format("%04X", profileId),
@@ -374,7 +374,7 @@ public class ZBMessageTranslator {
       apsFrame.setAddressMode(com.zsmartsystems.zigbee.ZigBeeNwkAddressMode.DEVICE);
       apsFrame.setPayload(byteArrayToIntArray(rawFrame));
 
-      logger.info("Sending IAS Zone Enroll Response to NWK={} profile=0x{} ep={}",
+      logger.debug("Sending IAS Zone Enroll Response to NWK={} profile=0x{} ep={}",
             String.format("%04X", node.getNwkAddr()),
             String.format("%04X", profileId),
             endpoint);
@@ -404,7 +404,7 @@ public class ZBMessageTranslator {
       apsFrame.setAddressMode(com.zsmartsystems.zigbee.ZigBeeNwkAddressMode.DEVICE);
       apsFrame.setPayload(byteArrayToIntArray(rawFrame));
 
-      logger.info("Sending AlertMe ModeChange(NORMAL) to NWK={}", String.format("%04X", node.getNwkAddr()));
+      logger.debug("Sending AlertMe ModeChange(NORMAL) to NWK={}", String.format("%04X", node.getNwkAddr()));
       ZBServices.INSTANCE.getDriver().sendApsFrame(apsFrame);
    }
 
@@ -451,7 +451,7 @@ public class ZBMessageTranslator {
          int maxOutgoing = (payload[14] & 0xFF) | ((payload[15] & 0xFF) << 8);
          int descCap = payload[16] & 0xFF;
 
-         logger.info("Node descriptor for NWK={}: mfr=0x{}, maxBuf={}, macCap=0x{}, nodeFlags=0x{}",
+         logger.debug("Node descriptor for NWK={}: mfr=0x{}, maxBuf={}, macCap=0x{}, nodeFlags=0x{}",
                String.format("%04X", nwkAddr),
                String.format("%04X", mfrCode), maxBuf,
                String.format("%02X", macCap),
@@ -483,7 +483,7 @@ public class ZBMessageTranslator {
       int sourceNwk = apsFrame.getSourceAddress();
       ZBNetwork network = ZBServices.INSTANCE.getNetwork();
       ZBNode node = network.getNodeByNwk(sourceNwk);
-      logger.info("APS frame from NWK={} cluster=0x{} node={}",
+      logger.debug("APS frame from NWK={} cluster=0x{} node={}",
             String.format("%04X", sourceNwk),
             String.format("%04X", apsFrame.getCluster()),
             node != null ? String.format("%016X", node.getIeeeAddr()) : "null");
@@ -512,7 +512,7 @@ public class ZBMessageTranslator {
                if (node != null) {
                   node.setNwkAddr(sourceNwk);
                   network.saveNode(node);
-                  logger.info("Updated NWK for IEEE={} to {}",
+                  logger.debug("Updated NWK for IEEE={} to {}",
                         String.format("%016X", ieeeAddr), String.format("%04X", sourceNwk));
                }
             }
@@ -520,9 +520,8 @@ public class ZBMessageTranslator {
       }
 
       if (node == null) {
-         logger.warn("No node found for NWK {} (have {} nodes, nwk2node keys: {})",
-               String.format("%04X", sourceNwk), network.getNumDevices(),
-               network.debugNwkKeys());
+         logger.warn("No node found for NWK {} (have {} nodes)",
+               String.format("%04X", sourceNwk), network.getNumDevices());
          return;
       }
 
@@ -566,7 +565,7 @@ public class ZBMessageTranslator {
       // For AlertMe devices, send ModeChange(NORMAL) once per session to activate PIR.
       // The on-added reflex sends this, but sleepy devices often miss it.
       if (apsFrame.getProfile() == 0xC216 && modeChangeSent.add(node.getIeeeAddr())) {
-         logger.info("Sending initial AlertMe ModeChange(NORMAL) to IEEE={} NWK={}",
+         logger.debug("Sending initial AlertMe ModeChange(NORMAL) to IEEE={} NWK={}",
                String.format("%016X", node.getIeeeAddr()), String.format("%04X", sourceNwk));
          sendAlertMeModeChange(node);
       }
@@ -583,7 +582,7 @@ public class ZBMessageTranslator {
             int cmdIdx = seqIdx + 1;
             if (isClusterSpecific && cmdIdx < rawPayload.length && (rawPayload[cmdIdx] & 0xFF) == 0x01) {
                int seqNum = (seqIdx < rawPayload.length) ? rawPayload[seqIdx] & 0xFF : 0;
-               logger.info("IAS Zone Enroll Request from IEEE={} NWK={} ep={}, sending enroll response",
+               logger.debug("IAS Zone Enroll Request from IEEE={} NWK={} ep={}, sending enroll response",
                      String.format("%016X", node.getIeeeAddr()),
                      String.format("%04X", node.getNwkAddr()),
                      apsFrame.getSourceEndpoint());
@@ -698,14 +697,14 @@ public class ZBMessageTranslator {
          if (model != null) node.setModel(model);
          ZBServices.INSTANCE.getNetwork().saveNode(node);
 
-         logger.info("AlertMe HelloResponse for IEEE={}: vendor='{}' model='{}'",
+         logger.debug("AlertMe HelloResponse for IEEE={}: vendor='{}' model='{}'",
                String.format("%016X", node.getIeeeAddr()), vendor, model);
 
          // Notify bootstrapper. If discovery was started, this feeds into the
          // pending-add flow. If not (device sent HelloResponse proactively after
          // Match_Desc_rsp), dispatch the add event directly.
          if (!com.iris.agent.zigbee.process.ZBBootstrapper.onBasicClusterReceived(node.getIeeeAddr())) {
-            logger.info("Dispatching add for IEEE={} (proactive HelloResponse)",
+            logger.debug("Dispatching add for IEEE={} (proactive HelloResponse)",
                   String.format("%016X", node.getIeeeAddr()));
             com.iris.agent.zigbee.process.ZBBootstrapper.dispatchNodeAdded(node.getIeeeAddr());
          }
@@ -771,11 +770,11 @@ public class ZBMessageTranslator {
          if (model != null) node.setModel(model);
          ZBServices.INSTANCE.getNetwork().saveNode(node);
 
-         logger.info("Basic cluster for IEEE={}: vendor='{}' model='{}'",
+         logger.debug("Basic cluster for IEEE={}: vendor='{}' model='{}'",
                String.format("%016X", node.getIeeeAddr()), vendor, model);
 
          if (!com.iris.agent.zigbee.process.ZBBootstrapper.onBasicClusterReceived(node.getIeeeAddr())) {
-            logger.info("Dispatching add for IEEE={} (proactive Basic cluster response)",
+            logger.debug("Dispatching add for IEEE={} (proactive Basic cluster response)",
                   String.format("%016X", node.getIeeeAddr()));
             com.iris.agent.zigbee.process.ZBBootstrapper.dispatchNodeAdded(node.getIeeeAddr());
          }

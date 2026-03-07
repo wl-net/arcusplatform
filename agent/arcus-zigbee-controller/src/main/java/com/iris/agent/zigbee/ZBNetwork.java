@@ -78,15 +78,6 @@ public class ZBNetwork implements ZBEventListener {
       return ieee2node.size();
    }
 
-   public String debugNwkKeys() {
-      StringBuilder sb = new StringBuilder();
-      for (Integer nwk : nwk2node.keySet()) {
-         if (sb.length() > 0) sb.append(",");
-         sb.append(String.format("%04X", nwk));
-      }
-      return sb.toString();
-   }
-
    public ProtocolDeviceId getDeviceId(long ieeeAddr) {
       return ZBNode.computeDeviceId(ieeeAddr);
    }
