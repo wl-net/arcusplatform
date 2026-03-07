@@ -26,7 +26,6 @@ ext.libraries = new Libraries();
 ext.libraries << [
 // Zigbee
 		zsmartsystems_zigbee: "com.zsmartsystems.zigbee:com.zsmartsystems.zigbee:1.4.16.1",
-		zsmartsystems_zigbee_serial: "com.zsmartsystems.zigbee:com.zsmartsystems.zigbee.serial:1.4.16.1",
 		zsmartsystems_zigbee_ember: "com.zsmartsystems.zigbee:com.zsmartsystems.zigbee.dongle.ember:1.4.16.1",
 
 // ZWave
