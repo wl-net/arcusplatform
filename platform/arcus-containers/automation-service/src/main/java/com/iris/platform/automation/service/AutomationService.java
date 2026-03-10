@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.platform.rule.service.automation;
+package com.iris.platform.automation.service;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -32,14 +32,14 @@ import com.iris.messages.PlatformMessage;
  * GetNextSteps, and Create.
  */
 @Singleton
-public class AutomationServiceHandler extends AbstractPlatformService {
+public class AutomationService extends AbstractPlatformService {
    public static final String PROP_THREADPOOL = "service.automation.threadpool";
    public static final String NAMESPACE = "auto";
 
    private final Consumer<PlatformMessage> dispatcher;
 
    @Inject
-   public AutomationServiceHandler(
+   public AutomationService(
          @Named(PROP_THREADPOOL) Executor executor,
          PlatformMessageBus platformBus,
          ListAutomationsHandler listAutomations,

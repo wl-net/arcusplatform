@@ -43,7 +43,6 @@ import com.iris.platform.rule.service.SceneRequestHandler;
 import com.iris.platform.rule.service.SceneServiceHandler;
 import com.iris.platform.rule.service.SceneServiceModule;
 import com.iris.platform.rule.service.SceneTemplateRequestHandler;
-import com.iris.platform.rule.service.automation.AutomationServiceHandler;
 import com.iris.platform.scene.SceneTemplateManager;
 import com.iris.platform.scene.SceneTemplateManagerImpl;
 import com.iris.platform.subsystem.SubsystemDaoModule;
@@ -96,9 +95,6 @@ public class RuleServiceModule extends AbstractIrisModule {
       bind(PlaceExecutorRegistry.class).to(DefaultPlaceExecutorRegistry.class);
       bind(SceneTemplateManager.class).to(SceneTemplateManagerImpl.class);
       bind(ContextLoader.class).to(SimpleContextLoader.class);
-
-      // Automation chain service
-      bind(AutomationServiceHandler.class);
    }
    
    @Provides @Singleton @Named(RuleService.PROP_THREADPOOL)
@@ -118,11 +114,6 @@ public class RuleServiceModule extends AbstractIrisModule {
 
    @Provides @Singleton @Named(SceneTemplateRequestHandler.PROP_THREADPOOL)
    public Executor sceneTemplateExecutor() {
-      return serviceExecutor;
-   }
-
-   @Provides @Singleton @Named(AutomationServiceHandler.PROP_THREADPOOL)
-   public Executor automationServiceExecutor() {
       return serviceExecutor;
    }
 

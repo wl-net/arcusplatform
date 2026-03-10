@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iris.platform.rule.service.automation;
+package com.iris.platform.automation.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.iris.messages.capability.AccountCapability;
+import com.iris.messages.capability.DeviceCapability;
+import com.iris.messages.capability.HubCapability;
+import com.iris.messages.capability.PersonCapability;
+import com.iris.messages.capability.PlaceCapability;
+import com.iris.messages.capability.SceneCapability;
+import com.iris.messages.capability.SubsystemCapability;
 import com.iris.messages.model.Model;
 import com.iris.platform.model.ModelDao;
-import com.iris.platform.rule.environment.PlaceEnvironmentExecutor;
-import com.iris.platform.rule.environment.PlaceExecutorRegistry;
-import com.iris.platform.rule.environment.RuleModelStore;
 
 /**
  * Introspects a place's devices and subsystems to build available
@@ -44,12 +48,21 @@ import com.iris.platform.rule.environment.RuleModelStore;
 @Singleton
 public class BlockRegistry {
 
-   private final PlaceExecutorRegistry executorRegistry;
+   private static final Set<String> TRACKED_TYPES =
+         ImmutableSet.<String>builder()
+            .add(AccountCapability.NAMESPACE)
+            .add(DeviceCapability.NAMESPACE)
+            .add(PlaceCapability.NAMESPACE)
+            .add(PersonCapability.NAMESPACE)
+            .add(HubCapability.NAMESPACE)
+            .add(SceneCapability.NAMESPACE)
+            .add(SubsystemCapability.NAMESPACE)
+            .build();
+
    private final ModelDao modelDao;
 
    @Inject
-   public BlockRegistry(PlaceExecutorRegistry executorRegistry, ModelDao modelDao) {
-      this.executorRegistry = executorRegistry;
+   public BlockRegistry(ModelDao modelDao) {
       this.modelDao = modelDao;
    }
 
@@ -262,11 +275,7 @@ public class BlockRegistry {
    }
 
    private Collection<Model> getModels(UUID placeId) {
-      PlaceEnvironmentExecutor executor = executorRegistry.getExecutor(placeId).orNull();
-      if (executor != null) {
-         return executor.getModelStore().getModels();
-      }
-      return modelDao.loadModelsByPlace(placeId, RuleModelStore.TRACKED_TYPES);
+      return modelDao.loadModelsByPlace(placeId, TRACKED_TYPES);
    }
 
    private boolean hasCapability(Collection<Model> models, String attribute) {
