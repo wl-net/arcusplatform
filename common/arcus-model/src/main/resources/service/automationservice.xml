@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:service name="AutomationService"
+           namespace="auto"
+           version="1.0"
+           xmlns:s="http://www.arcussmarthome.com/schema/service/1.0.0">
+
+   <s:description>
+   Entry points for the automation service, which supports building IFTTT-style
+   automation chains from composable building blocks.
+   </s:description>
+
+   <s:methods>
+
+   <s:method name="ListAutomations" description="Lists all automations defined for a given place">
+      <s:parameter name="placeId" type="string" description="UUID of the place" optional="false"/>
+      <s:return name="automations" type="list&lt;Automation&gt;" description="The automations"/>
+   </s:method>
+
+   <s:method name="GetStartingPoints" description="Returns the available trigger types for building a new automation">
+      <s:parameter name="placeId" type="string" description="UUID of the place" optional="false"/>
+      <s:return name="triggers" type="list&lt;Object&gt;"
+         description="Available trigger blocks grouped by category, each with type, label, and parameter schema"/>
+   </s:method>
+
+   <s:method name="GetNextSteps" description="Given a partial chain, returns the available next steps (conditions or actions)">
+      <s:parameter name="placeId" type="string" description="UUID of the place" optional="false"/>
+      <s:parameter name="trigger" type="Object" description="The selected trigger" optional="false"/>
+      <s:parameter name="conditions" type="list&lt;Object&gt;" description="Currently selected conditions" optional="true"/>
+      <s:return name="conditions" type="list&lt;Object&gt;"
+         description="Available condition blocks that can be added"/>
+      <s:return name="actions" type="list&lt;Object&gt;"
+         description="Available action blocks"/>
+   </s:method>
+
+   <s:method name="Create" description="Creates a new automation from a complete chain">
+      <s:parameter name="placeId" type="string" description="UUID of the place" optional="false"/>
+      <s:parameter name="name" type="string" description="Name of the automation" optional="false"/>
+      <s:parameter name="description" type="string" description="Description of the automation" optional="true"/>
+      <s:parameter name="trigger" type="Object" description="The trigger configuration" optional="false"/>
+      <s:parameter name="conditions" type="list&lt;Object&gt;" description="The guard conditions" optional="true"/>
+      <s:parameter name="actions" type="list&lt;Object&gt;" description="The actions to execute" optional="false"/>
+      <s:return name="automation" type="string" description="The address of the created automation"/>
+   </s:method>
+
+   </s:methods>
+
+</s:service>

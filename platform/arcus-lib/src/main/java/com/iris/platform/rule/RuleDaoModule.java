@@ -16,6 +16,8 @@
 package com.iris.platform.rule;
 
 import com.iris.bootstrap.guice.AbstractIrisModule;
+import com.iris.platform.rule.automation.AutomationDao;
+import com.iris.platform.rule.cassandra.AutomationDaoImpl;
 import com.iris.platform.rule.cassandra.ActionDaoImpl;
 import com.iris.platform.rule.cassandra.RuleDaoImpl;
 import com.iris.platform.rule.cassandra.RuleEnvironmentDaoImpl;
@@ -32,6 +34,7 @@ public class RuleDaoModule extends AbstractIrisModule {
       bind(SceneDao.class).to(SceneDaoImpl.class);
       bind(RuleDao.class).to(RuleDaoImpl.class);
       bind(RuleEnvironmentDao.class).to(RuleEnvironmentDaoImpl.class);
+      bind(AutomationDao.class).to(AutomationDaoImpl.class);
    }
 
 }

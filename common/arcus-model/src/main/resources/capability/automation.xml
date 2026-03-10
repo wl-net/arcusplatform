@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<c:capability name="Automation" namespace="auto"
+   version="1.0" xmlns:c="http://www.arcussmarthome.com/schema/capability/1.0.0">
+
+   <c:description>
+   Model of an automation chain: a composable starting point, conditions, and actions
+   that users build step-by-step.
+   </c:description>
+
+   <c:attributes>
+
+      <c:attribute name="name" readwrite="rw" type="string"
+                   optional="false" description="The name of the automation"/>
+      <c:attribute name="description" readwrite="rw" type="string"
+                   optional="true" description="User provided description of the automation"/>
+      <c:attribute name="created" readwrite="r" type="timestamp"
+                   optional="false" description="Timestamp that the automation was created"/>
+      <c:attribute name="modified" readwrite="r" type="timestamp"
+                   optional="false" description="Timestamp that the automation was last modified"/>
+      <c:attribute name="state" readwrite="r" type="enum" values="ENABLED,DISABLED"
+                   optional="false" description="The current state of the automation"/>
+      <c:attribute name="trigger" readwrite="r" type="Object"
+                   optional="false" description="The starting point trigger configuration"/>
+      <c:attribute name="conditions" readwrite="r" type="list&lt;Object&gt;"
+                   optional="true" description="The guard conditions that must be true for actions to execute"/>
+      <c:attribute name="actions" readwrite="r" type="list&lt;Object&gt;"
+                   optional="false" description="The actions to execute when the trigger fires and conditions are met"/>
+      <c:attribute name="lastExecuted" readwrite="r" type="timestamp"
+                   optional="true" description="Timestamp of the last time the automation executed"/>
+
+   </c:attributes>
+
+   <c:methods>
+
+      <c:method name="Enable" description="Enables the automation if it is disabled"/>
+      <c:method name="Disable" description="Disables the automation if it is enabled"/>
+      <c:method name="Update" description="Updates the automation chain">
+         <c:parameters>
+            <c:parameter name="name" type="string" description="New name" optional="true"/>
+            <c:parameter name="description" type="string" description="New description" optional="true"/>
+            <c:parameter name="trigger" type="Object" description="New trigger configuration" optional="true"/>
+            <c:parameter name="conditions" type="list&lt;Object&gt;" description="New conditions" optional="true"/>
+            <c:parameter name="actions" type="list&lt;Object&gt;" description="New actions" optional="true"/>
+         </c:parameters>
+      </c:method>
+      <c:method name="Delete" description="Deletes the automation"/>
+      <c:method
+          name="ListHistoryEntries"
+          description="Returns a list of all the history log entries associated with this automation">
+         <c:parameters>
+             <c:parameter
+                name="limit"
+                type="int"
+                description="The maximum number of events to return (defaults to 10)"
+                optional="true"/>
+             <c:parameter
+                name="token"
+                type="string"
+                description="The token from a previous query to use for retrieving the next set of results"
+                optional="true"/>
+         </c:parameters>
+         <c:return
+            name="nextToken"
+            type="string"
+            description="The token to use for getting the next page, if null there is no next page" />
+         <c:return
+            name="results"
+            type="list&lt;HistoryLog&gt;"
+            description="The entries associated with this automation" />
+      </c:method>
+
+   </c:methods>
+
+</c:capability>

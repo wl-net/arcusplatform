@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cl:changelog
+   version="automation"
+   xmlns:cl="http://www.arcussmarthome.com/schema/changelog/1.0.0">
+
+   <cl:changeset identifier="addAutomationSequence" author="arcus">
+      <cl:description>Add automationSequence counter to place table for generating automation IDs</cl:description>
+      <cl:tracking>AUTO-001</cl:tracking>
+      <cl:cql>
+         <cl:update>ALTER TABLE place add automationSequence int</cl:update>
+         <cl:rollback>ALTER TABLE place drop automationSequence</cl:rollback>
+      </cl:cql>
+   </cl:changeset>
+
+</cl:changelog>

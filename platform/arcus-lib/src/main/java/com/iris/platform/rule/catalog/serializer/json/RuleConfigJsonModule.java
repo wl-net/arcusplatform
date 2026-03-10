@@ -30,12 +30,15 @@ import com.iris.platform.rule.catalog.action.config.LogActionConfig;
 import com.iris.platform.rule.catalog.action.config.SendActionConfig;
 import com.iris.platform.rule.catalog.action.config.SendNotificationActionConfig;
 import com.iris.platform.rule.catalog.action.config.SetAttributeActionConfig;
+import com.iris.platform.rule.catalog.condition.config.AlarmStateConfig;
 import com.iris.platform.rule.catalog.condition.config.ConditionConfig;
 import com.iris.platform.rule.catalog.condition.config.ContextQueryConfig;
 import com.iris.platform.rule.catalog.condition.config.DayOfWeekConfig;
+import com.iris.platform.rule.catalog.condition.config.DeviceStateConfig;
 import com.iris.platform.rule.catalog.condition.config.DurationConfig;
 import com.iris.platform.rule.catalog.condition.config.IfConditionConfig;
 import com.iris.platform.rule.catalog.condition.config.OrConfig;
+import com.iris.platform.rule.catalog.condition.config.PresenceConfig;
 import com.iris.platform.rule.catalog.condition.config.QueryChangeConfig;
 import com.iris.platform.rule.catalog.condition.config.ReceivedMessageConfig;
 import com.iris.platform.rule.catalog.condition.config.ReferenceFilterConfig;
@@ -86,6 +89,9 @@ public class RuleConfigJsonModule extends AbstractIrisModule {
                .registerSubtype(ThresholdConfig.class, ThresholdConfig.TYPE)
                .registerSubtype(TimeOfDayConfig.class, TimeOfDayConfig.TYPE)
                .registerSubtype(ValueChangeConfig.class, ValueChangeConfig.TYPE)
+               .registerSubtype(PresenceConfig.class, PresenceConfig.TYPE)
+               .registerSubtype(AlarmStateConfig.class, AlarmStateConfig.TYPE)
+               .registerSubtype(DeviceStateConfig.class, DeviceStateConfig.TYPE)
                ;
    }
    
