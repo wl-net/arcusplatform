@@ -41,6 +41,8 @@ import com.iris.oculus.menu.SessionMenu;
 import com.iris.oculus.menu.WindowsMenu;
 import com.iris.oculus.modules.account.AccountController;
 import com.iris.oculus.modules.account.AccountSection;
+import com.iris.oculus.modules.automation.AutomationController;
+import com.iris.oculus.modules.automation.AutomationSection;
 import com.iris.oculus.modules.apikey.ApiKeyController;
 import com.iris.oculus.modules.apikey.ApiKeySection;
 import com.iris.oculus.modules.behaviors.BehaviorSection;
@@ -120,6 +122,8 @@ public class OculusModule extends AbstractIrisModule {
          .asEagerSingleton();
       bind(RuleController.class)
          .asEagerSingleton();
+      bind(AutomationController.class)
+         .asEagerSingleton();
       bind(PersonController.class)
       	.asEagerSingleton();
       bind(PlaceController.class)
@@ -144,6 +148,7 @@ public class OculusModule extends AbstractIrisModule {
       bind(ProductSection.class);
       bind(RuleSection.class);
       bind(SceneSection.class);
+      bind(AutomationSection.class);
       bind(PersonSection.class);
       bind(VideoSection.class);
       bind(PlaceSection.class);
