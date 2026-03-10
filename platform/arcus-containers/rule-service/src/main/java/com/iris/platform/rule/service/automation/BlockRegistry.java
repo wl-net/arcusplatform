@@ -88,6 +88,20 @@ public class BlockRegistry {
                   )
             )));
 
+      // Category: Sunrise/Sunset
+      triggers.add(triggerBlock("sunrise-sunset",
+            "At sunrise or sunset",
+            "Time",
+            ImmutableMap.of(
+                  "description", "Triggers at sunrise or sunset with optional offset",
+                  "params", ImmutableMap.of(
+                        "mode", ImmutableMap.of("type", "enum", "label", "Event",
+                              "values", ImmutableList.of("SUNRISE", "SUNSET")),
+                        "offsetMinutes", ImmutableMap.of("type", "int", "label", "Offset (minutes)",
+                              "default", 0)
+                  )
+            )));
+
       // Category: Duration
       if (hasCapability(models, "mot:motion")) {
          triggers.add(triggerBlock("duration",

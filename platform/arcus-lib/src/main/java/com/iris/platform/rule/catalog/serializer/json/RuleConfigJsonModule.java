@@ -37,6 +37,7 @@ import com.iris.platform.rule.catalog.condition.config.DayOfWeekConfig;
 import com.iris.platform.rule.catalog.condition.config.DeviceStateConfig;
 import com.iris.platform.rule.catalog.condition.config.DurationConfig;
 import com.iris.platform.rule.catalog.condition.config.IfConditionConfig;
+import com.iris.platform.rule.catalog.condition.config.SunriseSunsetConfig;
 import com.iris.platform.rule.catalog.condition.config.OrConfig;
 import com.iris.platform.rule.catalog.condition.config.PresenceConfig;
 import com.iris.platform.rule.catalog.condition.config.QueryChangeConfig;
@@ -44,6 +45,7 @@ import com.iris.platform.rule.catalog.condition.config.ReceivedMessageConfig;
 import com.iris.platform.rule.catalog.condition.config.ReferenceFilterConfig;
 import com.iris.platform.rule.catalog.condition.config.ThresholdConfig;
 import com.iris.platform.rule.catalog.condition.config.TimeOfDayConfig;
+import com.iris.platform.rule.catalog.condition.config.TimeWindowConfig;
 import com.iris.platform.rule.catalog.condition.config.ValueChangeConfig;
 import com.iris.bootstrap.annotations.Modules;
 
@@ -92,6 +94,8 @@ public class RuleConfigJsonModule extends AbstractIrisModule {
                .registerSubtype(PresenceConfig.class, PresenceConfig.TYPE)
                .registerSubtype(AlarmStateConfig.class, AlarmStateConfig.TYPE)
                .registerSubtype(DeviceStateConfig.class, DeviceStateConfig.TYPE)
+               .registerSubtype(SunriseSunsetConfig.class, SunriseSunsetConfig.TYPE)
+               .registerSubtype(TimeWindowConfig.class, TimeWindowConfig.TYPE)
                ;
    }
    
