@@ -49,6 +49,7 @@ public class BlockParamEditor extends JDialog {
    private JComboBox<DeviceItem> deviceCombo;
    private JComboBox<String> attributeCombo;
    private JComboBox<String> modeCombo;
+   private JComboBox<SceneItem> sceneCombo;
    private Map<String, Object> result;
    private boolean confirmed = false;
 
@@ -58,12 +59,13 @@ public class BlockParamEditor extends JDialog {
     */
    @SuppressWarnings("unchecked")
    public static Map<String, Object> configure(Window owner, Map<String, Object> block) {
-      // Check if block has params, devices, or modes to configure
+      // Check if block has params, devices, modes, or scenes to configure
       Map<String, Object> params = (Map<String, Object>) block.get("params");
       List<Map<String, Object>> devices = (List<Map<String, Object>>) block.get("devices");
       List<Map<String, Object>> modes = (List<Map<String, Object>>) block.get("modes");
+      List<Map<String, Object>> scenes = (List<Map<String, Object>>) block.get("scenes");
       if ((params == null || params.isEmpty()) && (devices == null || devices.isEmpty())
-            && (modes == null || modes.isEmpty())) {
+            && (modes == null || modes.isEmpty()) && (scenes == null || scenes.isEmpty())) {
          // No params to configure, return block as-is
          return new LinkedHashMap<>(block);
       }
@@ -128,6 +130,21 @@ public class BlockParamEditor extends JDialog {
          modeCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
          modeCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
          content.add(modeCombo);
+         content.add(javax.swing.Box.createVerticalStrut(5));
+      }
+
+      // Scene selector
+      List<Map<String, Object>> scenes = (List<Map<String, Object>>) block.get("scenes");
+      if (scenes != null && !scenes.isEmpty()) {
+         content.add(createLabel("Scene:"));
+         sceneCombo = new JComboBox<>();
+         for (Map<String, Object> scene : scenes) {
+            String name = scene.get("name") != null ? (String) scene.get("name") : (String) scene.get("address");
+            sceneCombo.addItem(new SceneItem(name, (String) scene.get("address")));
+         }
+         sceneCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
+         sceneCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+         content.add(sceneCombo);
          content.add(javax.swing.Box.createVerticalStrut(5));
       }
 
@@ -258,6 +275,15 @@ public class BlockParamEditor extends JDialog {
          }
       }
 
+      // Add scene selection
+      if (sceneCombo != null) {
+         SceneItem scene = (SceneItem) sceneCombo.getSelectedItem();
+         if (scene != null) {
+            configured.put("selectedScene", scene.address);
+            configured.put("selectedSceneName", scene.name);
+         }
+      }
+
       // Add param values
       Map<String, Object> paramValues = new LinkedHashMap<>();
       for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
@@ -309,6 +335,21 @@ public class BlockParamEditor extends JDialog {
          this.name = name;
          this.address = address;
          this.attributes = attributes;
+      }
+
+      @Override
+      public String toString() {
+         return name;
+      }
+   }
+
+   private static class SceneItem {
+      final String name;
+      final String address;
+
+      SceneItem(String name, String address) {
+         this.name = name;
+         this.address = address;
       }
 
       @Override

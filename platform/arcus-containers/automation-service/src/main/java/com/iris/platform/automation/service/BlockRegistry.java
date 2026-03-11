@@ -302,13 +302,17 @@ public class BlockRegistry {
                   "description", "Send a push notification or email"
             )));
 
-      // Fire a scene
-      actions.add(actionBlock("fire-scene",
-            "Run a scene",
-            "Scenes",
-            ImmutableMap.of(
-                  "description", "Execute an existing scene"
-            )));
+      // Fire a scene — list available scenes
+      List<Map<String, Object>> scenes = getScenesForPlace(models);
+      if (!scenes.isEmpty()) {
+         actions.add(actionBlock("fire-scene",
+               "Run a scene",
+               "Scenes",
+               ImmutableMap.of(
+                     "description", "Execute an existing scene",
+                     "scenes", scenes
+               )));
+      }
 
       // Delay
       actions.add(actionBlock("delay",
@@ -326,6 +330,19 @@ public class BlockRegistry {
 
    private Collection<Model> getModels(UUID placeId) {
       return modelDao.loadModelsByPlace(placeId, TRACKED_TYPES);
+   }
+
+   private List<Map<String, Object>> getScenesForPlace(Collection<Model> models) {
+      List<Map<String, Object>> scenes = new ArrayList<>();
+      for (Model model : models) {
+         if (model.supports(SceneCapability.NAMESPACE)) {
+            Map<String, Object> scene = new LinkedHashMap<>();
+            scene.put("address", String.valueOf(model.getAttribute("base:address")));
+            scene.put("name", model.getAttribute("scene:name"));
+            scenes.add(scene);
+         }
+      }
+      return scenes;
    }
 
    private boolean hasCapability(Collection<Model> models, String attribute) {

@@ -32,13 +32,14 @@
          description="Available action blocks"/>
    </s:method>
 
-   <s:method name="Create" description="Creates a new automation from a complete chain">
+   <s:method name="Create" description="Creates a new automation from a complete chain (single-flow)">
       <s:parameter name="placeId" type="string" description="UUID of the place" optional="false"/>
       <s:parameter name="name" type="string" description="Name of the automation" optional="false"/>
       <s:parameter name="description" type="string" description="Description of the automation" optional="true"/>
       <s:parameter name="trigger" type="Object" description="The trigger configuration" optional="false"/>
       <s:parameter name="conditions" type="list&lt;Object&gt;" description="The guard conditions" optional="true"/>
-      <s:parameter name="actions" type="list&lt;Object&gt;" description="The actions to execute" optional="false"/>
+      <s:parameter name="actions" type="list&lt;Object&gt;" description="The actions to execute" optional="true"/>
+      <s:parameter name="flows" type="list&lt;Object&gt;" description="Multiple guard-action flows (alternative to conditions+actions)" optional="true"/>
       <s:return name="automation" type="string" description="The address of the created automation"/>
    </s:method>
 

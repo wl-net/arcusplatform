@@ -15,11 +15,13 @@
  */
 package com.iris.platform.rule.automation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import com.iris.common.rule.action.stateful.GuardedAction;
 import com.iris.common.rule.action.stateful.SequentialActionList;
 import com.iris.common.rule.action.stateful.StatefulAction;
 import com.iris.common.rule.condition.Condition;
@@ -94,16 +96,74 @@ public final class ChainCompiler {
    }
 
    /**
+    * Compiles multiple flows into a single action. Each flow becomes a
+    * GuardedAction that checks its conditions before executing.
+    * All matching flows execute sequentially.
+    */
+   public static StatefulAction compileFlows(
+         List<AutomationFlow> flows,
+         Map<String, Object> values) {
+
+      Preconditions.checkNotNull(flows, "flows are required");
+      Preconditions.checkArgument(!flows.isEmpty(), "at least one flow is required");
+
+      if (flows.size() == 1) {
+         AutomationFlow flow = flows.get(0);
+         StatefulAction action = compileActions(flow.getActions(), values);
+         if (flow.getConditions().isEmpty()) {
+            return action;
+         }
+         List<Condition> guards = new ArrayList<>();
+         for (ConditionConfig guard : flow.getConditions()) {
+            guards.add(guard.generate(values));
+         }
+         return new GuardedAction(guards, action);
+      }
+
+      SequentialActionList.Builder builder = new SequentialActionList.Builder();
+      for (AutomationFlow flow : flows) {
+         StatefulAction action = compileActions(flow.getActions(), values);
+         if (flow.getConditions().isEmpty()) {
+            builder.addAction(action);
+         }
+         else {
+            List<Condition> guards = new ArrayList<>();
+            for (ConditionConfig guard : flow.getConditions()) {
+               guards.add(guard.generate(values));
+            }
+            builder.addAction(new GuardedAction(guards, action));
+         }
+      }
+      return builder.build();
+   }
+
+   /**
     * Convenience method to compile an entire automation definition.
     */
    public static CompiledAutomation compile(AutomationDefinition definition) {
       Map<String, Object> values = Collections.emptyMap();
-      Condition condition = compileCondition(
-            definition.getTrigger(),
-            definition.getConditions(),
-            values
-      );
-      StatefulAction action = compileActions(definition.getActions(), values);
+      List<AutomationFlow> effectiveFlows = definition.getEffectiveFlows();
+
+      // Trigger — for multi-flow, guards are in the action layer
+      Condition condition;
+      if (effectiveFlows.size() <= 1 && !definition.getConditions().isEmpty()) {
+         condition = compileCondition(definition.getTrigger(), definition.getConditions(), values);
+      }
+      else {
+         condition = compileCondition(definition.getTrigger(), Collections.emptyList(), values);
+      }
+
+      // Actions — single flow uses simple compilation, multi-flow uses guarded dispatch
+      StatefulAction action;
+      if (effectiveFlows.size() <= 1) {
+         List<ActionConfig> actionConfigs = effectiveFlows.isEmpty()
+               ? definition.getActions() : effectiveFlows.get(0).getActions();
+         action = compileActions(actionConfigs, values);
+      }
+      else {
+         action = compileFlows(effectiveFlows, values);
+      }
+
       return new CompiledAutomation(condition, action);
    }
 

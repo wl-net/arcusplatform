@@ -15,28 +15,33 @@
  */
 package com.iris.oculus.modules.automation.ux;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
 import com.iris.client.IrisClientFactory;
 import com.iris.client.service.AutomationService;
@@ -44,28 +49,31 @@ import com.iris.oculus.Oculus;
 import com.iris.oculus.widget.Dialog;
 
 /**
- * Multi-step wizard for creating an automation chain.
+ * Visual flow-chart wizard for creating automations.
  *
- * Flow: Name/Description -> Select Trigger -> Add Conditions -> Add Actions -> Create
+ * Layout: [Trigger] ---> Flow 1: [Guards] ---> [Actions]
+ *                        Flow 2: [Guards] ---> [Actions]
+ *                        [+ Add Flow]
  */
 public class AutomationCreatorWizard extends Dialog<Void> {
+
+   private static final Color TRIGGER_COLOR = new Color(0x4A90D9);
+   private static final Color GUARD_COLOR = new Color(0xF5A623);
+   private static final Color ACTION_COLOR = new Color(0x7ED321);
+   private static final Color ARROW_COLOR = new Color(0x999999);
+   private static final Color NODE_BG = new Color(0xF8F8F8);
 
    private String placeId;
 
    // Chain state
-   private Map<String, Object> selectedTrigger;
-   private List<Map<String, Object>> selectedConditions = new ArrayList<>();
-   private List<Map<String, Object>> selectedActions = new ArrayList<>();
+   private List<Map<String, Object>> selectedTriggers = new ArrayList<>();
+   private List<FlowState> flowStates = new ArrayList<>();
 
-   // UI components
+   // UI
    private JTextField nameField;
    private JTextField descriptionField;
-   private JComboBox<BlockItem> triggerCombo;
-   private DefaultListModel<String> conditionListModel;
-   private DefaultListModel<String> actionListModel;
-   private JComboBox<BlockItem> conditionCombo;
-   private JComboBox<BlockItem> actionCombo;
-   private JLabel triggerSummary;
+   private JPanel triggersPanel;
+   private JPanel flowsContainer;
 
    // Available blocks from server
    private List<Map<String, Object>> availableTriggers;
@@ -80,7 +88,8 @@ public class AutomationCreatorWizard extends Dialog<Void> {
    private AutomationCreatorWizard(String placeId) {
       this.placeId = placeId;
       setTitle("Create Automation");
-      setPreferredSize(new Dimension(600, 550));
+      setPreferredSize(new Dimension(1000, 700));
+      setAlwaysOnTop(true);
    }
 
    @Override
@@ -89,98 +98,278 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
       panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-      // Name / Description
-      JPanel namePanel = new JPanel();
-      namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
-      namePanel.setBorder(new TitledBorder("Automation Details"));
-      nameField = new JTextField();
-      descriptionField = new JTextField();
-      namePanel.add(labeledRow("Name:", nameField));
-      namePanel.add(labeledRow("Description:", descriptionField));
-      panel.add(namePanel);
-      panel.add(Box.createVerticalStrut(8));
+      // Name / Description row
+      JPanel nameRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 2));
+      nameField = new JTextField(15);
+      descriptionField = new JTextField(20);
+      nameRow.add(new JLabel("Name:"));
+      nameRow.add(nameField);
+      nameRow.add(Box.createHorizontalStrut(10));
+      nameRow.add(new JLabel("Description:"));
+      nameRow.add(descriptionField);
+      nameRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+      panel.add(nameRow);
+      panel.add(Box.createVerticalStrut(10));
 
-      // Trigger selection
-      JPanel triggerPanel = new JPanel(new BorderLayout());
-      triggerPanel.setBorder(new TitledBorder("1. Starting Point (Trigger)"));
-      triggerCombo = new JComboBox<>();
-      triggerCombo.addItem(new BlockItem("Loading...", null));
-      JButton configureTriggerBtn = new JButton("Configure...");
-      configureTriggerBtn.addActionListener(e -> configureTrigger());
-      triggerSummary = new JLabel(" ");
-      JPanel triggerControls = new JPanel(new BorderLayout());
-      triggerControls.add(triggerCombo, BorderLayout.CENTER);
-      triggerControls.add(configureTriggerBtn, BorderLayout.EAST);
-      triggerPanel.add(triggerControls, BorderLayout.NORTH);
-      triggerPanel.add(triggerSummary, BorderLayout.CENTER);
-      panel.add(triggerPanel);
-      panel.add(Box.createVerticalStrut(8));
+      // Flow chart area
+      JPanel chartPanel = new JPanel(new BorderLayout(0, 0));
 
-      // Conditions
-      JPanel condPanel = new JPanel(new BorderLayout());
-      condPanel.setBorder(new TitledBorder("2. Conditions (Optional Guards)"));
-      conditionListModel = new DefaultListModel<>();
-      JList<String> condList = new JList<>(conditionListModel);
-      condList.setVisibleRowCount(3);
-      conditionCombo = new JComboBox<>();
-      conditionCombo.addItem(new BlockItem("Loading...", null));
-      JButton addCondBtn = new JButton("Add");
-      addCondBtn.addActionListener(e -> addCondition());
-      JButton removeCondBtn = new JButton("Remove");
-      removeCondBtn.addActionListener(e -> {
-         int idx = condList.getSelectedIndex();
-         if (idx >= 0) {
-            conditionListModel.remove(idx);
-            selectedConditions.remove(idx);
-         }
+      // Left: Trigger node (supports multiple triggers OR'd together)
+      JPanel triggerNode = createNodePanel("WHEN", TRIGGER_COLOR);
+      triggersPanel = new JPanel();
+      triggersPanel.setLayout(new BoxLayout(triggersPanel, BoxLayout.Y_AXIS));
+      triggersPanel.setOpaque(false);
+      JButton addTriggerBtn = new JButton("+");
+      addTriggerBtn.setToolTipText("Add trigger (fires when ANY trigger matches)");
+      addTriggerBtn.setFont(addTriggerBtn.getFont().deriveFont(Font.BOLD, 14f));
+      addTriggerBtn.setMargin(new java.awt.Insets(2, 8, 2, 8));
+      addTriggerBtn.addActionListener(e -> addTrigger());
+      JPanel triggerHeader = new JPanel(new BorderLayout());
+      triggerHeader.setOpaque(false);
+      JLabel orLabel = new JLabel("any of these triggers:");
+      orLabel.setFont(orLabel.getFont().deriveFont(Font.ITALIC, 10f));
+      orLabel.setForeground(TRIGGER_COLOR.darker());
+      triggerHeader.add(orLabel, BorderLayout.CENTER);
+      triggerHeader.add(addTriggerBtn, BorderLayout.EAST);
+      JPanel triggerContent = new JPanel(new BorderLayout(0, 4));
+      triggerContent.setOpaque(false);
+      triggerContent.add(triggerHeader, BorderLayout.NORTH);
+      triggerContent.add(triggersPanel, BorderLayout.CENTER);
+      triggerNode.add(triggerContent, BorderLayout.CENTER);
+      triggerNode.setPreferredSize(new Dimension(220, 130));
+      triggerNode.setMinimumSize(new Dimension(220, 80));
+      triggerNode.setMaximumSize(new Dimension(220, 400));
+
+      // Arrow
+      JPanel arrowPanel = new ArrowPanel();
+      arrowPanel.setPreferredSize(new Dimension(40, 120));
+
+      // Right: Flows
+      flowsContainer = new JPanel();
+      flowsContainer.setLayout(new BoxLayout(flowsContainer, BoxLayout.Y_AXIS));
+      flowsContainer.setOpaque(false);
+
+      // Add first flow
+      addFlow();
+
+      // Add Flow button
+      JButton addFlowBtn = new JButton("+ Add Flow Branch");
+      addFlowBtn.addActionListener(e -> {
+         addFlow();
+         flowsContainer.revalidate();
+         flowsContainer.repaint();
       });
-      JPanel condControls = new JPanel();
-      condControls.add(conditionCombo);
-      condControls.add(addCondBtn);
-      condControls.add(removeCondBtn);
-      condPanel.add(new JScrollPane(condList), BorderLayout.CENTER);
-      condPanel.add(condControls, BorderLayout.SOUTH);
-      panel.add(condPanel);
-      panel.add(Box.createVerticalStrut(8));
+      JPanel addFlowBtnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      addFlowBtnPanel.setOpaque(false);
+      addFlowBtnPanel.add(addFlowBtn);
 
-      // Actions
-      JPanel actPanel = new JPanel(new BorderLayout());
-      actPanel.setBorder(new TitledBorder("3. Actions"));
-      actionListModel = new DefaultListModel<>();
-      JList<String> actList = new JList<>(actionListModel);
-      actList.setVisibleRowCount(3);
-      actionCombo = new JComboBox<>();
-      actionCombo.addItem(new BlockItem("Loading...", null));
-      JButton addActBtn = new JButton("Add");
-      addActBtn.addActionListener(e -> addAction());
-      JButton removeActBtn = new JButton("Remove");
-      removeActBtn.addActionListener(e -> {
-         int idx = actList.getSelectedIndex();
-         if (idx >= 0) {
-            actionListModel.remove(idx);
-            selectedActions.remove(idx);
-         }
-      });
-      JPanel actControls = new JPanel();
-      actControls.add(actionCombo);
-      actControls.add(addActBtn);
-      actControls.add(removeActBtn);
-      actPanel.add(new JScrollPane(actList), BorderLayout.CENTER);
-      actPanel.add(actControls, BorderLayout.SOUTH);
-      panel.add(actPanel);
-      panel.add(Box.createVerticalStrut(8));
+      JPanel flowsWrapper = new JPanel();
+      flowsWrapper.setLayout(new BoxLayout(flowsWrapper, BoxLayout.Y_AXIS));
+      flowsWrapper.setOpaque(false);
+      flowsWrapper.add(flowsContainer);
+      flowsWrapper.add(addFlowBtnPanel);
+
+      JPanel leftPanel = new JPanel(new BorderLayout());
+      leftPanel.setOpaque(false);
+      leftPanel.add(triggerNode, BorderLayout.CENTER);
+
+      chartPanel.add(leftPanel, BorderLayout.WEST);
+      chartPanel.add(arrowPanel, BorderLayout.CENTER);
+      chartPanel.add(new JScrollPane(flowsWrapper), BorderLayout.EAST);
+      chartPanel.setPreferredSize(new Dimension(800, 400));
+
+      // Use a horizontal layout with scroll
+      JPanel flowRow = new JPanel();
+      flowRow.setLayout(new BoxLayout(flowRow, BoxLayout.X_AXIS));
+      flowRow.add(triggerNode);
+      flowRow.add(arrowPanel);
+      flowRow.add(new JScrollPane(flowsWrapper));
+
+      panel.add(flowRow);
+      panel.add(Box.createVerticalStrut(10));
 
       // Create button
       JButton createBtn = new JButton("Create Automation");
+      createBtn.setFont(createBtn.getFont().deriveFont(Font.BOLD));
       createBtn.addActionListener(e -> doCreate());
-      JPanel btnPanel = new JPanel();
+      JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       btnPanel.add(createBtn);
+      btnPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
       panel.add(btnPanel);
 
-      // Load available blocks from server
       loadBlocks();
 
       return new JScrollPane(panel);
+   }
+
+   private void addFlow() {
+      int flowNum = flowStates.size() + 1;
+      FlowState state = new FlowState();
+      flowStates.add(state);
+
+      JPanel flowPanel = new JPanel();
+      flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.X_AXIS));
+      flowPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0xDDDDDD), 1, true),
+            new EmptyBorder(6, 6, 6, 6)));
+      flowPanel.setBackground(NODE_BG);
+      flowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 160));
+
+      // Guards column
+      JPanel guardsNode = createNodePanel("IF (Guards)", GUARD_COLOR);
+      guardsNode.setPreferredSize(new Dimension(250, 130));
+      JPanel guardsList = new JPanel();
+      guardsList.setLayout(new BoxLayout(guardsList, BoxLayout.Y_AXIS));
+      guardsList.setOpaque(false);
+      state.guardsPanel = guardsList;
+      JButton addGuardBtn = new JButton("+ Guard");
+      addGuardBtn.addActionListener(e -> addGuard(state));
+      JPanel guardContent = new JPanel(new BorderLayout(0, 4));
+      guardContent.setOpaque(false);
+      guardContent.add(guardsList, BorderLayout.CENTER);
+      guardContent.add(addGuardBtn, BorderLayout.SOUTH);
+      guardsNode.add(guardContent, BorderLayout.CENTER);
+
+      // Arrow between guards and actions
+      JPanel arrow2 = new ArrowPanel();
+      arrow2.setPreferredSize(new Dimension(30, 130));
+
+      // Actions column
+      JPanel actionsNode = createNodePanel("THEN (Actions)", ACTION_COLOR);
+      actionsNode.setPreferredSize(new Dimension(250, 130));
+      JPanel actionsList = new JPanel();
+      actionsList.setLayout(new BoxLayout(actionsList, BoxLayout.Y_AXIS));
+      actionsList.setOpaque(false);
+      state.actionsPanel = actionsList;
+      JButton addActionBtn = new JButton("+ Action");
+      addActionBtn.addActionListener(e -> addAction(state));
+      JPanel actionContent = new JPanel(new BorderLayout(0, 4));
+      actionContent.setOpaque(false);
+      actionContent.add(actionsList, BorderLayout.CENTER);
+      actionContent.add(addActionBtn, BorderLayout.SOUTH);
+      actionsNode.add(actionContent, BorderLayout.CENTER);
+
+      // Remove flow button
+      JButton removeBtn = new JButton("X");
+      removeBtn.setToolTipText("Remove this flow");
+      removeBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
+      removeBtn.addActionListener(e -> {
+         flowStates.remove(state);
+         flowsContainer.remove(flowPanel);
+         flowsContainer.revalidate();
+         flowsContainer.repaint();
+      });
+
+      JPanel label = new JPanel(new BorderLayout());
+      label.setOpaque(false);
+      JLabel flowLabel = new JLabel("Flow " + flowNum);
+      flowLabel.setFont(flowLabel.getFont().deriveFont(Font.BOLD, 11f));
+      label.add(flowLabel, BorderLayout.CENTER);
+      if (flowStates.size() > 1) {
+         label.add(removeBtn, BorderLayout.EAST);
+      }
+
+      JPanel flowInner = new JPanel();
+      flowInner.setLayout(new BoxLayout(flowInner, BoxLayout.Y_AXIS));
+      flowInner.setOpaque(false);
+      flowInner.add(label);
+
+      JPanel nodesRow = new JPanel();
+      nodesRow.setLayout(new BoxLayout(nodesRow, BoxLayout.X_AXIS));
+      nodesRow.setOpaque(false);
+      nodesRow.add(guardsNode);
+      nodesRow.add(arrow2);
+      nodesRow.add(actionsNode);
+
+      flowInner.add(nodesRow);
+      flowPanel.add(flowInner);
+
+      flowsContainer.add(flowPanel);
+      flowsContainer.add(Box.createVerticalStrut(6));
+   }
+
+   private void addGuard(FlowState state) {
+      if (availableConditions == null || availableConditions.isEmpty()) return;
+
+      BlockItem[] items = availableConditions.stream()
+            .map(b -> new BlockItem((String) b.get("label"), b))
+            .toArray(BlockItem[]::new);
+      BlockItem selected = (BlockItem) JOptionPane.showInputDialog(
+            this, "Select guard condition:", "Add Guard",
+            JOptionPane.PLAIN_MESSAGE, null, items, items[0]);
+      if (selected == null || selected.block == null) return;
+
+      Map<String, Object> configured = BlockParamEditor.configure(this, selected.block);
+      if (configured == null) return;
+
+      state.conditions.add(configured);
+      addItemCard(state.guardsPanel, state.conditions, configured, GUARD_COLOR);
+   }
+
+   private void addAction(FlowState state) {
+      if (availableActions == null || availableActions.isEmpty()) return;
+
+      BlockItem[] items = availableActions.stream()
+            .map(b -> new BlockItem((String) b.get("label"), b))
+            .toArray(BlockItem[]::new);
+      BlockItem selected = (BlockItem) JOptionPane.showInputDialog(
+            this, "Select action:", "Add Action",
+            JOptionPane.PLAIN_MESSAGE, null, items, items[0]);
+      if (selected == null || selected.block == null) return;
+
+      Map<String, Object> configured = BlockParamEditor.configure(this, selected.block);
+      if (configured == null) return;
+
+      state.actions.add(configured);
+      addItemCard(state.actionsPanel, state.actions, configured, ACTION_COLOR);
+   }
+
+   private void addItemCard(JPanel container, List<Map<String, Object>> list,
+         Map<String, Object> item, Color color) {
+      JPanel card = new JPanel(new BorderLayout(4, 0));
+      card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(color, 1, true),
+            new EmptyBorder(3, 5, 3, 3)));
+      card.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 25));
+      card.setAlignmentX(Component.LEFT_ALIGNMENT);
+      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+
+      JLabel text = new JLabel("<html><body style='width:150px'>"
+            + summarizeBlock(item) + "</body></html>");
+      text.setFont(text.getFont().deriveFont(10f));
+
+      JButton removeBtn = new JButton("\u00d7");
+      removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 11f));
+      removeBtn.setMargin(new java.awt.Insets(0, 3, 0, 3));
+      removeBtn.addActionListener(e -> {
+         list.remove(item);
+         container.remove(card);
+         container.revalidate();
+         container.repaint();
+      });
+
+      card.add(text, BorderLayout.CENTER);
+      card.add(removeBtn, BorderLayout.EAST);
+
+      container.add(card);
+      container.add(Box.createVerticalStrut(2));
+      container.revalidate();
+      container.repaint();
+   }
+
+   private JPanel createNodePanel(String title, Color color) {
+      JPanel panel = new JPanel(new BorderLayout(4, 4));
+      panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(color, 2, true),
+            new EmptyBorder(6, 8, 6, 8)));
+      panel.setBackground(NODE_BG);
+
+      JLabel titleLabel = new JLabel(title);
+      titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 11f));
+      titleLabel.setForeground(color.darker());
+      panel.add(titleLabel, BorderLayout.NORTH);
+
+      return panel;
    }
 
    private void loadBlocks() {
@@ -189,13 +378,6 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       service.getStartingPoints(placeId)
             .onSuccess(response -> SwingUtilities.invokeLater(() -> {
                availableTriggers = response.getTriggers();
-               triggerCombo.removeAllItems();
-               if (availableTriggers != null) {
-                  for (Map<String, Object> block : availableTriggers) {
-                     triggerCombo.addItem(new BlockItem(
-                           (String) block.get("label"), block));
-                  }
-               }
             }))
             .onFailure(err -> Oculus.error("Failed to load triggers", err));
 
@@ -203,36 +385,70 @@ public class AutomationCreatorWizard extends Dialog<Void> {
             .onSuccess(response -> SwingUtilities.invokeLater(() -> {
                availableConditions = response.getConditions();
                availableActions = response.getActions();
-               conditionCombo.removeAllItems();
-               if (availableConditions != null) {
-                  for (Map<String, Object> block : availableConditions) {
-                     conditionCombo.addItem(new BlockItem(
-                           (String) block.get("label"), block));
-                  }
-               }
-               actionCombo.removeAllItems();
-               if (availableActions != null) {
-                  for (Map<String, Object> block : availableActions) {
-                     actionCombo.addItem(new BlockItem(
-                           (String) block.get("label"), block));
-                  }
-               }
             }))
             .onFailure(err -> Oculus.error("Failed to load blocks", err));
    }
 
-   private void configureTrigger() {
-      BlockItem item = (BlockItem) triggerCombo.getSelectedItem();
-      if (item == null || item.block == null) return;
-      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
-      if (configured != null) {
-         selectedTrigger = configured;
-         triggerSummary.setText(summarizeBlock(configured));
+   private void addTrigger() {
+      if (availableTriggers == null || availableTriggers.isEmpty()) return;
+
+      BlockItem[] items = availableTriggers.stream()
+            .map(b -> new BlockItem((String) b.get("label"), b))
+            .toArray(BlockItem[]::new);
+      BlockItem selected = (BlockItem) JOptionPane.showInputDialog(
+            this, "Select trigger:", "Add Trigger",
+            JOptionPane.PLAIN_MESSAGE, null, items, items[0]);
+      if (selected == null || selected.block == null) return;
+
+      Map<String, Object> configured = BlockParamEditor.configure(this, selected.block);
+      if (configured == null) return;
+
+      selectedTriggers.add(configured);
+      addTriggerCard(configured);
+   }
+
+   private void addTriggerCard(Map<String, Object> trigger) {
+      JPanel card = new JPanel(new BorderLayout(4, 0));
+      card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(TRIGGER_COLOR, 1, true),
+            new EmptyBorder(4, 6, 4, 4)));
+      card.setBackground(new Color(
+            TRIGGER_COLOR.getRed(), TRIGGER_COLOR.getGreen(), TRIGGER_COLOR.getBlue(), 25));
+      card.setAlignmentX(Component.LEFT_ALIGNMENT);
+      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+      JLabel text = new JLabel("<html><body style='width:140px'>"
+            + summarizeBlock(trigger) + "</body></html>");
+      text.setFont(text.getFont().deriveFont(10f));
+
+      JButton removeBtn = new JButton("\u00d7");
+      removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 12f));
+      removeBtn.setMargin(new java.awt.Insets(0, 3, 0, 3));
+      removeBtn.setToolTipText("Remove this trigger");
+      removeBtn.addActionListener(e -> {
+         selectedTriggers.remove(trigger);
+         triggersPanel.remove(card);
+         triggersPanel.revalidate();
+         triggersPanel.repaint();
+      });
+
+      card.add(text, BorderLayout.CENTER);
+      card.add(removeBtn, BorderLayout.EAST);
+
+      triggersPanel.add(card);
+      triggersPanel.add(Box.createVerticalStrut(3));
+      triggersPanel.revalidate();
+      triggersPanel.repaint();
+
+      // Resize trigger node if needed
+      JPanel triggerNode = (JPanel) triggersPanel.getParent().getParent();
+      if (triggerNode != null) {
+         triggerNode.revalidate();
       }
    }
 
    @SuppressWarnings("unchecked")
-   private static String summarizeBlock(Map<String, Object> block) {
+   static String summarizeBlock(Map<String, Object> block) {
       StringBuilder sb = new StringBuilder();
       sb.append((String) block.get("label"));
       if (block.containsKey("selectedDeviceName")) {
@@ -259,24 +475,6 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       return sb.toString();
    }
 
-   private void addCondition() {
-      BlockItem item = (BlockItem) conditionCombo.getSelectedItem();
-      if (item == null || item.block == null) return;
-      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
-      if (configured == null) return;
-      selectedConditions.add(configured);
-      conditionListModel.addElement(summarizeBlock(configured));
-   }
-
-   private void addAction() {
-      BlockItem item = (BlockItem) actionCombo.getSelectedItem();
-      if (item == null || item.block == null) return;
-      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
-      if (configured == null) return;
-      selectedActions.add(configured);
-      actionListModel.addElement(summarizeBlock(configured));
-   }
-
    private void doCreate() {
       String name = nameField.getText().trim();
       if (name.isEmpty()) {
@@ -285,43 +483,84 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          return;
       }
 
-      if (selectedTrigger == null) {
-         BlockItem triggerItem = (BlockItem) triggerCombo.getSelectedItem();
-         if (triggerItem == null || triggerItem.block == null) {
-            JOptionPane.showMessageDialog(this, "Please select and configure a trigger",
-                  "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return;
-         }
-         // If trigger has no params, use as-is
-         selectedTrigger = triggerItem.block;
-      }
-
-      if (selectedActions.isEmpty()) {
-         JOptionPane.showMessageDialog(this, "At least one action is required",
+      if (selectedTriggers.isEmpty()) {
+         JOptionPane.showMessageDialog(this, "At least one trigger is required",
                "Validation Error", JOptionPane.ERROR_MESSAGE);
          return;
       }
-      String description = descriptionField.getText().trim();
 
+      // Build trigger: single trigger or OR wrapper for multiple
+      Map<String, Object> triggerParam;
+      if (selectedTriggers.size() == 1) {
+         triggerParam = selectedTriggers.get(0);
+      }
+      else {
+         // Wrap in an OR — server will deserialize as OrConfig
+         Map<String, Object> orTrigger = new HashMap<>();
+         orTrigger.put("type", "or");
+         orTrigger.put("configs", selectedTriggers);
+         triggerParam = orTrigger;
+      }
+
+      // Validate flows
+      boolean hasActions = false;
+      for (FlowState flow : flowStates) {
+         if (!flow.actions.isEmpty()) {
+            hasActions = true;
+            break;
+         }
+      }
+      if (!hasActions) {
+         JOptionPane.showMessageDialog(this, "At least one flow must have actions",
+               "Validation Error", JOptionPane.ERROR_MESSAGE);
+         return;
+      }
+
+      String description = descriptionField.getText().trim();
       AutomationService service = IrisClientFactory.getService(AutomationService.class);
+
+      // Build flows list for the API
+      List<Map<String, Object>> flows = new ArrayList<>();
+      for (FlowState state : flowStates) {
+         if (state.actions.isEmpty()) continue;
+         Map<String, Object> flow = new HashMap<>();
+         flow.put("conditions", state.conditions);
+         flow.put("actions", state.actions);
+         flows.add(flow);
+      }
+
+      // Single flow uses conditions+actions, multi-flow uses flows param
+      List<Map<String, Object>> conditions = null;
+      List<Map<String, Object>> actions = null;
+      List<Map<String, Object>> flowsParam = null;
+
+      if (flows.size() == 1) {
+         @SuppressWarnings("unchecked")
+         List<Map<String, Object>> c = (List<Map<String, Object>>) flows.get(0).get("conditions");
+         @SuppressWarnings("unchecked")
+         List<Map<String, Object>> a = (List<Map<String, Object>>) flows.get(0).get("actions");
+         conditions = c;
+         actions = a;
+      }
+      else {
+         flowsParam = flows;
+      }
+
       Oculus.showProgress(
-            service.create(placeId, name, description, selectedTrigger,
-                  selectedConditions, selectedActions)
-                  .onSuccess(r -> {
-                     SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(this,
-                              "Automation created: " + r.getAutomation(),
-                              "Success", JOptionPane.INFORMATION_MESSAGE);
-                        dispose();
-                        submit();
-                     });
-                  })
+            service.create(placeId, name, description, triggerParam,
+                  conditions, actions, flowsParam)
+                  .onSuccess(r -> SwingUtilities.invokeLater(() -> {
+                     JOptionPane.showMessageDialog(this,
+                           "Automation created: " + r.getAutomation(),
+                           "Success", JOptionPane.INFORMATION_MESSAGE);
+                     dispose();
+                     submit();
+                  }))
                   .onFailure(err -> SwingUtilities.invokeLater(() ->
                         JOptionPane.showMessageDialog(this,
-                              "Failed to create automation: " + err.getMessage(),
+                              "Failed: " + err.getMessage(),
                               "Error", JOptionPane.ERROR_MESSAGE))),
-            "Creating automation..."
-      );
+            "Creating automation...");
    }
 
    @Override
@@ -329,20 +568,20 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       return null;
    }
 
-   private static JPanel labeledRow(String label, JTextField field) {
-      JPanel row = new JPanel(new BorderLayout(5, 0));
-      JLabel lbl = new JLabel(label);
-      lbl.setPreferredSize(new Dimension(100, 25));
-      row.add(lbl, BorderLayout.WEST);
-      row.add(field, BorderLayout.CENTER);
-      row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-      return row;
+   /**
+    * State for one flow branch.
+    */
+   private static class FlowState {
+      List<Map<String, Object>> conditions = new ArrayList<>();
+      List<Map<String, Object>> actions = new ArrayList<>();
+      JPanel guardsPanel;
+      JPanel actionsPanel;
    }
 
    /**
     * Wraps a block map for display in a combo box.
     */
-   private static class BlockItem {
+   static class BlockItem {
       final String label;
       final Map<String, Object> block;
 
@@ -354,6 +593,40 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       @Override
       public String toString() {
          return label;
+      }
+   }
+
+   /**
+    * Draws a horizontal arrow.
+    */
+   private static class ArrowPanel extends JPanel {
+      ArrowPanel() {
+         setOpaque(false);
+      }
+
+      @Override
+      protected void paintComponent(Graphics g) {
+         super.paintComponent(g);
+         Graphics2D g2 = (Graphics2D) g.create();
+         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+         g2.setColor(ARROW_COLOR);
+         g2.setStroke(new BasicStroke(2f));
+
+         int y = getHeight() / 2;
+         int x1 = 4;
+         int x2 = getWidth() - 4;
+
+         // Line
+         g2.drawLine(x1, y, x2, y);
+
+         // Arrowhead
+         int arrowSize = 6;
+         g2.fillPolygon(
+               new int[]{x2, x2 - arrowSize, x2 - arrowSize},
+               new int[]{y, y - arrowSize, y + arrowSize},
+               3);
+
+         g2.dispose();
       }
    }
 }

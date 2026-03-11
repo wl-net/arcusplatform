@@ -85,7 +85,7 @@ public class AutomationController extends BaseController<AutomationModel> {
          List<Map<String, Object>> actions) {
       return IrisClientFactory
             .getService(AutomationService.class)
-            .create(getPlaceId().toString(), name, description, trigger, conditions, actions);
+            .create(getPlaceId().toString(), name, description, trigger, conditions, actions, null);
    }
 
    @Override

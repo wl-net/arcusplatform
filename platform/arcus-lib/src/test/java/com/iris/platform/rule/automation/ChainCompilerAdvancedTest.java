@@ -23,13 +23,16 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.iris.common.rule.action.stateful.GuardedAction;
 import com.iris.common.rule.action.stateful.SequentialActionList;
 import com.iris.common.rule.action.stateful.StatefulAction;
 import com.iris.common.rule.condition.Condition;
+import com.iris.common.rule.condition.OrCondition;
 import com.iris.common.rule.filter.GuardedCondition;
 import com.iris.common.rule.trigger.SunriseSunsetTrigger;
 import com.iris.common.rule.trigger.ValueChangeTrigger;
 import com.iris.common.rule.trigger.ValueInSetTrigger;
+import com.iris.platform.rule.catalog.condition.config.OrConfig;
 import com.iris.platform.rule.catalog.action.config.LogActionConfig;
 import com.iris.platform.rule.catalog.condition.config.AlarmStateConfig;
 import com.iris.platform.rule.catalog.condition.config.PresenceConfig;
@@ -320,6 +323,167 @@ public class ChainCompilerAdvancedTest extends IrisTestCase {
       assertEquals(1, copy.getConditions().size());
       assertEquals(1, def.getActions().size());
       assertEquals(1, copy.getActions().size());
+   }
+
+   // ---- Multiple triggers (OR) tests ----
+
+   @Test
+   public void testCompileMultipleTriggersWithOr() {
+      SunriseSunsetConfig trigger1 = new SunriseSunsetConfig();
+      trigger1.setMode("SUNSET");
+      trigger1.setOffsetMinutes(0);
+
+      ValueChangeConfig trigger2 = new ValueChangeConfig();
+      trigger2.setAttributeExpression(new TemplatedExpression("swit:state"));
+      trigger2.setNewValueExpression(new TemplatedExpression("ON"));
+
+      OrConfig orTrigger = new OrConfig(Arrays.asList(trigger1, trigger2));
+
+      Condition condition = ChainCompiler.compileCondition(
+            orTrigger, Collections.emptyList(), ImmutableMap.of());
+
+      assertTrue("Expected OrCondition, got " + condition.getClass(),
+            condition instanceof OrCondition);
+   }
+
+   @Test
+   public void testCompileMultipleTriggersWithGuards() {
+      SunriseSunsetConfig trigger1 = new SunriseSunsetConfig();
+      trigger1.setMode("SUNRISE");
+      trigger1.setOffsetMinutes(0);
+
+      ValueInSetConfig trigger2 = new ValueInSetConfig();
+      trigger2.setAttribute("alarm:alertState");
+      trigger2.setAcceptedValues(ImmutableSet.of("ON"));
+
+      OrConfig orTrigger = new OrConfig(Arrays.asList(trigger1, trigger2));
+
+      PresenceConfig guard = new PresenceConfig();
+      guard.setMode(PresenceConfig.MODE_OCCUPIED);
+
+      Condition condition = ChainCompiler.compileCondition(
+            orTrigger, Arrays.asList(guard), ImmutableMap.of());
+
+      assertTrue("Expected GuardedCondition wrapping OR, got " + condition.getClass(),
+            condition instanceof GuardedCondition);
+   }
+
+   // ---- Multi-flow tests ----
+
+   @Test
+   public void testCompileMultipleFlows() {
+      AutomationDefinition def = new AutomationDefinition();
+      def.setPlaceId(UUID.randomUUID());
+      def.setName("Multi-flow test");
+
+      ValueChangeConfig trigger = new ValueChangeConfig();
+      trigger.setAttributeExpression(new TemplatedExpression("mot:motion"));
+      trigger.setNewValueExpression(new TemplatedExpression("DETECTED"));
+      def.setTrigger(trigger);
+
+      // Flow 1: if nighttime -> turn on lights
+      AutomationFlow flow1 = new AutomationFlow(
+            Arrays.asList(new TimeWindowConfig() {{
+               setStartTime("22:00:00");
+               setEndTime("06:00:00");
+            }}),
+            Arrays.asList(new LogActionConfig("turn on lights")));
+
+      // Flow 2: if daytime -> send notification
+      AutomationFlow flow2 = new AutomationFlow(
+            Arrays.asList(new TimeWindowConfig() {{
+               setStartTime("06:00:00");
+               setEndTime("22:00:00");
+            }}),
+            Arrays.asList(new LogActionConfig("send notification")));
+
+      def.setFlows(Arrays.asList(flow1, flow2));
+
+      ChainCompiler.CompiledAutomation compiled = ChainCompiler.compile(def);
+
+      assertNotNull(compiled);
+      // Trigger should be unguarded (guards are per-flow)
+      assertTrue("Multi-flow trigger should not be guarded",
+            compiled.getCondition() instanceof ValueChangeTrigger);
+      // Action should be a sequential list of guarded actions
+      assertTrue("Multi-flow should produce SequentialActionList",
+            compiled.getAction() instanceof SequentialActionList);
+   }
+
+   @Test
+   public void testCompileSingleFlowWithGuards() {
+      AutomationDefinition def = new AutomationDefinition();
+      def.setPlaceId(UUID.randomUUID());
+      def.setName("Single flow test");
+
+      SunriseSunsetConfig trigger = new SunriseSunsetConfig();
+      trigger.setMode("SUNSET");
+      trigger.setOffsetMinutes(0);
+      def.setTrigger(trigger);
+
+      AutomationFlow flow = new AutomationFlow(
+            Arrays.asList(new PresenceConfig() {{
+               setMode(MODE_OCCUPIED);
+            }}),
+            Arrays.asList(new LogActionConfig("turn on lights")));
+
+      def.setFlows(Arrays.asList(flow));
+
+      ChainCompiler.CompiledAutomation compiled = ChainCompiler.compile(def);
+
+      assertNotNull(compiled);
+      // Single flow with guards — guards in action layer
+      assertNotNull(compiled.getAction());
+   }
+
+   @Test
+   public void testCompileMultipleFlowsNoGuards() {
+      AutomationDefinition def = new AutomationDefinition();
+      def.setPlaceId(UUID.randomUUID());
+      def.setName("Multi-flow no guards");
+
+      SunriseSunsetConfig trigger = new SunriseSunsetConfig();
+      trigger.setMode("SUNSET");
+      trigger.setOffsetMinutes(0);
+      def.setTrigger(trigger);
+
+      AutomationFlow flow1 = new AutomationFlow(
+            Collections.emptyList(),
+            Arrays.asList(new LogActionConfig("action 1")));
+      AutomationFlow flow2 = new AutomationFlow(
+            Collections.emptyList(),
+            Arrays.asList(new LogActionConfig("action 2")));
+
+      def.setFlows(Arrays.asList(flow1, flow2));
+
+      ChainCompiler.CompiledAutomation compiled = ChainCompiler.compile(def);
+
+      assertNotNull(compiled);
+      assertTrue("Multiple unguarded flows should produce SequentialActionList",
+            compiled.getAction() instanceof SequentialActionList);
+   }
+
+   @Test
+   public void testEffectiveFlowsFallbackToLegacy() {
+      AutomationDefinition def = new AutomationDefinition();
+      def.setPlaceId(UUID.randomUUID());
+      def.setName("Legacy format");
+
+      SunriseSunsetConfig trigger = new SunriseSunsetConfig();
+      trigger.setMode("SUNSET");
+      trigger.setOffsetMinutes(0);
+      def.setTrigger(trigger);
+
+      def.setConditions(Arrays.asList(new PresenceConfig() {{
+         setMode(MODE_OCCUPIED);
+      }}));
+      def.setActions(Arrays.asList(new LogActionConfig("legacy action")));
+
+      // No flows set — should fall back to conditions + actions
+      assertEquals(1, def.getEffectiveFlows().size());
+      AutomationFlow effective = def.getEffectiveFlows().get(0);
+      assertEquals(1, effective.getConditions().size());
+      assertEquals(1, effective.getActions().size());
    }
 
    // ---- Error cases ----

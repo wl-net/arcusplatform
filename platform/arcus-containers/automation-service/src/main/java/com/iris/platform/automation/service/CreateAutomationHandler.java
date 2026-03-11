@@ -34,6 +34,7 @@ import com.iris.messages.address.Address;
 import com.iris.messages.errors.Errors;
 import com.iris.platform.rule.automation.AutomationDao;
 import com.iris.platform.rule.automation.AutomationDefinition;
+import com.iris.platform.rule.automation.AutomationFlow;
 import com.iris.platform.rule.automation.ChainCompiler;
 import com.iris.platform.rule.catalog.action.config.ActionConfig;
 import com.iris.platform.rule.catalog.condition.config.ConditionConfig;
@@ -85,19 +86,52 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
       Errors.assertRequiredParam(triggerObj, "trigger");
       ConditionConfig trigger = deserializeCondition(triggerObj);
 
+      // Support either legacy (conditions + actions) or multi-flow format
       @SuppressWarnings("unchecked")
-      List<Object> conditionObjs = (List<Object>) attrs.get("conditions");
-      List<ConditionConfig> conditions = deserializeConditions(conditionObjs);
+      List<Map<String, Object>> flowObjs = (List<Map<String, Object>>) attrs.get("flows");
+      List<AutomationFlow> flows = new ArrayList<>();
 
-      @SuppressWarnings("unchecked")
-      List<Object> actionObjs = (List<Object>) attrs.get("actions");
-      Errors.assertRequiredParam(actionObjs, "actions");
-      List<ActionConfig> actions = deserializeActions(actionObjs);
+      if (flowObjs != null && !flowObjs.isEmpty()) {
+         // Multi-flow format
+         for (Map<String, Object> flowObj : flowObjs) {
+            @SuppressWarnings("unchecked")
+            List<Object> flowCondObjs = (List<Object>) flowObj.get("conditions");
+            @SuppressWarnings("unchecked")
+            List<Object> flowActObjs = (List<Object>) flowObj.get("actions");
+            if (flowActObjs == null || flowActObjs.isEmpty()) {
+               throw new com.iris.messages.errors.ErrorEventException(
+                     "invalid.param", "Each flow must have at least one action");
+            }
+            flows.add(new AutomationFlow(
+                  deserializeConditions(flowCondObjs),
+                  deserializeActions(flowActObjs)));
+         }
+      }
+      else {
+         // Legacy single-flow format
+         @SuppressWarnings("unchecked")
+         List<Object> conditionObjs = (List<Object>) attrs.get("conditions");
+         List<ConditionConfig> conditions = deserializeConditions(conditionObjs);
+
+         @SuppressWarnings("unchecked")
+         List<Object> actionObjs = (List<Object>) attrs.get("actions");
+         Errors.assertRequiredParam(actionObjs, "actions");
+         List<ActionConfig> actions = deserializeActions(actionObjs);
+
+         flows.add(new AutomationFlow(conditions, actions));
+      }
 
       // Validate by compiling — this will throw if configs are invalid
+      AutomationDefinition definition = new AutomationDefinition();
+      definition.setPlaceId(placeId);
+      definition.setName(name);
+      definition.setDescription(description);
+      definition.setTrigger(trigger);
+      definition.setFlows(flows);
+      definition.setDisabled(false);
+
       try {
-         ChainCompiler.compileCondition(trigger, conditions, Collections.emptyMap());
-         ChainCompiler.compileActions(actions, Collections.emptyMap());
+         ChainCompiler.compile(definition);
       }
       catch (Exception e) {
          logger.warn("Failed to compile automation chain", e);
@@ -105,16 +139,6 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
                "invalid.param",
                "Invalid automation chain: " + e.getMessage());
       }
-
-      // Build and persist
-      AutomationDefinition definition = new AutomationDefinition();
-      definition.setPlaceId(placeId);
-      definition.setName(name);
-      definition.setDescription(description);
-      definition.setTrigger(trigger);
-      definition.setConditions(conditions);
-      definition.setActions(actions);
-      definition.setDisabled(false);
 
       automationDao.save(definition);
 
