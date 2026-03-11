@@ -37,6 +37,7 @@ public class AutomationChainConfig {
 
    private ConditionConfig trigger;
    private List<ConditionConfig> conditions = new ArrayList<>();
+   private List<AutomationFlow> flows;
 
    public ConditionConfig getTrigger() {
       return trigger;
@@ -52,5 +53,13 @@ public class AutomationChainConfig {
 
    public void setConditions(List<ConditionConfig> conditions) {
       this.conditions = conditions != null ? conditions : new ArrayList<>();
+   }
+
+   public List<AutomationFlow> getFlows() {
+      return flows;
+   }
+
+   public void setFlows(List<AutomationFlow> flows) {
+      this.flows = flows;
    }
 }

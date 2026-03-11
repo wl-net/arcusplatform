@@ -102,8 +102,12 @@ public class AutomationDaoImpl
          AutomationChainConfig chainConfig = JSON.fromJson(conditionJson, AutomationChainConfig.class);
          definition.setTrigger(chainConfig.getTrigger());
          definition.setConditions(chainConfig.getConditions());
+         if (chainConfig.getFlows() != null && !chainConfig.getFlows().isEmpty()) {
+            definition.setFlows(chainConfig.getFlows());
+         }
       }
 
+      // Legacy: actions in actionconfig column (used when flows are not present)
       String actionJson = row.getString("actionconfig");
       if (actionJson != null && !actionJson.isEmpty()) {
          List<ActionConfig> actions = JSON.fromJson(actionJson,
@@ -116,13 +120,16 @@ public class AutomationDaoImpl
 
    @Override
    protected Statement<?> prepareUpsert(AutomationDefinition definition, Date ts) {
-      // Serialize the chain: trigger + conditions go into conditionconfig
+      // Serialize the chain: trigger + conditions + flows go into conditionconfig
       AutomationChainConfig chainConfig = new AutomationChainConfig();
       chainConfig.setTrigger(definition.getTrigger());
       chainConfig.setConditions(definition.getConditions());
+      if (definition.getFlows() != null && !definition.getFlows().isEmpty()) {
+         chainConfig.setFlows(definition.getFlows());
+      }
       String conditionJson = JSON.toJson(chainConfig);
 
-      // Actions go into actionconfig as a list
+      // Actions go into actionconfig as a list (for legacy compat + single-flow)
       String actionJson = JSON.toJson(definition.getActions());
 
       BoundStatement bs = upsert.bind();
