@@ -29,15 +29,24 @@ import com.iris.platform.rule.catalog.condition.config.ConditionConfig;
  */
 public class AutomationFlow {
 
+   /** Guard logic: AND means all guards must pass, OR means any guard must pass. */
+   public enum GuardLogic { AND, OR }
+
    private List<ConditionConfig> conditions = new ArrayList<>();
    private List<ActionConfig> actions = new ArrayList<>();
+   private GuardLogic guardLogic = GuardLogic.AND;
 
    public AutomationFlow() {
    }
 
    public AutomationFlow(List<ConditionConfig> conditions, List<ActionConfig> actions) {
+      this(conditions, actions, GuardLogic.AND);
+   }
+
+   public AutomationFlow(List<ConditionConfig> conditions, List<ActionConfig> actions, GuardLogic guardLogic) {
       this.conditions = conditions != null ? new ArrayList<>(conditions) : new ArrayList<>();
       this.actions = actions != null ? new ArrayList<>(actions) : new ArrayList<>();
+      this.guardLogic = guardLogic != null ? guardLogic : GuardLogic.AND;
    }
 
    public List<ConditionConfig> getConditions() {
@@ -56,15 +65,25 @@ public class AutomationFlow {
       this.actions = actions != null ? new ArrayList<>(actions) : new ArrayList<>();
    }
 
+   public GuardLogic getGuardLogic() {
+      return guardLogic;
+   }
+
+   public void setGuardLogic(GuardLogic guardLogic) {
+      this.guardLogic = guardLogic != null ? guardLogic : GuardLogic.AND;
+   }
+
    @Override
    public String toString() {
-      return "AutomationFlow [conditions=" + conditions + ", actions=" + actions + "]";
+      return "AutomationFlow [guardLogic=" + guardLogic
+            + ", conditions=" + conditions + ", actions=" + actions + "]";
    }
 
    @Override
    public int hashCode() {
       final int prime = 31;
       int result = 1;
+      result = prime * result + ((guardLogic == null) ? 0 : guardLogic.hashCode());
       result = prime * result + ((conditions == null) ? 0 : conditions.hashCode());
       result = prime * result + ((actions == null) ? 0 : actions.hashCode());
       return result;
@@ -76,6 +95,7 @@ public class AutomationFlow {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
       AutomationFlow other = (AutomationFlow) obj;
+      if (guardLogic != other.guardLogic) return false;
       if (conditions == null) {
          if (other.conditions != null) return false;
       }

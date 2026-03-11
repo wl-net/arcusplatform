@@ -221,12 +221,33 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       guardsList.setLayout(new BoxLayout(guardsList, BoxLayout.Y_AXIS));
       guardsList.setOpaque(false);
       state.guardsPanel = guardsList;
+
+      // AND/OR toggle
+      JButton logicToggle = new JButton("AND");
+      logicToggle.setFont(logicToggle.getFont().deriveFont(Font.BOLD, 10f));
+      logicToggle.setPreferredSize(new Dimension(44, 20));
+      logicToggle.setToolTipText("Toggle between ALL guards (AND) or ANY guard (OR)");
+      logicToggle.addActionListener(e -> {
+         if ("AND".equals(state.guardLogic)) {
+            state.guardLogic = "OR";
+            logicToggle.setText("OR");
+         } else {
+            state.guardLogic = "AND";
+            logicToggle.setText("AND");
+         }
+      });
+
+      JPanel guardButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+      guardButtons.setOpaque(false);
       JButton addGuardBtn = new JButton("+ Guard");
+      guardButtons.add(addGuardBtn);
+      guardButtons.add(logicToggle);
       addGuardBtn.addActionListener(e -> addGuard(state));
+
       JPanel guardContent = new JPanel(new BorderLayout(0, 4));
       guardContent.setOpaque(false);
       guardContent.add(guardsList, BorderLayout.CENTER);
-      guardContent.add(addGuardBtn, BorderLayout.SOUTH);
+      guardContent.add(guardButtons, BorderLayout.SOUTH);
       guardsNode.add(guardContent, BorderLayout.CENTER);
 
       // Arrow between guards and actions
@@ -614,6 +635,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          Map<String, Object> flow = new HashMap<>();
          flow.put("conditions", state.conditions);
          flow.put("actions", state.actions);
+         flow.put("guardLogic", state.guardLogic);
          flows.add(flow);
       }
 
@@ -663,6 +685,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       JPanel flowPanel;
       JPanel nodesRow;
       boolean enabled = true;
+      String guardLogic = "AND";
    }
 
    /**

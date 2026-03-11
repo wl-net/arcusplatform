@@ -117,7 +117,8 @@ public final class ChainCompiler {
          for (ConditionConfig guard : flow.getConditions()) {
             guards.add(guard.generate(values));
          }
-         return new GuardedAction(guards, action);
+         boolean useOr = flow.getGuardLogic() == AutomationFlow.GuardLogic.OR;
+         return new GuardedAction(guards, action, useOr);
       }
 
       SequentialActionList.Builder builder = new SequentialActionList.Builder();
@@ -131,7 +132,8 @@ public final class ChainCompiler {
             for (ConditionConfig guard : flow.getConditions()) {
                guards.add(guard.generate(values));
             }
-            builder.addAction(new GuardedAction(guards, action));
+            boolean useOr = flow.getGuardLogic() == AutomationFlow.GuardLogic.OR;
+            builder.addAction(new GuardedAction(guards, action, useOr));
          }
       }
       return builder.build();

@@ -102,9 +102,15 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
                throw new com.iris.messages.errors.ErrorEventException(
                      "invalid.param", "Each flow must have at least one action");
             }
+            AutomationFlow.GuardLogic logic = AutomationFlow.GuardLogic.AND;
+            String logicStr = (String) flowObj.get("guardLogic");
+            if ("OR".equalsIgnoreCase(logicStr)) {
+               logic = AutomationFlow.GuardLogic.OR;
+            }
             flows.add(new AutomationFlow(
                   deserializeConditions(flowCondObjs),
-                  deserializeActions(flowActObjs)));
+                  deserializeActions(flowActObjs),
+                  logic));
          }
       }
       else {

@@ -37,12 +37,18 @@ public class GuardedAction extends BaseStatefulAction {
 
    private final List<Condition> guards;
    private final StatefulAction delegate;
+   private final boolean useOr;
 
    public GuardedAction(List<Condition> guards, StatefulAction delegate) {
+      this(guards, delegate, false);
+   }
+
+   public GuardedAction(List<Condition> guards, StatefulAction delegate, boolean useOr) {
       Preconditions.checkNotNull(guards, "guards may not be null");
       Preconditions.checkNotNull(delegate, "delegate action is required");
       this.guards = Collections.unmodifiableList(guards);
       this.delegate = delegate;
+      this.useOr = useOr;
    }
 
    @Override
@@ -96,12 +102,22 @@ public class GuardedAction extends BaseStatefulAction {
          return true;
       }
       RuleContext ruleContext = (RuleContext) context;
-      for (Condition guard : guards) {
-         if (!guard.isSatisfiable(ruleContext)) {
-            return false;
+      if (useOr) {
+         for (Condition guard : guards) {
+            if (guard.isSatisfiable(ruleContext)) {
+               return true;
+            }
          }
+         return false;
       }
-      return true;
+      else {
+         for (Condition guard : guards) {
+            if (!guard.isSatisfiable(ruleContext)) {
+               return false;
+            }
+         }
+         return true;
+      }
    }
 
    @Override
