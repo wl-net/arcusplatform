@@ -329,7 +329,7 @@ public class BlockRegistry {
             ImmutableMap.of(
                   "description", "Pause for a duration before the next action",
                   "params", ImmutableMap.of(
-                        "duration", ImmutableMap.of("type", "duration", "label", "Wait for")
+                        "duration", ImmutableMap.of("type", "duration", "label", "Wait for (minutes)")
                   )
             )));
 

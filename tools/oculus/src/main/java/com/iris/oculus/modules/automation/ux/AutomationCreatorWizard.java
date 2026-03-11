@@ -120,8 +120,8 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       triggersPanel.setOpaque(false);
       JButton addTriggerBtn = new JButton("+");
       addTriggerBtn.setToolTipText("Add trigger (fires when ANY trigger matches)");
-      addTriggerBtn.setFont(addTriggerBtn.getFont().deriveFont(Font.BOLD, 14f));
-      addTriggerBtn.setMargin(new java.awt.Insets(2, 8, 2, 8));
+      addTriggerBtn.setFont(addTriggerBtn.getFont().deriveFont(Font.BOLD, 16f));
+      addTriggerBtn.setPreferredSize(new Dimension(36, 28));
       addTriggerBtn.addActionListener(e -> addTrigger());
       JPanel triggerHeader = new JPanel(new BorderLayout());
       triggerHeader.setOpaque(false);
@@ -212,7 +212,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
             BorderFactory.createLineBorder(new Color(0xDDDDDD), 1, true),
             new EmptyBorder(6, 6, 6, 6)));
       flowPanel.setBackground(NODE_BG);
-      flowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 160));
+      flowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
 
       // Guards column
       JPanel guardsNode = createNodePanel("IF (Guards)", GUARD_COLOR);
@@ -248,10 +248,21 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       actionContent.add(addActionBtn, BorderLayout.SOUTH);
       actionsNode.add(actionContent, BorderLayout.CENTER);
 
+      // Build nodes row first (referenced by enable checkbox lambda)
+      JPanel nodesRow = new JPanel();
+      nodesRow.setLayout(new BoxLayout(nodesRow, BoxLayout.X_AXIS));
+      nodesRow.setOpaque(false);
+      nodesRow.add(guardsNode);
+      nodesRow.add(arrow2);
+      nodesRow.add(actionsNode);
+      state.flowPanel = flowPanel;
+      state.nodesRow = nodesRow;
+
       // Remove flow button
-      JButton removeBtn = new JButton("X");
+      JButton removeBtn = new JButton("\u00d7");
       removeBtn.setToolTipText("Remove this flow");
-      removeBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
+      removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 14f));
+      removeBtn.setPreferredSize(new Dimension(28, 24));
       removeBtn.addActionListener(e -> {
          if (flowStates.size() <= 1) {
             JOptionPane.showMessageDialog(AutomationCreatorWizard.this,
@@ -265,30 +276,50 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          flowsContainer.repaint();
       });
 
-      JPanel label = new JPanel(new BorderLayout());
-      label.setOpaque(false);
+      // Enable/disable checkbox
+      javax.swing.JCheckBox enableCb = new javax.swing.JCheckBox("", true);
+      enableCb.setOpaque(false);
+      enableCb.setToolTipText("Enable/disable this flow");
+      enableCb.addActionListener(e -> {
+         state.enabled = enableCb.isSelected();
+         setFlowEnabled(nodesRow, flowPanel, state.enabled);
+      });
+
+      JPanel headerRow = new JPanel(new BorderLayout());
+      headerRow.setOpaque(false);
+      JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+      headerLeft.setOpaque(false);
+      headerLeft.add(enableCb);
       JLabel flowLabel = new JLabel("Flow " + flowNum);
       flowLabel.setFont(flowLabel.getFont().deriveFont(Font.BOLD, 11f));
-      label.add(flowLabel, BorderLayout.CENTER);
-      label.add(removeBtn, BorderLayout.EAST);
+      headerLeft.add(flowLabel);
+      headerRow.add(headerLeft, BorderLayout.CENTER);
+      headerRow.add(removeBtn, BorderLayout.EAST);
 
       JPanel flowInner = new JPanel();
       flowInner.setLayout(new BoxLayout(flowInner, BoxLayout.Y_AXIS));
       flowInner.setOpaque(false);
-      flowInner.add(label);
-
-      JPanel nodesRow = new JPanel();
-      nodesRow.setLayout(new BoxLayout(nodesRow, BoxLayout.X_AXIS));
-      nodesRow.setOpaque(false);
-      nodesRow.add(guardsNode);
-      nodesRow.add(arrow2);
-      nodesRow.add(actionsNode);
-
+      flowInner.add(headerRow);
       flowInner.add(nodesRow);
       flowPanel.add(flowInner);
 
       flowsContainer.add(flowPanel);
       flowsContainer.add(Box.createVerticalStrut(6));
+   }
+
+   private void setFlowEnabled(JPanel nodesRow, JPanel flowPanel, boolean enabled) {
+      setEnabledRecursive(nodesRow, enabled);
+      flowPanel.setBackground(enabled ? NODE_BG : new Color(0xE8E8E8));
+      flowPanel.repaint();
+   }
+
+   private static void setEnabledRecursive(Component comp, boolean enabled) {
+      comp.setEnabled(enabled);
+      if (comp instanceof java.awt.Container) {
+         for (Component child : ((java.awt.Container) comp).getComponents()) {
+            setEnabledRecursive(child, enabled);
+         }
+      }
    }
 
    private void addGuard(FlowState state) {
@@ -559,16 +590,16 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          triggerParam = orTrigger;
       }
 
-      // Validate flows
+      // Validate flows — at least one enabled flow must have actions
       boolean hasActions = false;
       for (FlowState flow : flowStates) {
-         if (!flow.actions.isEmpty()) {
+         if (flow.enabled && !flow.actions.isEmpty()) {
             hasActions = true;
             break;
          }
       }
       if (!hasActions) {
-         JOptionPane.showMessageDialog(this, "At least one flow must have actions",
+         JOptionPane.showMessageDialog(this, "At least one enabled flow must have actions",
                "Validation Error", JOptionPane.ERROR_MESSAGE);
          return;
       }
@@ -576,10 +607,10 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       String description = descriptionField.getText().trim();
       AutomationService service = IrisClientFactory.getService(AutomationService.class);
 
-      // Build flows list for the API
+      // Build flows list for the API (skip disabled and empty flows)
       List<Map<String, Object>> flows = new ArrayList<>();
       for (FlowState state : flowStates) {
-         if (state.actions.isEmpty()) continue;
+         if (!state.enabled || state.actions.isEmpty()) continue;
          Map<String, Object> flow = new HashMap<>();
          flow.put("conditions", state.conditions);
          flow.put("actions", state.actions);
@@ -629,6 +660,9 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       List<Map<String, Object>> actions = new ArrayList<>();
       JPanel guardsPanel;
       JPanel actionsPanel;
+      JPanel flowPanel;
+      JPanel nodesRow;
+      boolean enabled = true;
    }
 
    /**

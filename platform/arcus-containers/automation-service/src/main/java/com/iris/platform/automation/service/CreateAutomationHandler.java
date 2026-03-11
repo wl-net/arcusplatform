@@ -17,6 +17,7 @@ package com.iris.platform.automation.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -38,7 +39,6 @@ import com.iris.platform.rule.automation.AutomationFlow;
 import com.iris.platform.rule.automation.ChainCompiler;
 import com.iris.platform.rule.catalog.action.config.ActionConfig;
 import com.iris.platform.rule.catalog.condition.config.ConditionConfig;
-import com.iris.util.TypeMarker;
 
 /**
  * Handles auto:Create — validates and persists a new automation chain.
@@ -148,8 +148,11 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
             ImmutableMap.of("automation", definition.getAddress()));
    }
 
+   @SuppressWarnings("unchecked")
    private ConditionConfig deserializeCondition(Object obj) {
-      String json = JSON.toJson(obj);
+      Map<String, Object> blockMap = (Map<String, Object>) obj;
+      Map<String, Object> condMap = translateConditionBlock(blockMap);
+      String json = JSON.toJson(condMap);
       return JSON.fromJson(json, ConditionConfig.class);
    }
 
@@ -164,15 +167,122 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
       return configs;
    }
 
+   /**
+    * Translates a UI block into a ConditionConfig-compatible map.
+    * Merges selectedDevice/selectedAttribute/selectedMode/paramValues
+    * into the flat structure expected by ConditionConfig subtypes.
+    */
+   @SuppressWarnings("unchecked")
+   private Map<String, Object> translateConditionBlock(Map<String, Object> block) {
+      String blockType = (String) block.get("type");
+      Map<String, Object> result = new LinkedHashMap<>();
+      result.put("type", blockType);
+
+      // Map UI-facing trigger types to ConditionConfig types
+      if ("presence-change".equals(blockType)) {
+         result.put("type", "presence");
+      } else if ("alarm-change".equals(blockType)) {
+         result.put("type", "alarm-state");
+      }
+
+      // Copy device selection into config fields
+      if (block.containsKey("selectedDevice")) {
+         result.put("address", block.get("selectedDevice"));
+      }
+      if (block.containsKey("selectedAttribute")) {
+         result.put("attribute", block.get("selectedAttribute"));
+      }
+      if (block.containsKey("selectedValue")) {
+         result.put("value", block.get("selectedValue"));
+      }
+      if (block.containsKey("selectedMode")) {
+         result.put("mode", block.get("selectedMode"));
+      }
+
+      // Merge param values into the config
+      Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
+      if (paramValues != null) {
+         result.putAll(paramValues);
+      }
+
+      return result;
+   }
+
    private List<ActionConfig> deserializeActions(List<Object> objs) {
       if (objs == null || objs.isEmpty()) {
          throw new IllegalArgumentException("At least one action is required");
       }
       List<ActionConfig> configs = new ArrayList<>();
       for (Object obj : objs) {
-         String json = JSON.toJson(obj);
+         @SuppressWarnings("unchecked")
+         Map<String, Object> blockMap = (Map<String, Object>) obj;
+         Map<String, Object> actionMap = translateActionBlock(blockMap);
+         String json = JSON.toJson(actionMap);
          configs.add(JSON.fromJson(json, ActionConfig.class));
       }
       return configs;
+   }
+
+   /**
+    * Translates a UI block (from BlockRegistry) into a proper ActionConfig-compatible map.
+    * UI blocks have types like "set-attribute", "notify", "fire-scene", "delay", "no-op".
+    * ActionConfig subtypes use types like "set-attr", "send-notification", "send", "log", "no-op".
+    */
+   @SuppressWarnings("unchecked")
+   private Map<String, Object> translateActionBlock(Map<String, Object> block) {
+      String blockType = (String) block.get("type");
+      if (blockType == null) {
+         return block;
+      }
+
+      switch (blockType) {
+         case "set-attribute": {
+            // Translate to SetAttributeActionConfig
+            Map<String, Object> action = new LinkedHashMap<>();
+            action.put("type", "set-attr");
+            action.put("targetAttribute", block.get("selectedAttribute"));
+            action.put("attributeValue", block.get("selectedValue"));
+            action.put("address", block.get("selectedDevice"));
+            return action;
+         }
+         case "notify": {
+            // Translate to SendNotificationActionConfig
+            Map<String, Object> action = new LinkedHashMap<>();
+            action.put("type", "send-notification");
+            Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
+            if (paramValues != null) {
+               action.putAll(paramValues);
+            }
+            return action;
+         }
+         case "fire-scene": {
+            // Translate to SendActionConfig — sends scene:Fire to the scene address
+            Map<String, Object> action = new LinkedHashMap<>();
+            action.put("type", "send");
+            action.put("sendActionType", "scene:Fire");
+            action.put("address", block.get("selectedScene"));
+            return action;
+         }
+         case "delay": {
+            // Translate to a log action as placeholder (delay is handled by SequentialActionList timing)
+            Map<String, Object> action = new LinkedHashMap<>();
+            action.put("type", "log");
+            Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
+            int duration = 5;
+            if (paramValues != null && paramValues.get("duration") instanceof Number) {
+               duration = ((Number) paramValues.get("duration")).intValue();
+            }
+            action.put("message", "Delay " + duration + " minutes");
+            return action;
+         }
+         case "no-op": {
+            Map<String, Object> action = new LinkedHashMap<>();
+            action.put("type", "no-op");
+            return action;
+         }
+         default:
+            // Unknown block type — try direct deserialization
+            return block;
+      }
    }
 }
