@@ -46,6 +46,7 @@ import com.iris.platform.rule.catalog.condition.config.ReferenceFilterConfig;
 import com.iris.platform.rule.catalog.condition.config.ThresholdConfig;
 import com.iris.platform.rule.catalog.condition.config.TimeOfDayConfig;
 import com.iris.platform.rule.catalog.condition.config.TimeWindowConfig;
+import com.iris.platform.rule.catalog.condition.config.ValueInSetConfig;
 import com.iris.platform.rule.catalog.condition.config.ValueChangeConfig;
 import com.iris.bootstrap.annotations.Modules;
 
@@ -96,6 +97,7 @@ public class RuleConfigJsonModule extends AbstractIrisModule {
                .registerSubtype(DeviceStateConfig.class, DeviceStateConfig.TYPE)
                .registerSubtype(SunriseSunsetConfig.class, SunriseSunsetConfig.TYPE)
                .registerSubtype(TimeWindowConfig.class, TimeWindowConfig.TYPE)
+               .registerSubtype(ValueInSetConfig.class, ValueInSetConfig.TYPE)
                ;
    }
    

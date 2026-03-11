@@ -189,6 +189,14 @@ public class BlockParamEditor extends JDialog {
             int def = defaultVal instanceof Number ? ((Number) defaultVal).intValue() : 0;
             return new JSpinner(new SpinnerNumberModel(def, -1440, 1440, 1));
          }
+         case "double": {
+            Object defaultVal = spec.get("default");
+            double def = defaultVal instanceof Number ? ((Number) defaultVal).doubleValue() : 0.0;
+            return new JSpinner(new SpinnerNumberModel(def, -10000.0, 10000.0, 0.1));
+         }
+         case "string-list": {
+            return new JTextField();
+         }
          case "time": {
             JTextField field = new JTextField("12:00:00");
             return field;

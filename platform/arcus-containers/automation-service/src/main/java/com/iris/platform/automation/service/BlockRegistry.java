@@ -75,18 +75,55 @@ public class BlockRegistry {
       Collection<Model> models = getModels(placeId);
       List<Map<String, Object>> triggers = new ArrayList<>();
 
-      // Category: Device Events
+      // Category: Device Events — exact value match
       List<Map<String, Object>> devices = getDevicesWithCapability(models,
             "mot:motion", "cont:contact", "but:state", "swit:state",
             "doorlock:lockstate", "temp:temperature", "humid:humidity",
             "pres:presence", "pow:instantaneous");
       if (!devices.isEmpty()) {
          triggers.add(triggerBlock("value-change",
-               "A device does something",
+               "A device attribute changes",
                "Device Events",
                ImmutableMap.of(
                      "devices", devices,
-                     "description", "Triggers when a device attribute changes to a value"
+                     "description", "Triggers when a device attribute changes to a specific value",
+                     "params", ImmutableMap.of(
+                           "newValue", ImmutableMap.of("type", "string", "label", "New value (leave blank for any)")
+                     )
+               )));
+
+         // Multi-value match for enum attributes
+         triggers.add(triggerBlock("value-in-set",
+               "A device attribute becomes one of...",
+               "Device Events",
+               ImmutableMap.of(
+                     "devices", devices,
+                     "description", "Triggers when a device attribute changes to any of the selected values",
+                     "params", ImmutableMap.of(
+                           "acceptedValues", ImmutableMap.of("type", "string-list",
+                                 "label", "Accepted values (comma-separated)")
+                     )
+               )));
+      }
+
+      // Category: Device Events — threshold crossing
+      List<Map<String, Object>> numericDevices = getDevicesWithCapability(models,
+            "temp:temperature", "humid:humidity", "pow:instantaneous",
+            "dim:brightness", "fan:speed");
+      if (!numericDevices.isEmpty()) {
+         triggers.add(triggerBlock("value-threshold",
+               "A reading crosses a threshold",
+               "Device Events",
+               ImmutableMap.of(
+                     "devices", numericDevices,
+                     "description", "Triggers when a numeric attribute goes above or below a threshold",
+                     "params", ImmutableMap.of(
+                           "direction", ImmutableMap.of("type", "enum", "label", "Direction",
+                                 "values", ImmutableList.of("ABOVE", "BELOW")),
+                           "threshold", ImmutableMap.of("type", "double", "label", "Threshold value"),
+                           "sensitivity", ImmutableMap.of("type", "double", "label", "Sensitivity (hysteresis)",
+                                 "default", 0.0)
+                     )
                )));
       }
 
@@ -135,16 +172,28 @@ public class BlockRegistry {
                "Someone arrives or leaves",
                "Presence",
                ImmutableMap.of(
-                     "description", "Triggers when a person arrives or departs"
+                     "description", "Triggers when a person arrives or departs",
+                     "modes", ImmutableList.of(
+                           ImmutableMap.of("value", "ANY", "label", "Any change"),
+                           ImmutableMap.of("value", "PRESENT", "label", "Arrives"),
+                           ImmutableMap.of("value", "ABSENT", "label", "Leaves")
+                     )
                )));
       }
 
-      // Category: Alarm
+      // Category: Alarm — with selectable states
       triggers.add(triggerBlock("alarm-change",
             "Alarm state changes",
             "Security",
             ImmutableMap.of(
-                  "description", "Triggers when the security alarm changes state"
+                  "description", "Triggers when the security alarm changes to a selected state",
+                  "modes", ImmutableList.of(
+                        ImmutableMap.of("value", "ANY", "label", "Any change"),
+                        ImmutableMap.of("value", "DISARMED", "label", "Disarmed"),
+                        ImmutableMap.of("value", "ON", "label", "Armed (On)"),
+                        ImmutableMap.of("value", "PARTIAL", "label", "Armed (Partial)"),
+                        ImmutableMap.of("value", "ALERT", "label", "Alert (Triggered)")
+                  )
             )));
 
       return triggers;
