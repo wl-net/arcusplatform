@@ -51,7 +51,7 @@ import com.iris.util.TypeMarker;
  */
 public class CreateAutomationHandler implements PlatformRequestMessageHandler {
 
-   public static final String NAME = "auto:CreateRequest";
+   public static final String NAME = "auto:Create";
 
    private static final Logger logger = LoggerFactory.getLogger(CreateAutomationHandler.class);
 

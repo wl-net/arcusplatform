@@ -32,7 +32,7 @@ import com.iris.messages.errors.Errors;
  */
 public class GetStartingPointsHandler implements PlatformRequestMessageHandler {
 
-   public static final String NAME = "auto:GetStartingPointsRequest";
+   public static final String NAME = "auto:GetStartingPoints";
 
    private final BlockRegistry blockRegistry;
 

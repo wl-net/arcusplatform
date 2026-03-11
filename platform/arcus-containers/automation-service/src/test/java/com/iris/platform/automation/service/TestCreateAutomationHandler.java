@@ -216,7 +216,7 @@ public class TestCreateAutomationHandler extends IrisMockTestCase {
    }
 
    private PlatformMessage createMessage(Map<String, Object> attrs) {
-      MessageBody body = MessageBody.buildMessage("auto:CreateRequest", attrs);
+      MessageBody body = MessageBody.buildMessage("auto:Create", attrs);
       return PlatformMessage.buildRequest(body,
             Address.clientAddress("test", "session"),
             Address.platformService("auto"))

@@ -34,7 +34,7 @@ import com.iris.platform.rule.automation.AutomationDefinition;
 
 public class ListAutomationsHandler implements PlatformRequestMessageHandler {
 
-   public static final String NAME = "auto:ListAutomationsRequest";
+   public static final String NAME = "auto:ListAutomations";
 
    private final AutomationDao automationDao;
 

@@ -36,7 +36,7 @@ import com.iris.messages.errors.Errors;
  */
 public class GetNextStepsHandler implements PlatformRequestMessageHandler {
 
-   public static final String NAME = "auto:GetNextStepsRequest";
+   public static final String NAME = "auto:GetNextSteps";
 
    private final BlockRegistry blockRegistry;
 
