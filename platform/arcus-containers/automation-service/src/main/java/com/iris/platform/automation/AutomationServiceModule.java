@@ -15,6 +15,7 @@
  */
 package com.iris.platform.automation;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 import com.google.inject.Provides;
@@ -47,7 +48,7 @@ public class AutomationServiceModule extends AbstractIrisModule {
    @Provides
    @Singleton
    @Named(AutomationService.PROP_THREADPOOL)
-   public ExecutorService automationPool() {
+   public Executor automationPool() {
       return new ThreadPoolBuilder()
             .withBlockingBacklog()
             .withMaxPoolSize(100)
