@@ -136,9 +136,14 @@ public class AutomationDefinition extends BaseDefinition<AutomationDefinition> {
    public Condition createCondition(RuleEnvironment environment) {
       Map<String, Object> values = Collections.emptyMap();
       List<AutomationFlow> effectiveFlows = getEffectiveFlows();
-      if (effectiveFlows.size() <= 1 && !conditions.isEmpty()) {
-         // Single flow: wrap trigger with guards
-         return ChainCompiler.compileCondition(trigger, conditions, values);
+      if (effectiveFlows.size() <= 1) {
+         // Single flow: wrap trigger with guards from the effective flow
+         List<ConditionConfig> guards = effectiveFlows.isEmpty()
+               ? conditions
+               : effectiveFlows.get(0).getConditions();
+         if (!guards.isEmpty()) {
+            return ChainCompiler.compileCondition(trigger, guards, values);
+         }
       }
       // Multi-flow or no guards: just the trigger
       return ChainCompiler.compileCondition(trigger, Collections.emptyList(), values);

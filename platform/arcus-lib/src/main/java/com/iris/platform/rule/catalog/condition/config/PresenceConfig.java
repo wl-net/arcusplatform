@@ -18,7 +18,6 @@ package com.iris.platform.rule.catalog.condition.config;
 import java.util.Map;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.iris.common.rule.condition.Condition;
 import com.iris.common.rule.filter.GuardConditionAdapter;
 import com.iris.messages.model.Model;
@@ -68,8 +67,8 @@ public class PresenceConfig implements ConditionConfig {
    public Condition generate(Map<String, Object> values) {
       // Build a predicate that checks the presence subsystem model attributes.
       // The PresenceSubsystem exposes:
-      //   presences:occupied (boolean)
-      //   presences:peopleAtHome (set<string> of person addresses)
+      //   subspres:occupied (boolean)
+      //   subspres:peopleAtHome (set<string> of person addresses)
       //   presences:peopleAway (set<string> of person addresses)
       Predicate<Model> predicate;
       String description;
@@ -104,7 +103,7 @@ public class PresenceConfig implements ConditionConfig {
          String address = String.valueOf(model.getAttribute("base:address"));
          // Only match the presence subsystem model
          if (!address.contains("subspres")) return false;
-         Object occupied = model.getAttribute("presences:occupied");
+         Object occupied = model.getAttribute("subspres:occupied");
          if (occupied == null) return !expectOccupied;
          return Boolean.valueOf(occupied.toString()) == expectOccupied;
       };
@@ -115,7 +114,7 @@ public class PresenceConfig implements ConditionConfig {
          if (model == null || personAddr == null) return false;
          String address = String.valueOf(model.getAttribute("base:address"));
          if (!address.contains("subspres")) return false;
-         Object peopleAtHome = model.getAttribute("presences:peopleAtHome");
+         Object peopleAtHome = model.getAttribute("subspres:peopleAtHome");
          if (peopleAtHome == null) return !expectHome;
          @SuppressWarnings("unchecked")
          java.util.Set<String> people = (java.util.Set<String>) peopleAtHome;

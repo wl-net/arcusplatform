@@ -122,10 +122,11 @@ public class TestBlockRegistry extends IrisMockTestCase {
       List<Map<String, Object>> actions = registry.getActions(placeId);
 
       assertHasBlockType(actions, "notify");
-      assertHasBlockType(actions, "fire-scene");
       assertHasBlockType(actions, "delay");
       // No set-attribute without controllable devices
       assertNoBlockType(actions, "set-attribute");
+      // fire-scene only present when scenes exist
+      assertNoBlockType(actions, "fire-scene");
 
       verify();
    }
@@ -142,8 +143,8 @@ public class TestBlockRegistry extends IrisMockTestCase {
 
       assertHasBlockType(actions, "set-attribute");
       assertHasBlockType(actions, "notify");
-      assertHasBlockType(actions, "fire-scene");
       assertHasBlockType(actions, "delay");
+      // fire-scene only present when scene models exist
 
       verify();
    }

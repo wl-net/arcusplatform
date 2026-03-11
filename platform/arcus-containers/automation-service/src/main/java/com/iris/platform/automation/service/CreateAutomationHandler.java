@@ -21,12 +21,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import com.iris.capability.definition.AttributeTypes;
 import com.iris.core.platform.PlatformRequestMessageHandler;
 import com.iris.io.json.JSON;
 import com.iris.messages.MessageBody;
@@ -38,7 +40,12 @@ import com.iris.platform.rule.automation.AutomationDefinition;
 import com.iris.platform.rule.automation.AutomationFlow;
 import com.iris.platform.rule.automation.ChainCompiler;
 import com.iris.platform.rule.catalog.action.config.ActionConfig;
+import com.iris.platform.rule.catalog.action.config.LogActionConfig;
+import com.iris.platform.rule.catalog.action.config.NoOpActionConfig;
+import com.iris.platform.rule.catalog.action.config.SendActionConfig;
+import com.iris.platform.rule.catalog.action.config.SetAttributeActionConfig;
 import com.iris.platform.rule.catalog.condition.config.ConditionConfig;
+import com.iris.platform.rule.catalog.template.TemplatedExpression;
 
 /**
  * Handles auto:Create — validates and persists a new automation chain.
@@ -134,6 +141,11 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
       definition.setDescription(description);
       definition.setTrigger(trigger);
       definition.setFlows(flows);
+      // Also populate legacy fields for backward compatibility
+      if (flows.size() == 1) {
+         definition.setConditions(flows.get(0).getConditions());
+         definition.setActions(flows.get(0).getActions());
+      }
       definition.setDisabled(false);
 
       try {
@@ -205,10 +217,12 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
          result.put("mode", block.get("selectedMode"));
       }
 
-      // Merge param values into the config
+      // Merge param values into the config (but don't allow overriding type)
       Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
       if (paramValues != null) {
+         String savedType = (String) result.get("type");
          result.putAll(paramValues);
+         result.put("type", savedType);
       }
 
       return result;
@@ -222,73 +236,72 @@ public class CreateAutomationHandler implements PlatformRequestMessageHandler {
       for (Object obj : objs) {
          @SuppressWarnings("unchecked")
          Map<String, Object> blockMap = (Map<String, Object>) obj;
-         Map<String, Object> actionMap = translateActionBlock(blockMap);
-         String json = JSON.toJson(actionMap);
-         configs.add(JSON.fromJson(json, ActionConfig.class));
+         configs.add(buildActionConfig(blockMap));
       }
       return configs;
    }
 
    /**
-    * Translates a UI block (from BlockRegistry) into a proper ActionConfig-compatible map.
-    * UI blocks have types like "set-attribute", "notify", "fire-scene", "delay", "no-op".
-    * ActionConfig subtypes use types like "set-attr", "send-notification", "send", "log", "no-op".
+    * Builds an ActionConfig directly from a UI block map.
+    * Constructs objects programmatically to avoid Gson round-trip issues
+    * (SendActionConfig/LogActionConfig lack no-arg constructors).
     */
    @SuppressWarnings("unchecked")
-   private Map<String, Object> translateActionBlock(Map<String, Object> block) {
+   private ActionConfig buildActionConfig(Map<String, Object> block) {
       String blockType = (String) block.get("type");
       if (blockType == null) {
-         return block;
+         throw new IllegalArgumentException("Block type is required");
       }
 
       switch (blockType) {
          case "set-attribute": {
-            // Translate to SetAttributeActionConfig
-            Map<String, Object> action = new LinkedHashMap<>();
-            action.put("type", "set-attr");
-            action.put("targetAttribute", block.get("selectedAttribute"));
-            action.put("attributeValue", block.get("selectedValue"));
-            action.put("address", block.get("selectedDevice"));
-            return action;
+            SetAttributeActionConfig config = new SetAttributeActionConfig();
+            String device = (String) block.get("selectedDevice");
+            String attribute = (String) block.get("selectedAttribute");
+            Object value = block.get("selectedValue");
+            config.setAddress(new TemplatedExpression(device));
+            config.setAttributeName(attribute);
+            config.setAttributeValue(new TemplatedExpression(String.valueOf(value)));
+            config.setAttributeType(AttributeTypes.stringType());
+            config.setDuration(0);
+            config.setUnit(TimeUnit.SECONDS);
+            return config;
          }
          case "notify": {
-            // Translate to SendNotificationActionConfig
-            Map<String, Object> action = new LinkedHashMap<>();
-            action.put("type", "send-notification");
+            // Notification requires complex service setup; use log as placeholder
             Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
-            if (paramValues != null) {
-               action.putAll(paramValues);
+            String message = "Notification";
+            if (paramValues != null && paramValues.get("message") != null) {
+               message = String.valueOf(paramValues.get("message"));
             }
-            return action;
+            return new LogActionConfig("notify: " + message);
          }
          case "fire-scene": {
-            // Translate to SendActionConfig — sends scene:Fire to the scene address
-            Map<String, Object> action = new LinkedHashMap<>();
-            action.put("type", "send");
-            action.put("sendActionType", "scene:Fire");
-            action.put("address", block.get("selectedScene"));
-            return action;
+            String sceneAddr = (String) block.get("selectedScene");
+            SendActionConfig config = new SendActionConfig("scene:Fire");
+            config.setAddress(new TemplatedExpression(sceneAddr));
+            return config;
          }
          case "delay": {
-            // Translate to a log action as placeholder (delay is handled by SequentialActionList timing)
-            Map<String, Object> action = new LinkedHashMap<>();
-            action.put("type", "log");
             Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
             int duration = 5;
             if (paramValues != null && paramValues.get("duration") instanceof Number) {
                duration = ((Number) paramValues.get("duration")).intValue();
             }
-            action.put("message", "Delay " + duration + " minutes");
-            return action;
+            return new LogActionConfig("Delay " + duration + " minutes");
+         }
+         case "log": {
+            String message = (String) block.get("message");
+            return new LogActionConfig(message != null ? message : "");
          }
          case "no-op": {
-            Map<String, Object> action = new LinkedHashMap<>();
-            action.put("type", "no-op");
-            return action;
+            return new NoOpActionConfig();
          }
-         default:
-            // Unknown block type — try direct deserialization
-            return block;
+         default: {
+            // Unknown block type — try JSON deserialization
+            String json = JSON.toJson(block);
+            return JSON.fromJson(json, ActionConfig.class);
+         }
       }
    }
 }

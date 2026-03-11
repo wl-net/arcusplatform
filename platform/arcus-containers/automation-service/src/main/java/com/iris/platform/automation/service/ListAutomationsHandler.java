@@ -80,6 +80,7 @@ public class ListAutomationsHandler implements PlatformRequestMessageHandler {
       map.put("auto:trigger", def.getTrigger());
       map.put("auto:conditions", def.getConditions());
       map.put("auto:actions", def.getActions());
+      map.put("auto:flows", def.getFlows());
       map.put("auto:lastExecuted", def.getLastExecuted());
       return map;
    }

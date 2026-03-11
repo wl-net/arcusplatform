@@ -59,13 +59,13 @@ public class AlarmStateConfig implements ConditionConfig {
       Predicate<Model> predicate = model -> {
          if (model == null) return false;
          String address = String.valueOf(model.getAttribute("base:address"));
-         if (!address.contains("subsecurityalarm")) return false;
-         Object alarmMode = model.getAttribute("subsecurityalarm:alarmMode");
+         if (!address.contains("subalarm")) return false;
+         Object alarmMode = model.getAttribute("subalarm:securityMode");
          if (alarmMode == null) return STATE_DISARMED.equals(state);
          return state.equals(alarmMode.toString());
       };
 
-      return new GuardConditionAdapter(description, "subsecurityalarm:", predicate);
+      return new GuardConditionAdapter(description, "subalarm:", predicate);
    }
 
    @Override

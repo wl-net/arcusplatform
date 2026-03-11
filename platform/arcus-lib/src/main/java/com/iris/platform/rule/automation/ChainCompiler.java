@@ -146,23 +146,29 @@ public final class ChainCompiler {
       Map<String, Object> values = Collections.emptyMap();
       List<AutomationFlow> effectiveFlows = definition.getEffectiveFlows();
 
-      // Trigger — for multi-flow, guards are in the action layer
+      // For single-flow, guards can be applied as a condition wrapper.
+      // For multi-flow, guards are in the action layer (per-flow GuardedAction).
       Condition condition;
-      if (effectiveFlows.size() <= 1 && !definition.getConditions().isEmpty()) {
-         condition = compileCondition(definition.getTrigger(), definition.getConditions(), values);
-      }
-      else {
-         condition = compileCondition(definition.getTrigger(), Collections.emptyList(), values);
-      }
-
-      // Actions — single flow uses simple compilation, multi-flow uses guarded dispatch
       StatefulAction action;
+
       if (effectiveFlows.size() <= 1) {
+         // Single flow — apply guards at condition level
+         List<ConditionConfig> guards = effectiveFlows.isEmpty()
+               ? definition.getConditions()
+               : effectiveFlows.get(0).getConditions();
+         if (!guards.isEmpty()) {
+            condition = compileCondition(definition.getTrigger(), guards, values);
+         }
+         else {
+            condition = compileCondition(definition.getTrigger(), Collections.emptyList(), values);
+         }
          List<ActionConfig> actionConfigs = effectiveFlows.isEmpty()
                ? definition.getActions() : effectiveFlows.get(0).getActions();
          action = compileActions(actionConfigs, values);
       }
       else {
+         // Multi-flow — trigger is unguarded, each flow has its own guards
+         condition = compileCondition(definition.getTrigger(), Collections.emptyList(), values);
          action = compileFlows(effectiveFlows, values);
       }
 

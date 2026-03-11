@@ -112,8 +112,7 @@ public class AutomationRequestHandler {
 
       // Validate the updated chain compiles
       try {
-         ChainCompiler.compileCondition(def.getTrigger(), def.getConditions(), Collections.emptyMap());
-         ChainCompiler.compileActions(def.getActions(), Collections.emptyMap());
+         ChainCompiler.compile(def);
       }
       catch (Exception e) {
          logger.warn("Failed to compile updated automation chain", e);

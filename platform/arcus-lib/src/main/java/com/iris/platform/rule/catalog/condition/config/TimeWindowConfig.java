@@ -15,7 +15,6 @@
  */
 package com.iris.platform.rule.catalog.condition.config;
 
-import java.util.Calendar;
 import java.util.Map;
 
 import com.iris.common.rule.condition.Condition;

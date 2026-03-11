@@ -381,6 +381,9 @@ public class AutomationCreatorWizard extends Dialog<Void> {
 
    private void addItemCard(JPanel container, List<Map<String, Object>> list,
          Map<String, Object> item, Color color) {
+      // Mutable holder so lambdas always see the latest version after edits
+      final Map<String, Object>[] current = new Map[]{ item };
+
       JPanel card = new JPanel(new BorderLayout(4, 0));
       card.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(color, 1, true),
@@ -399,12 +402,13 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          public void mouseClicked(java.awt.event.MouseEvent e) {
             if (e.getClickCount() == 2) {
                Map<String, Object> reconfigured = BlockParamEditor.configure(
-                     AutomationCreatorWizard.this, item);
+                     AutomationCreatorWizard.this, current[0]);
                if (reconfigured != null) {
-                  int idx = list.indexOf(item);
+                  int idx = list.indexOf(current[0]);
                   if (idx >= 0) {
                      list.set(idx, reconfigured);
                   }
+                  current[0] = reconfigured;
                   text.setText("<html><body style='width:190px'>"
                         + summarizeBlock(reconfigured) + "</body></html>");
                }
@@ -416,7 +420,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 11f));
       removeBtn.setMargin(new java.awt.Insets(0, 3, 0, 3));
       removeBtn.addActionListener(e -> {
-         list.remove(item);
+         list.remove(current[0]);
          container.remove(card);
          container.revalidate();
          container.repaint();
@@ -482,6 +486,9 @@ public class AutomationCreatorWizard extends Dialog<Void> {
    }
 
    private void addTriggerCard(Map<String, Object> trigger) {
+      // Mutable holder so lambdas always see the latest version after edits
+      final Map<String, Object>[] current = new Map[]{ trigger };
+
       JPanel card = new JPanel(new BorderLayout(4, 0));
       card.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(TRIGGER_COLOR, 1, true),
@@ -501,12 +508,13 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          public void mouseClicked(java.awt.event.MouseEvent e) {
             if (e.getClickCount() == 2) {
                Map<String, Object> reconfigured = BlockParamEditor.configure(
-                     AutomationCreatorWizard.this, trigger);
+                     AutomationCreatorWizard.this, current[0]);
                if (reconfigured != null) {
-                  int idx = selectedTriggers.indexOf(trigger);
+                  int idx = selectedTriggers.indexOf(current[0]);
                   if (idx >= 0) {
                      selectedTriggers.set(idx, reconfigured);
                   }
+                  current[0] = reconfigured;
                   text.setText("<html><body style='width:220px'>"
                         + summarizeBlock(reconfigured) + "</body></html>");
                }
@@ -519,7 +527,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       removeBtn.setMargin(new java.awt.Insets(0, 3, 0, 3));
       removeBtn.setToolTipText("Remove this trigger");
       removeBtn.addActionListener(e -> {
-         selectedTriggers.remove(trigger);
+         selectedTriggers.remove(current[0]);
          triggersPanel.remove(card);
          triggersPanel.revalidate();
          triggersPanel.repaint();
