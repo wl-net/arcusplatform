@@ -314,6 +314,14 @@ public class BlockRegistry {
                )));
       }
 
+      // Do nothing (explicit no-op for guarded flows)
+      actions.add(actionBlock("no-op",
+            "Do nothing",
+            "Flow",
+            ImmutableMap.of(
+                  "description", "Explicitly do nothing (useful in guarded flow branches)"
+            )));
+
       // Delay
       actions.add(actionBlock("delay",
             "Wait, then continue",

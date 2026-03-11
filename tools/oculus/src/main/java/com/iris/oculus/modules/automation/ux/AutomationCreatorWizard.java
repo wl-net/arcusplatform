@@ -89,7 +89,6 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       this.placeId = placeId;
       setTitle("Create Automation");
       setPreferredSize(new Dimension(1000, 700));
-      setAlwaysOnTop(true);
    }
 
    @Override
@@ -254,6 +253,12 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       removeBtn.setToolTipText("Remove this flow");
       removeBtn.setMargin(new java.awt.Insets(2, 5, 2, 5));
       removeBtn.addActionListener(e -> {
+         if (flowStates.size() <= 1) {
+            JOptionPane.showMessageDialog(AutomationCreatorWizard.this,
+                  "At least one flow is required",
+                  "Cannot Remove", JOptionPane.WARNING_MESSAGE);
+            return;
+         }
          flowStates.remove(state);
          flowsContainer.remove(flowPanel);
          flowsContainer.revalidate();
@@ -265,9 +270,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       JLabel flowLabel = new JLabel("Flow " + flowNum);
       flowLabel.setFont(flowLabel.getFont().deriveFont(Font.BOLD, 11f));
       label.add(flowLabel, BorderLayout.CENTER);
-      if (flowStates.size() > 1) {
-         label.add(removeBtn, BorderLayout.EAST);
-      }
+      label.add(removeBtn, BorderLayout.EAST);
 
       JPanel flowInner = new JPanel();
       flowInner.setLayout(new BoxLayout(flowInner, BoxLayout.Y_AXIS));
@@ -555,11 +558,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
                            "Success", JOptionPane.INFORMATION_MESSAGE);
                      dispose();
                      submit();
-                  }))
-                  .onFailure(err -> SwingUtilities.invokeLater(() ->
-                        JOptionPane.showMessageDialog(this,
-                              "Failed: " + err.getMessage(),
-                              "Error", JOptionPane.ERROR_MESSAGE))),
+                  })),
             "Creating automation...");
    }
 

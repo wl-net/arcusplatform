@@ -27,6 +27,7 @@ import com.iris.platform.rule.catalog.action.config.ActionConfig;
 import com.iris.platform.rule.catalog.action.config.ActionListConfig;
 import com.iris.platform.rule.catalog.action.config.ForEachModelActionConfig;
 import com.iris.platform.rule.catalog.action.config.LogActionConfig;
+import com.iris.platform.rule.catalog.action.config.NoOpActionConfig;
 import com.iris.platform.rule.catalog.action.config.SendActionConfig;
 import com.iris.platform.rule.catalog.action.config.SendNotificationActionConfig;
 import com.iris.platform.rule.catalog.action.config.SetAttributeActionConfig;
@@ -110,6 +111,7 @@ public class RuleConfigJsonModule extends AbstractIrisModule {
             .registerSubtype(SetAttributeActionConfig.class, SetAttributeActionConfig.TYPE)
             .registerSubtype(ForEachModelActionConfig.class, ForEachModelActionConfig.TYPE)
             .registerSubtype(LogActionConfig.class, LogActionConfig.TYPE)
+            .registerSubtype(NoOpActionConfig.class, NoOpActionConfig.TYPE)
             .registerSubtype(ActionListConfig.class, ActionListConfig.TYPE);
    }
 
