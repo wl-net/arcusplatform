@@ -16,14 +16,21 @@
 package com.iris.oculus.modules.automation.ux;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,10 +51,30 @@ import javax.swing.border.EmptyBorder;
  */
 public class BlockParamEditor extends JDialog {
 
+   private static final Color HEADER_COLOR = new Color(0x4A90D9);
+   private static final Color SECTION_BG = new Color(0xF5F7FA);
+
+   /** Known enum values for common device attributes */
+   private static final Map<String, List<String>> KNOWN_ATTRIBUTE_VALUES;
+   static {
+      Map<String, List<String>> m = new LinkedHashMap<>();
+      m.put("swit:state", Arrays.asList("ON", "OFF"));
+      m.put("doorlock:lockstate", Arrays.asList("LOCKED", "UNLOCKED"));
+      m.put("cont:contact", Arrays.asList("OPENED", "CLOSED"));
+      m.put("mot:motion", Arrays.asList("DETECTED", "NONE"));
+      m.put("pres:presence", Arrays.asList("PRESENT", "ABSENT"));
+      m.put("fan:speed", Arrays.asList("OFF", "LOW", "MEDIUM", "HIGH"));
+      m.put("therm:hvacmode", Arrays.asList("OFF", "HEAT", "COOL", "AUTO"));
+      m.put("vent:level", Arrays.asList("OPEN", "CLOSED"));
+      KNOWN_ATTRIBUTE_VALUES = Collections.unmodifiableMap(m);
+   }
+
    private final Map<String, Object> block;
    private final Map<String, JComponent> editors = new LinkedHashMap<>();
    private JComboBox<DeviceItem> deviceCombo;
    private JComboBox<String> attributeCombo;
+   private JPanel valueContainer;
+   private JComponent valueEditor;
    private JComboBox<String> modeCombo;
    private JComboBox<SceneItem> sceneCombo;
    private Map<String, Object> result;
@@ -59,14 +86,12 @@ public class BlockParamEditor extends JDialog {
     */
    @SuppressWarnings("unchecked")
    public static Map<String, Object> configure(Window owner, Map<String, Object> block) {
-      // Check if block has params, devices, modes, or scenes to configure
       Map<String, Object> params = (Map<String, Object>) block.get("params");
       List<Map<String, Object>> devices = (List<Map<String, Object>>) block.get("devices");
       List<Map<String, Object>> modes = (List<Map<String, Object>>) block.get("modes");
       List<Map<String, Object>> scenes = (List<Map<String, Object>>) block.get("scenes");
       if ((params == null || params.isEmpty()) && (devices == null || devices.isEmpty())
             && (modes == null || modes.isEmpty()) && (scenes == null || scenes.isEmpty())) {
-         // No params to configure, return block as-is
          return new LinkedHashMap<>(block);
       }
 
@@ -79,114 +104,180 @@ public class BlockParamEditor extends JDialog {
    private BlockParamEditor(Window owner, Map<String, Object> block) {
       super(owner, "Configure: " + block.get("label"), ModalityType.APPLICATION_MODAL);
       this.block = block;
-      setPreferredSize(new Dimension(400, 350));
 
       JPanel content = new JPanel();
       content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-      content.setBorder(new EmptyBorder(10, 10, 10, 10));
+      content.setBorder(new EmptyBorder(12, 14, 8, 14));
 
+      // Description header
       String description = (String) block.get("description");
       if (description != null) {
-         JLabel descLabel = new JLabel("<html><i>" + description + "</i></html>");
+         JLabel descLabel = new JLabel("<html><body style='width:340px'><i>"
+               + description + "</i></body></html>");
+         descLabel.setForeground(new Color(0x666666));
          descLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
          content.add(descLabel);
-         content.add(javax.swing.Box.createVerticalStrut(10));
+         content.add(Box.createVerticalStrut(12));
       }
 
       // Device selector
       List<Map<String, Object>> devices = (List<Map<String, Object>>) block.get("devices");
       if (devices != null && !devices.isEmpty()) {
-         content.add(createLabel("Device:"));
+         JPanel deviceSection = createSection("Device");
+         JPanel inner = new JPanel();
+         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
+         inner.setOpaque(false);
+
          deviceCombo = new JComboBox<>();
          for (Map<String, Object> dev : devices) {
             String name = dev.get("name") != null ? (String) dev.get("name") : (String) dev.get("address");
             List<String> attrs = (List<String>) dev.get("attributes");
             deviceCombo.addItem(new DeviceItem(name, (String) dev.get("address"), attrs));
          }
-         deviceCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-         deviceCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
-         content.add(deviceCombo);
-         content.add(javax.swing.Box.createVerticalStrut(5));
+         styleCombo(deviceCombo);
+         inner.add(createFieldLabel("Device:"));
+         inner.add(deviceCombo);
+         inner.add(Box.createVerticalStrut(6));
 
-         // Attribute selector (populated from selected device's attributes)
-         content.add(createLabel("Attribute:"));
+         // Attribute selector
          attributeCombo = new JComboBox<>();
-         attributeCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-         attributeCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+         styleCombo(attributeCombo);
+         inner.add(createFieldLabel("Attribute:"));
+         inner.add(attributeCombo);
+         inner.add(Box.createVerticalStrut(6));
+
+         // Dynamic value editor (dropdown for known enums, text field for others)
+         inner.add(createFieldLabel("Value:"));
+         valueContainer = new JPanel(new BorderLayout());
+         valueContainer.setOpaque(false);
+         valueContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
+         valueContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+         inner.add(valueContainer);
+
          deviceCombo.addActionListener(e -> updateAttributeCombo());
+         attributeCombo.addActionListener(e -> updateValueEditor());
          updateAttributeCombo();
-         content.add(attributeCombo);
-         content.add(javax.swing.Box.createVerticalStrut(5));
+
+         deviceSection.add(inner, BorderLayout.CENTER);
+         content.add(deviceSection);
+         content.add(Box.createVerticalStrut(8));
       }
 
-      // Mode selector (for blocks with predefined modes like presence, alarm-state)
+      // Mode selector
       List<Map<String, Object>> modes = (List<Map<String, Object>>) block.get("modes");
       if (modes != null && !modes.isEmpty()) {
-         content.add(createLabel("Mode:"));
+         JPanel modeSection = createSection("Mode");
          modeCombo = new JComboBox<>();
          for (Map<String, Object> mode : modes) {
             modeCombo.addItem((String) mode.get("label"));
          }
-         modeCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-         modeCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
-         content.add(modeCombo);
-         content.add(javax.swing.Box.createVerticalStrut(5));
+         styleCombo(modeCombo);
+         JPanel inner = new JPanel(new BorderLayout());
+         inner.setOpaque(false);
+         inner.add(modeCombo, BorderLayout.CENTER);
+         modeSection.add(inner, BorderLayout.CENTER);
+         content.add(modeSection);
+         content.add(Box.createVerticalStrut(8));
       }
 
       // Scene selector
       List<Map<String, Object>> scenes = (List<Map<String, Object>>) block.get("scenes");
       if (scenes != null && !scenes.isEmpty()) {
-         content.add(createLabel("Scene:"));
+         JPanel sceneSection = createSection("Scene");
          sceneCombo = new JComboBox<>();
          for (Map<String, Object> scene : scenes) {
             String name = scene.get("name") != null ? (String) scene.get("name") : (String) scene.get("address");
             sceneCombo.addItem(new SceneItem(name, (String) scene.get("address")));
          }
-         sceneCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-         sceneCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
-         content.add(sceneCombo);
-         content.add(javax.swing.Box.createVerticalStrut(5));
+         styleCombo(sceneCombo);
+         JPanel inner = new JPanel(new BorderLayout());
+         inner.setOpaque(false);
+         inner.add(sceneCombo, BorderLayout.CENTER);
+         sceneSection.add(inner, BorderLayout.CENTER);
+         content.add(sceneSection);
+         content.add(Box.createVerticalStrut(8));
       }
 
       // Params schema-driven fields
       Map<String, Object> params = (Map<String, Object>) block.get("params");
-      if (params != null) {
+      if (params != null && !params.isEmpty()) {
+         JPanel paramSection = createSection("Parameters");
+         JPanel inner = new JPanel();
+         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
+         inner.setOpaque(false);
+
          for (Map.Entry<String, Object> entry : params.entrySet()) {
             String paramName = entry.getKey();
             Map<String, Object> paramSpec = (Map<String, Object>) entry.getValue();
             String type = (String) paramSpec.get("type");
             String label = (String) paramSpec.get("label");
 
-            content.add(createLabel(label != null ? label + ":" : paramName + ":"));
+            inner.add(createFieldLabel(label != null ? label + ":" : paramName + ":"));
             JComponent editor = createEditor(type, paramSpec);
             editor.setAlignmentX(Component.LEFT_ALIGNMENT);
-            editor.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+            editor.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
             editors.put(paramName, editor);
-            content.add(editor);
-            content.add(javax.swing.Box.createVerticalStrut(5));
+            inner.add(editor);
+            inner.add(Box.createVerticalStrut(6));
          }
+
+         paramSection.add(inner, BorderLayout.CENTER);
+         content.add(paramSection);
+         content.add(Box.createVerticalStrut(8));
       }
 
-      content.add(javax.swing.Box.createVerticalGlue());
+      content.add(Box.createVerticalGlue());
 
       // Buttons
-      JPanel btnPanel = new JPanel();
+      JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 6));
       JButton okBtn = new JButton("OK");
       JButton cancelBtn = new JButton("Cancel");
+      okBtn.setPreferredSize(new Dimension(80, 28));
+      cancelBtn.setPreferredSize(new Dimension(80, 28));
       okBtn.addActionListener(e -> {
          confirmed = true;
          result = buildResult();
          dispose();
       });
       cancelBtn.addActionListener(e -> dispose());
-      btnPanel.add(okBtn);
       btnPanel.add(cancelBtn);
+      btnPanel.add(okBtn);
 
       getContentPane().setLayout(new BorderLayout());
       getContentPane().add(content, BorderLayout.CENTER);
       getContentPane().add(btnPanel, BorderLayout.SOUTH);
       pack();
+      setMinimumSize(new Dimension(420, 200));
       setLocationRelativeTo(owner);
+   }
+
+   private JPanel createSection(String title) {
+      JPanel section = new JPanel(new BorderLayout(0, 4));
+      section.setBackground(SECTION_BG);
+      section.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0xDDDDDD), 1, true),
+            new EmptyBorder(8, 10, 8, 10)));
+      section.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      JLabel titleLabel = new JLabel(title);
+      titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 12f));
+      titleLabel.setForeground(HEADER_COLOR);
+      section.add(titleLabel, BorderLayout.NORTH);
+
+      return section;
+   }
+
+   private static JLabel createFieldLabel(String text) {
+      JLabel label = new JLabel(text);
+      label.setAlignmentX(Component.LEFT_ALIGNMENT);
+      label.setFont(label.getFont().deriveFont(11f));
+      label.setForeground(new Color(0x555555));
+      return label;
+   }
+
+   private static void styleCombo(JComboBox<?> combo) {
+      combo.setAlignmentX(Component.LEFT_ALIGNMENT);
+      combo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
    }
 
    @SuppressWarnings("unchecked")
@@ -215,19 +306,20 @@ public class BlockParamEditor extends JDialog {
             return new JTextField();
          }
          case "time": {
-            JTextField field = new JTextField("12:00:00");
-            return field;
+            return new JTextField("12:00:00");
          }
          case "duration": {
-            JSpinner spinner = new JSpinner(new SpinnerNumberModel(5, 1, 1440, 1));
-            return spinner;
+            return new JSpinner(new SpinnerNumberModel(5, 1, 1440, 1));
          }
          case "day-set": {
             JPanel dayPanel = new JPanel();
             dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.X_AXIS));
+            dayPanel.setOpaque(false);
             String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
             for (String day : days) {
                JCheckBox cb = new JCheckBox(day, true);
+               cb.setOpaque(false);
+               cb.setFont(cb.getFont().deriveFont(11f));
                dayPanel.add(cb);
             }
             return dayPanel;
@@ -247,6 +339,29 @@ public class BlockParamEditor extends JDialog {
             attributeCombo.addItem(attr);
          }
       }
+      updateValueEditor();
+   }
+
+   private void updateValueEditor() {
+      if (valueContainer == null) return;
+      valueContainer.removeAll();
+
+      String selectedAttr = (String) (attributeCombo != null ? attributeCombo.getSelectedItem() : null);
+      List<String> knownValues = selectedAttr != null ? KNOWN_ATTRIBUTE_VALUES.get(selectedAttr) : null;
+
+      if (knownValues != null) {
+         JComboBox<String> combo = new JComboBox<>();
+         for (String v : knownValues) {
+            combo.addItem(v);
+         }
+         valueEditor = combo;
+      } else {
+         valueEditor = new JTextField();
+      }
+      valueEditor.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+      valueContainer.add(valueEditor, BorderLayout.CENTER);
+      valueContainer.revalidate();
+      valueContainer.repaint();
    }
 
    @SuppressWarnings("unchecked")
@@ -263,6 +378,9 @@ public class BlockParamEditor extends JDialog {
       }
       if (attributeCombo != null && attributeCombo.getSelectedItem() != null) {
          configured.put("selectedAttribute", attributeCombo.getSelectedItem());
+      }
+      if (valueEditor != null) {
+         configured.put("selectedValue", getEditorValue(valueEditor));
       }
 
       // Add mode selection
@@ -318,12 +436,6 @@ public class BlockParamEditor extends JDialog {
          return selectedDays;
       }
       return null;
-   }
-
-   private static JLabel createLabel(String text) {
-      JLabel label = new JLabel(text);
-      label.setAlignmentX(Component.LEFT_ALIGNMENT);
-      return label;
    }
 
    private static class DeviceItem {

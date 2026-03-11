@@ -340,6 +340,25 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       JLabel text = new JLabel("<html><body style='width:190px'>"
             + summarizeBlock(item) + "</body></html>");
       text.setFont(text.getFont().deriveFont(11f));
+      text.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+      text.setToolTipText("Double-click to edit");
+      text.addMouseListener(new java.awt.event.MouseAdapter() {
+         @Override
+         public void mouseClicked(java.awt.event.MouseEvent e) {
+            if (e.getClickCount() == 2) {
+               Map<String, Object> reconfigured = BlockParamEditor.configure(
+                     AutomationCreatorWizard.this, item);
+               if (reconfigured != null) {
+                  int idx = list.indexOf(item);
+                  if (idx >= 0) {
+                     list.set(idx, reconfigured);
+                  }
+                  text.setText("<html><body style='width:190px'>"
+                        + summarizeBlock(reconfigured) + "</body></html>");
+               }
+            }
+         }
+      });
 
       JButton removeBtn = new JButton("\u00d7");
       removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 11f));
@@ -423,6 +442,25 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       JLabel text = new JLabel("<html><body style='width:220px'>"
             + summarizeBlock(trigger) + "</body></html>");
       text.setFont(text.getFont().deriveFont(11f));
+      text.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+      text.setToolTipText("Double-click to edit");
+      text.addMouseListener(new java.awt.event.MouseAdapter() {
+         @Override
+         public void mouseClicked(java.awt.event.MouseEvent e) {
+            if (e.getClickCount() == 2) {
+               Map<String, Object> reconfigured = BlockParamEditor.configure(
+                     AutomationCreatorWizard.this, trigger);
+               if (reconfigured != null) {
+                  int idx = selectedTriggers.indexOf(trigger);
+                  if (idx >= 0) {
+                     selectedTriggers.set(idx, reconfigured);
+                  }
+                  text.setText("<html><body style='width:220px'>"
+                        + summarizeBlock(reconfigured) + "</body></html>");
+               }
+            }
+         }
+      });
 
       JButton removeBtn = new JButton("\u00d7");
       removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 12f));
@@ -459,21 +497,37 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          if (block.containsKey("selectedAttribute")) {
             sb.append(" / ").append(block.get("selectedAttribute"));
          }
+         if (block.containsKey("selectedValue")) {
+            sb.append(" = ").append(block.get("selectedValue"));
+         }
          sb.append("]");
       }
       if (block.containsKey("selectedModeLabel")) {
          sb.append(" [").append(block.get("selectedModeLabel")).append("]");
       }
+      if (block.containsKey("selectedSceneName")) {
+         sb.append(" [").append(block.get("selectedSceneName")).append("]");
+      }
       Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
+      Map<String, Object> params = (Map<String, Object>) block.get("params");
       if (paramValues != null && !paramValues.isEmpty()) {
-         sb.append(" (");
-         boolean first = true;
+         List<String> parts = new ArrayList<>();
          for (Map.Entry<String, Object> e : paramValues.entrySet()) {
-            if (!first) sb.append(", ");
-            sb.append(e.getKey()).append("=").append(e.getValue());
-            first = false;
+            Object val = e.getValue();
+            if (val == null || (val instanceof String && ((String) val).isEmpty())) continue;
+            // Use label from param spec if available
+            String displayName = e.getKey();
+            if (params != null && params.get(e.getKey()) instanceof Map) {
+               Map<String, Object> spec = (Map<String, Object>) params.get(e.getKey());
+               if (spec.get("label") != null) {
+                  displayName = (String) spec.get("label");
+               }
+            }
+            parts.add(displayName + "=" + val);
          }
-         sb.append(")");
+         if (!parts.isEmpty()) {
+            sb.append(" (").append(String.join(", ", parts)).append(")");
+         }
       }
       return sb.toString();
    }
