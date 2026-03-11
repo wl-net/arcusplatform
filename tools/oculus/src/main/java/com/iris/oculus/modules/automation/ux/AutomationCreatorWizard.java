@@ -65,6 +65,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
    private DefaultListModel<String> actionListModel;
    private JComboBox<BlockItem> conditionCombo;
    private JComboBox<BlockItem> actionCombo;
+   private JLabel triggerSummary;
 
    // Available blocks from server
    private List<Map<String, Object>> availableTriggers;
@@ -104,7 +105,14 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       triggerPanel.setBorder(new TitledBorder("1. Starting Point (Trigger)"));
       triggerCombo = new JComboBox<>();
       triggerCombo.addItem(new BlockItem("Loading...", null));
-      triggerPanel.add(triggerCombo, BorderLayout.CENTER);
+      JButton configureTriggerBtn = new JButton("Configure...");
+      configureTriggerBtn.addActionListener(e -> configureTrigger());
+      triggerSummary = new JLabel(" ");
+      JPanel triggerControls = new JPanel(new BorderLayout());
+      triggerControls.add(triggerCombo, BorderLayout.CENTER);
+      triggerControls.add(configureTriggerBtn, BorderLayout.EAST);
+      triggerPanel.add(triggerControls, BorderLayout.NORTH);
+      triggerPanel.add(triggerSummary, BorderLayout.CENTER);
       panel.add(triggerPanel);
       panel.add(Box.createVerticalStrut(8));
 
@@ -213,18 +221,60 @@ public class AutomationCreatorWizard extends Dialog<Void> {
             .onFailure(err -> Oculus.error("Failed to load blocks", err));
    }
 
+   private void configureTrigger() {
+      BlockItem item = (BlockItem) triggerCombo.getSelectedItem();
+      if (item == null || item.block == null) return;
+      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
+      if (configured != null) {
+         selectedTrigger = configured;
+         triggerSummary.setText(summarizeBlock(configured));
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   private static String summarizeBlock(Map<String, Object> block) {
+      StringBuilder sb = new StringBuilder();
+      sb.append((String) block.get("label"));
+      if (block.containsKey("selectedDeviceName")) {
+         sb.append(" [").append(block.get("selectedDeviceName"));
+         if (block.containsKey("selectedAttribute")) {
+            sb.append(" / ").append(block.get("selectedAttribute"));
+         }
+         sb.append("]");
+      }
+      if (block.containsKey("selectedModeLabel")) {
+         sb.append(" [").append(block.get("selectedModeLabel")).append("]");
+      }
+      Map<String, Object> paramValues = (Map<String, Object>) block.get("paramValues");
+      if (paramValues != null && !paramValues.isEmpty()) {
+         sb.append(" (");
+         boolean first = true;
+         for (Map.Entry<String, Object> e : paramValues.entrySet()) {
+            if (!first) sb.append(", ");
+            sb.append(e.getKey()).append("=").append(e.getValue());
+            first = false;
+         }
+         sb.append(")");
+      }
+      return sb.toString();
+   }
+
    private void addCondition() {
       BlockItem item = (BlockItem) conditionCombo.getSelectedItem();
       if (item == null || item.block == null) return;
-      selectedConditions.add(item.block);
-      conditionListModel.addElement(item.label);
+      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
+      if (configured == null) return;
+      selectedConditions.add(configured);
+      conditionListModel.addElement(summarizeBlock(configured));
    }
 
    private void addAction() {
       BlockItem item = (BlockItem) actionCombo.getSelectedItem();
       if (item == null || item.block == null) return;
-      selectedActions.add(item.block);
-      actionListModel.addElement(item.label);
+      Map<String, Object> configured = BlockParamEditor.configure(this, item.block);
+      if (configured == null) return;
+      selectedActions.add(configured);
+      actionListModel.addElement(summarizeBlock(configured));
    }
 
    private void doCreate() {
@@ -235,11 +285,15 @@ public class AutomationCreatorWizard extends Dialog<Void> {
          return;
       }
 
-      BlockItem triggerItem = (BlockItem) triggerCombo.getSelectedItem();
-      if (triggerItem == null || triggerItem.block == null) {
-         JOptionPane.showMessageDialog(this, "Please select a trigger",
-               "Validation Error", JOptionPane.ERROR_MESSAGE);
-         return;
+      if (selectedTrigger == null) {
+         BlockItem triggerItem = (BlockItem) triggerCombo.getSelectedItem();
+         if (triggerItem == null || triggerItem.block == null) {
+            JOptionPane.showMessageDialog(this, "Please select and configure a trigger",
+                  "Validation Error", JOptionPane.ERROR_MESSAGE);
+            return;
+         }
+         // If trigger has no params, use as-is
+         selectedTrigger = triggerItem.block;
       }
 
       if (selectedActions.isEmpty()) {
@@ -247,8 +301,6 @@ public class AutomationCreatorWizard extends Dialog<Void> {
                "Validation Error", JOptionPane.ERROR_MESSAGE);
          return;
       }
-
-      selectedTrigger = triggerItem.block;
       String description = descriptionField.getText().trim();
 
       AutomationService service = IrisClientFactory.getService(AutomationService.class);

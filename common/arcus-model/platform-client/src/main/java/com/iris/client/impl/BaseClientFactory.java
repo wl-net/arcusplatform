@@ -38,6 +38,8 @@ import com.iris.client.model.Store;
 import com.iris.client.model.proxy.ProxyModelFactory;
 import com.iris.client.service.AccountService;
 import com.iris.client.service.AccountServiceImpl;
+import com.iris.client.service.AutomationService;
+import com.iris.client.service.AutomationServiceImpl;
 import com.iris.client.service.EasCodeService;
 import com.iris.client.service.I18NService;
 import com.iris.client.service.InvitationService;
@@ -84,6 +86,7 @@ public abstract class BaseClientFactory extends IrisClientFactory {
       this.client = client;
       this.client.addMessageListener(cache);
       this.services.put(AccountService.class.getName(), new AccountServiceImpl(client));
+      this.services.put(AutomationService.class.getName(), new AutomationServiceImpl(client));
       this.services.put(I18NService.class.getName(), new I18NServiceImpl(client));
       this.services.put(PersonService.class.getName(), new PersonServiceImpl(client));
       this.services.put(PlaceService.class.getName(), new PlaceServiceImpl(client));
