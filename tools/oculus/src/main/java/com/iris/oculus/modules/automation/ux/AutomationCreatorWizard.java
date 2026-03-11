@@ -136,13 +136,13 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       triggerContent.add(triggerHeader, BorderLayout.NORTH);
       triggerContent.add(triggersPanel, BorderLayout.CENTER);
       triggerNode.add(triggerContent, BorderLayout.CENTER);
-      triggerNode.setPreferredSize(new Dimension(220, 130));
-      triggerNode.setMinimumSize(new Dimension(220, 80));
-      triggerNode.setMaximumSize(new Dimension(220, 400));
+      triggerNode.setPreferredSize(new Dimension(280, 150));
+      triggerNode.setMinimumSize(new Dimension(280, 80));
+      triggerNode.setMaximumSize(new Dimension(280, 500));
 
       // Arrow
       JPanel arrowPanel = new ArrowPanel();
-      arrowPanel.setPreferredSize(new Dimension(40, 120));
+      arrowPanel.setPreferredSize(new Dimension(24, 120));
 
       // Right: Flows
       flowsContainer = new JPanel();
@@ -232,7 +232,7 @@ public class AutomationCreatorWizard extends Dialog<Void> {
 
       // Arrow between guards and actions
       JPanel arrow2 = new ArrowPanel();
-      arrow2.setPreferredSize(new Dimension(30, 130));
+      arrow2.setPreferredSize(new Dimension(20, 130));
 
       // Actions column
       JPanel actionsNode = createNodePanel("THEN (Actions)", ACTION_COLOR);
@@ -332,11 +332,11 @@ public class AutomationCreatorWizard extends Dialog<Void> {
             new EmptyBorder(3, 5, 3, 3)));
       card.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 25));
       card.setAlignmentX(Component.LEFT_ALIGNMENT);
-      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
 
-      JLabel text = new JLabel("<html><body style='width:150px'>"
+      JLabel text = new JLabel("<html><body style='width:190px'>"
             + summarizeBlock(item) + "</body></html>");
-      text.setFont(text.getFont().deriveFont(10f));
+      text.setFont(text.getFont().deriveFont(11f));
 
       JButton removeBtn = new JButton("\u00d7");
       removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 11f));
@@ -415,11 +415,11 @@ public class AutomationCreatorWizard extends Dialog<Void> {
       card.setBackground(new Color(
             TRIGGER_COLOR.getRed(), TRIGGER_COLOR.getGreen(), TRIGGER_COLOR.getBlue(), 25));
       card.setAlignmentX(Component.LEFT_ALIGNMENT);
-      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+      card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
-      JLabel text = new JLabel("<html><body style='width:140px'>"
+      JLabel text = new JLabel("<html><body style='width:220px'>"
             + summarizeBlock(trigger) + "</body></html>");
-      text.setFont(text.getFont().deriveFont(10f));
+      text.setFont(text.getFont().deriveFont(11f));
 
       JButton removeBtn = new JButton("\u00d7");
       removeBtn.setFont(removeBtn.getFont().deriveFont(Font.BOLD, 12f));
