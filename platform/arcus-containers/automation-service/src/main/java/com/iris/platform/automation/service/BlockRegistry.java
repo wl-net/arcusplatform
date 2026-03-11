@@ -127,15 +127,16 @@ public class BlockRegistry {
                )));
       }
 
-      // Category: Time
+      // Category: Time — schedule with optional day-of-week
+      Map<String, Object> timeParams = new LinkedHashMap<>();
+      timeParams.put("time", ImmutableMap.of("type", "time", "label", "Time of day"));
+      timeParams.put("days", ImmutableMap.of("type", "day-set", "label", "On days"));
       triggers.add(triggerBlock("time-of-day",
-            "A time is reached",
+            "At a scheduled time",
             "Time",
             ImmutableMap.of(
-                  "description", "Triggers at a specific time of day",
-                  "params", ImmutableMap.of(
-                        "time", ImmutableMap.of("type", "time", "label", "Time of day")
-                  )
+                  "description", "Triggers at a specific time, optionally on selected days of the week",
+                  "params", timeParams
             )));
 
       // Category: Sunrise/Sunset

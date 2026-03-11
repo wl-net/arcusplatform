@@ -34,7 +34,7 @@ public class AutomationToolbar extends BaseToolbar<AutomationModel> {
    private Action disable;
    private Action delete;
 
-   private JButton toggleButton = new JButton(enable);
+   private JButton toggleButton;
    private ListenerRegistration listener;
 
    public AutomationToolbar(AutomationController controller) {
@@ -42,6 +42,8 @@ public class AutomationToolbar extends BaseToolbar<AutomationModel> {
       this.enable = Actions.build("Enable", (Supplier<AutomationModel>) this::model, controller::enable);
       this.disable = Actions.build("Disable", (Supplier<AutomationModel>) this::model, controller::disable);
       this.delete = Actions.build("Delete", (Supplier<AutomationModel>) this::model, controller::delete);
+      this.toggleButton = new JButton(enable);
+      this.toggleButton.setEnabled(false);
    }
 
    @Override
