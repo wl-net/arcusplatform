@@ -295,11 +295,16 @@ public class BlockRegistry {
       }
 
       // Send notification
+      Map<String, Object> notifyParams = new LinkedHashMap<>();
+      notifyParams.put("message", ImmutableMap.of("type", "string", "label", "Message"));
+      notifyParams.put("method", ImmutableMap.of("type", "enum", "label", "Method",
+            "values", ImmutableList.of("PUSH", "EMAIL", "BOTH")));
       actions.add(actionBlock("notify",
             "Send a notification",
             "Notifications",
             ImmutableMap.of(
-                  "description", "Send a push notification or email"
+                  "description", "Send a push notification or email",
+                  "params", notifyParams
             )));
 
       // Fire a scene — list available scenes
