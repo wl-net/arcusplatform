@@ -58,7 +58,7 @@ public class TestZWaveAllCommandClasses {
 		// Load the json file to the globals.
 		ZWaveAllCommandClasses.loadAllCommandClasses(filename);
 
-		Byte key = new Byte((byte) 0x25);
+		Byte key = Byte.valueOf((byte) 0x25);
 		ZWaveCommandClass switch2 = ZWaveAllCommandClasses.allClasses.classesByByte.get(key);
 		assertNotNull(switch2);
 		ZWaveCommand cmd = switch2.get("set");

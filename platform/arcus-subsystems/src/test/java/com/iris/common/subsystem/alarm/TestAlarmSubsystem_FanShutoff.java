@@ -143,7 +143,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       
       trigger(co);
       
-      assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
       assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SwitchCapability.ATTR_STATE, SwitchCapability.STATE_OFF)); 
@@ -174,7 +174,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       trigger(co);
       
       //Should not send shutoff messages
-      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
      
@@ -204,7 +204,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       trigger(co);
       
       //Should not send shutoff messages
-      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SwitchCapability.ATTR_STATE, SwitchCapability.STATE_OFF)); 
@@ -234,7 +234,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       
       trigger(smoke);
       
-      assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
      
@@ -260,7 +260,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       
       trigger(smoke);
       
-      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
      
@@ -289,7 +289,7 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
       
       trigger(smoke);
       
-      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, new Integer(0))); 
+      assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(FanCapability.ATTR_SPEED, Integer.valueOf(0))); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(SpaceHeaterCapability.ATTR_HEATSTATE, SpaceHeaterCapability.HEATSTATE_OFF)); 
       assertNotContainsRequestMessageWithAttrs(Capability.CMD_SET_ATTRIBUTES, ImmutableMap.<String, Object>of(ThermostatCapability.ATTR_HVACMODE, ThermostatCapability.HVACMODE_OFF)); 
      
@@ -309,13 +309,13 @@ public class TestAlarmSubsystem_FanShutoff extends PlatformAlarmSubsystemTestCas
 	
 	protected Model addFan(int fanSpeed) {
 	   return addOnlineDevice(ImmutableMap.<String, Object>of(
-         FanCapability.ATTR_SPEED, new Integer(fanSpeed)), FanCapability.NAMESPACE);
+         FanCapability.ATTR_SPEED, Integer.valueOf(fanSpeed)), FanCapability.NAMESPACE);
 	}
 	
 	private Model addFanWithSwitch(int fanSpeed, String switchState)
    {
 	   return addOnlineDevice(ImmutableMap.<String, Object>of(
-         FanCapability.ATTR_SPEED, new Integer(fanSpeed), SwitchCapability.ATTR_STATE, switchState), FanCapability.NAMESPACE, SwitchCapability.NAMESPACE);
+         FanCapability.ATTR_SPEED, Integer.valueOf(fanSpeed), SwitchCapability.ATTR_STATE, switchState), FanCapability.NAMESPACE, SwitchCapability.NAMESPACE);
    }
 	
 	protected Model addSpaceHeater(String heatState) {

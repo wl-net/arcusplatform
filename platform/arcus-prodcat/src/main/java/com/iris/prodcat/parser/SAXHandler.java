@@ -174,7 +174,7 @@ public class SAXHandler extends DefaultHandler {
 		else if ("step0".equals(qName) || "step1".equals(qName) || "step2".equals(qName) || "step3".equals(qName) ||
 				"step4".equals(qName) || "step5".equals(qName) || "step6".equals(qName)) {
 			currentStep = new Step();
-			currentStep.setOrder(new Integer(qName.substring(4)));
+			currentStep.setOrder(Integer.valueOf(qName.substring(4)));
 			currentStep.setType(StepType.valueOf(attributes.getValue("type").toUpperCase()));
 			currentStep.setImg(attributes.getValue("img"));
 			currentStep.setText(attributes.getValue("text"));

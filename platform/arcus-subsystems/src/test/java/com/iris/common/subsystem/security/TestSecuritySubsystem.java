@@ -153,10 +153,10 @@ public class TestSecuritySubsystem extends SecuritySubsystemTestCase {
       long ts = System.currentTimeMillis() + 10000;
       
       startSubsystem();
-      model.setAttribute(SecurityAlarmModeCapability.ATTR_EXITDELAYSEC + ":" + SecuritySubsystemCapability.ALARMMODE_PARTIAL, new Integer(10));
+      model.setAttribute(SecurityAlarmModeCapability.ATTR_EXITDELAYSEC + ":" + SecuritySubsystemCapability.ALARMMODE_PARTIAL, Integer.valueOf(10));
       MessageBody armResponse = armPartial();
       assertEquals(SecuritySubsystemCapability.ALARMSTATE_ARMING, context.model().getAlarmState());
-      assertEquals(new Integer(10), ArmResponse.getDelaySec(armResponse));
+      assertEquals(Integer.valueOf(10), ArmResponse.getDelaySec(armResponse));
       Date timeout = SubsystemUtils.getTimeout(context).get();
       assertTrue("Expected timeout of about " + new Date(ts) + " but was " + timeout, ts <= timeout.getTime());
 

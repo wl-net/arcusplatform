@@ -120,7 +120,7 @@ public class ZWaveAllCommandClasses {
 	}
 
 	public ZWaveCommandClass get(byte id) {
-		return classesByByte.get( new Byte(id) );
+		return classesByByte.get( Byte.valueOf(id) );
 	}
 
 	public ZWaveCommandClass get ( String name ) {

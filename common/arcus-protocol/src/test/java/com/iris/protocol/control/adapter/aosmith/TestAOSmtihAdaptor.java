@@ -39,7 +39,7 @@ public class TestAOSmtihAdaptor {
       for (int i=0;i<n;i++) {
          commands[i] = new SetParameterValuesCommand();
          Map<String,Object> map = new HashMap<String,Object>();
-         map.put("aos.setpoint",new Integer(i));
+         map.put("aos.setpoint",Integer.valueOf(i));
          commands[i].setValues(map);
          cmds.add(commands[i]);
       }

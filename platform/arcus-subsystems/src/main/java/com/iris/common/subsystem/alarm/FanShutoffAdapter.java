@@ -44,7 +44,7 @@ public class FanShutoffAdapter
   );
    
    private static final MessageBody SHUTOFF_MESSAGE_BODY_FOR_FAN = MessageBody.messageBuilder(Capability.CMD_SET_ATTRIBUTES)
-      .withAttribute(FanCapability.ATTR_SPEED, new Integer(0))
+      .withAttribute(FanCapability.ATTR_SPEED, Integer.valueOf(0))
       .create();
    
    private static final MessageBody SHUTOFF_MESSAGE_BODY_FOR_FAN_WITH_SWITCH = MessageBody.messageBuilder(Capability.CMD_SET_ATTRIBUTES)

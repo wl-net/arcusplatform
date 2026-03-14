@@ -84,14 +84,14 @@ public class TestThresholdTrigger extends Assert {
       trigger.activate(context);
       assertFalse(trigger.isSatisfiable(context));            
       
-      model.setAttribute(attributeName, new Double(80));
+      model.setAttribute(attributeName, Double.valueOf(80));
       assertTrue(trigger.isSatisfiable(context));
       
-      //valueChangeEvent = AttributeValueChangedEvent.create(model.getAddress(), attributeName, new Double(86.0), new Double(84.0));
-      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, new Double(80), new Double(86))));      
-      assertFalse(trigger.shouldFire(context, createValueChange("test:bad", new Double(80), new Double(86))));  
+      //valueChangeEvent = AttributeValueChangedEvent.create(model.getAddress(), attributeName, Double.valueOf(86.0), Double.valueOf(84.0));
+      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, Double.valueOf(80), Double.valueOf(86))));      
+      assertFalse(trigger.shouldFire(context, createValueChange("test:bad", Double.valueOf(80), Double.valueOf(86))));  
       //source does not match
-      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, new Double(80), new Double(86))));
+      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, Double.valueOf(80), Double.valueOf(86))));
    }
    
    @Test
@@ -105,18 +105,18 @@ public class TestThresholdTrigger extends Assert {
 	 
       trigger.activate(context);
       
-      //valueChangeEvent = AttributeValueChangedEvent.create(model.getAddress(), attributeName, new Double(86.0), new Double(84.0));
-      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, new Double(80), new Double(86))));      
-      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, new Double(80), new Double(86))));
+      //valueChangeEvent = AttributeValueChangedEvent.create(model.getAddress(), attributeName, Double.valueOf(86.0), Double.valueOf(84.0));
+      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, Double.valueOf(80), Double.valueOf(86))));      
+      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, Double.valueOf(80), Double.valueOf(86))));
       
-      assertFalse(trigger.shouldFire(context, createValueChange(attributeName, new Double(86), new Double(90))));  
-      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, new Double(86), new Double(90))));
+      assertFalse(trigger.shouldFire(context, createValueChange(attributeName, Double.valueOf(86), Double.valueOf(90))));  
+      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, Double.valueOf(86), Double.valueOf(90))));
       
-      assertFalse(trigger.shouldFire(context, createValueChange(attributeName, new Double(90), new Double(70))));
-      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, new Double(90), new Double(70))));
+      assertFalse(trigger.shouldFire(context, createValueChange(attributeName, Double.valueOf(90), Double.valueOf(70))));
+      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, Double.valueOf(90), Double.valueOf(70))));
       
-      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, new Double(70), new Double(88))));
-      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, new Double(70), new Double(88))));
+      assertFalse(trigger.shouldFire(context, createValueChange(model2, attributeName, Double.valueOf(70), Double.valueOf(88))));
+      assertTrue(trigger.shouldFire(context, createValueChange(attributeName, Double.valueOf(70), Double.valueOf(88))));
    }
    
    @Test

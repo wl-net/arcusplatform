@@ -88,7 +88,7 @@ public class TestProductCatalogParser extends AbstractProductCatalogTestCase {
 		assertEquals(true, TestUtils.verifyDate(2015, 4, 29, 13, 18, 35, p.getLastChanged()));
 		assertEquals(Version.fromRepresentation("2.0.0.031"), p.getMinHubFirmware());
 		assertEquals(Boolean.TRUE, p.getCanDiscover());
-		assertEquals(new Integer(240000), p.getPairingIdleTimeoutMs());
+		assertEquals(Integer.valueOf(240000), p.getPairingIdleTimeoutMs());
 		
 		assertEquals(1, p.getCategories().size());
 		assertEquals("Lights & Switches", p.getCategories().get(0));
@@ -119,8 +119,8 @@ public class TestProductCatalogParser extends AbstractProductCatalogTestCase {
 		List<Input> step3Inputs = pairStep3.getInputs();
 		assertEquals(2, step3Inputs.size());
 		Input step3Input2 = step3Inputs.get(1);
-		assertEquals(new Integer(14), step3Input2.getMinlen());
-		assertEquals(new Integer(14), step3Input2.getMaxlen());
+		assertEquals(Integer.valueOf(14), step3Input2.getMinlen());
+		assertEquals(Integer.valueOf(14), step3Input2.getMaxlen());
 		verifyStep(Step.StepType.TEXT,
 			      "",
 			      "TIP: Do not use other Iris devices at this time to avoid removing them.",
@@ -200,7 +200,7 @@ public class TestProductCatalogParser extends AbstractProductCatalogTestCase {
 		assertEquals(i.getType(), InputType.TEXT);
 		assertEquals(i.getName(), "sn");
 		assertNull(i.getValue());
-		assertEquals(i.getMaxlen(), new Integer(14));
+		assertEquals(i.getMaxlen(), Integer.valueOf(14));
 		assertTrue(i.getRequired());
 		
 		

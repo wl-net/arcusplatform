@@ -86,13 +86,13 @@ public class TestLightNSwitchesSubsystem extends SubsystemTestCase<LightsNSwitch
       turnOn(testLight);
 
       Map<String,Integer>onCounts=LightsNSwitchesSubsystemModel.getOnDeviceCounts(context.model());
-      assertEquals("switches",new Integer(1),onCounts.get("switch"));
-      assertEquals("dimemrs", new Integer(1),onCounts.get("dimmer"));
-      assertEquals("lights", new Integer(1),onCounts.get("light"));
+      assertEquals("switches",Integer.valueOf(1),onCounts.get("switch"));
+      assertEquals("dimemrs", Integer.valueOf(1),onCounts.get("dimmer"));
+      assertEquals("lights", Integer.valueOf(1),onCounts.get("light"));
       
       turnOff(testSwitch);
       onCounts=LightsNSwitchesSubsystemModel.getOnDeviceCounts(context.model());
-      assertEquals("switches",new Integer(0),onCounts.get("switch"));
+      assertEquals("switches",Integer.valueOf(0),onCounts.get("switch"));
    }
    
    @Test
@@ -103,7 +103,7 @@ public class TestLightNSwitchesSubsystem extends SubsystemTestCase<LightsNSwitch
       testSwitch2.setAttribute(SwitchCapability.ATTR_STATE, SwitchCapability.STATE_ON);
       store.addModel(testSwitch2.toMap());
       Map<String,Integer>onCounts=LightsNSwitchesSubsystemModel.getOnDeviceCounts(context.model());
-      assertEquals("switches count",new Integer(1),onCounts.get("switch"));
+      assertEquals("switches count",Integer.valueOf(1),onCounts.get("switch"));
    }
    
    @Test
@@ -123,7 +123,7 @@ public class TestLightNSwitchesSubsystem extends SubsystemTestCase<LightsNSwitch
       turnOn(testSwitch);
       store.removeModel(testSwitch.getAddress());
       Map<String,Integer>onCounts=LightsNSwitchesSubsystemModel.getOnDeviceCounts(context.model());
-      assertEquals("switches count",new Integer(0),onCounts.get("switch"));
+      assertEquals("switches count",Integer.valueOf(0),onCounts.get("switch"));
    }
    
    private void turnOn(Model model){

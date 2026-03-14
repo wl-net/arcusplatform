@@ -132,7 +132,7 @@ public class TestRegisterHubV2Handler extends IrisMockTestCase {
          assertEquals(RegisterHubV2Response.NAME, response.getMessageType());
          assertNull(RegisterHubV2Response.getHub(response));
          assertEquals(RegisterHubV2Response.STATE_DOWNLOADING, RegisterHubV2Response.getState(response));
-         assertEquals(new Integer(50), RegisterHubV2Response.getProgress(response));
+         assertEquals(Integer.valueOf(50), RegisterHubV2Response.getProgress(response));
       } catch(Exception e) {
          fail(e.getMessage());
       }
@@ -181,7 +181,7 @@ public class TestRegisterHubV2Handler extends IrisMockTestCase {
          assertEquals(RegisterHubV2Response.NAME, response.getMessageType());
          assertNotNull(RegisterHubV2Response.getHub(response));
          assertEquals(RegisterHubV2Response.STATE_REGISTERED, RegisterHubV2Response.getState(response));
-         assertEquals(new Integer(100), RegisterHubV2Response.getProgress(response));
+         assertEquals(Integer.valueOf(100), RegisterHubV2Response.getProgress(response));
          
          Hub savedHub = captureSavedHub.getValue();
          assertEquals(HubCapability.REGISTRATIONSTATE_REGISTERED, savedHub.getRegistrationState());
@@ -306,7 +306,7 @@ public class TestRegisterHubV2Handler extends IrisMockTestCase {
          assertEquals(RegisterHubV2Response.NAME, response.getMessageType());
          assertNull(RegisterHubV2Response.getHub(response));
          assertEquals(RegisterHubV2Response.STATE_DOWNLOADING, RegisterHubV2Response.getState(response));
-         assertEquals(new Integer(50), RegisterHubV2Response.getProgress(response));
+         assertEquals(Integer.valueOf(50), RegisterHubV2Response.getProgress(response));
       } catch(Exception e) {
          fail(e.getMessage());
       }
@@ -365,7 +365,7 @@ public class TestRegisterHubV2Handler extends IrisMockTestCase {
          assertEquals(RegisterHubV2Response.NAME, response.getMessageType());
          assertNotNull(RegisterHubV2Response.getHub(response));
          assertEquals(RegisterHubV2Response.STATE_REGISTERED, RegisterHubV2Response.getState(response));
-         assertEquals(new Integer(100), RegisterHubV2Response.getProgress(response));
+         assertEquals(Integer.valueOf(100), RegisterHubV2Response.getProgress(response));
          
          Hub savedHub = captureSavedHub.getValue();
          assertEquals(HubCapability.REGISTRATIONSTATE_REGISTERED, savedHub.getRegistrationState());

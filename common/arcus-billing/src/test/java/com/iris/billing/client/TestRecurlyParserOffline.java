@@ -572,10 +572,10 @@ public class TestRecurlyParserOffline {
 		assertFalse(addons.isEmpty());
 		assertEquals(2, addons.size());
 		assertEquals("extra_users", addons.get(0).getAddonCode());
-		assertEquals(new Integer(2), addons.get(0).getQuantity());
+		assertEquals(Integer.valueOf(2), addons.get(0).getQuantity());
 		assertEquals("1000",addons.get(0).getUnitAmountInCents());
 		assertEquals("extra_ip",addons.get(1).getAddonCode());
-		assertEquals(new Integer(3),addons.get(1).getQuantity());
+		assertEquals(Integer.valueOf(3),addons.get(1).getQuantity());
 		assertEquals("200", addons.get(1).getUnitAmountInCents());
 
 
@@ -612,10 +612,10 @@ public class TestRecurlyParserOffline {
 		assertFalse(addonsNested.isEmpty());
 		assertEquals(2, addons.size());
 		assertEquals("extra_users", addonsNested.get(0).getAddonCode());
-		assertEquals(new Integer(2), addonsNested.get(0).getQuantity());
+		assertEquals(Integer.valueOf(2), addonsNested.get(0).getQuantity());
 		assertEquals("1000",addonsNested.get(0).getUnitAmountInCents());
 		assertEquals("extra_ip",addonsNested.get(1).getAddonCode());
-		assertEquals(new Integer(3),addonsNested.get(1).getQuantity());
+		assertEquals(Integer.valueOf(3),addonsNested.get(1).getQuantity());
 		assertEquals("200", addonsNested.get(1).getUnitAmountInCents());
 	}
 

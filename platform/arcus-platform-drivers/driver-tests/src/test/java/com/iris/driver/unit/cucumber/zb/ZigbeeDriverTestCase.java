@@ -249,7 +249,7 @@ public class ZigbeeDriverTestCase extends AbstractDriverTestCase implements Driv
 		assert null != actual:"Unable to find attributes in "+ theRawCommand;
 		Short [] attributes = new Short[actual.length];
 		for( int i = 0; i < actual.length; i++) {
-				attributes[i] = new Short(actual[i]);
+				attributes[i] = Short.valueOf(actual[i]);
 		}
 		assert  Arrays.asList(attributes).contains(expected): "Unable to find attribute: "+attribute+" with expected value: "+expected+" in response: "+theRawCommand;
     }
