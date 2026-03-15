@@ -18,6 +18,7 @@ package com.iris.driver.groovy;
 import com.iris.driver.event.ScheduledDriverEvent;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
+import groovy.lang.MissingPropertyException;
 import groovy.lang.Script;
 
 import java.io.Closeable;
@@ -104,16 +105,51 @@ public class DriverBinding extends EnvironmentBinding {
       setProperty("importCapability", importer);
       setProperty("uses", importer);
 
-      // most event handlers are added as meta function on DriverScriptMetaClass
-      // these are added here because they are closures with attributes, not just
-      // methods, and full closures have to be assigned for each object
-      for(CapabilityDefinition definition: capabilityRegistry.listCapabilityDefinitions()) {
-         setProperty("on" + definition.getCapabilityName(), new OnCapabilityClosure(definition, this));
-      }
+      // OnCapabilityClosure objects are created lazily -- see getVariable() and hasVariable()
    }
 
    public CapabilityDefinition getCapabilityDefinition(String capabilityName) {
       return capabilityRegistry.getCapabilityDefinitionByName(capabilityName);
+   }
+
+   /**
+    * Lazily resolves OnCapabilityClosure properties. When a driver script
+    * references a variable like "onDevicePower", this checks the capability
+    * registry, creates the closure on demand, and caches it for future access.
+    */
+   private OnCapabilityClosure resolveCapabilityClosure(String name) {
+      if(name.length() > 2 && name.startsWith("on") && Character.isUpperCase(name.charAt(2))) {
+         String capabilityName = name.substring(2);
+         CapabilityDefinition definition = capabilityRegistry.getCapabilityDefinitionByName(capabilityName);
+         if(definition != null) {
+            OnCapabilityClosure closure = new OnCapabilityClosure(definition, this);
+            setVariable(name, closure);
+            return closure;
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public boolean hasVariable(String name) {
+      if(super.hasVariable(name)) {
+         return true;
+      }
+      return resolveCapabilityClosure(name) != null;
+   }
+
+   @Override
+   public Object getVariable(String name) {
+      try {
+         return super.getVariable(name);
+      }
+      catch(MissingPropertyException e) {
+         OnCapabilityClosure closure = resolveCapabilityClosure(name);
+         if(closure != null) {
+            return closure;
+         }
+         throw e;
+      }
    }
 
    @Override
