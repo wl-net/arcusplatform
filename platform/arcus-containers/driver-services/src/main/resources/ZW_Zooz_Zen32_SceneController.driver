@@ -93,6 +93,8 @@ instance 'button3', Button
 instance 'button4', Button
 instance 'main', Button
 
+zwaveAssociation()
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Device Settings — exposing Z-Wave config params to clients

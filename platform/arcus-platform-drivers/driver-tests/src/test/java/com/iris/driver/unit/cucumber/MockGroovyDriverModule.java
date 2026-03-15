@@ -37,6 +37,7 @@ import com.iris.driver.groovy.pin.PinManagementContext;
 import com.iris.driver.groovy.plugin.GroovyDriverPlugin;
 import com.iris.driver.groovy.scheduler.OnScheduledClosure;
 import com.iris.driver.groovy.scheduler.SchedulerContext;
+import com.iris.driver.groovy.zwaveassociation.ZWaveAssociationPlugin;
 
 public class MockGroovyDriverModule extends GroovyDriverModule {
 
@@ -81,6 +82,9 @@ public class MockGroovyDriverModule extends GroovyDriverModule {
       bindSetOf(GroovyDriverPlugin.class)
         .addBinding()
         .to(DeviceSettingsPlugin.class);
+      bindSetOf(GroovyDriverPlugin.class)
+        .addBinding()
+        .to(ZWaveAssociationPlugin.class);
       bindSetOf(CompilationCustomizer.class)
          .addBinding()
          .toInstance(new ImportCustomizer()
