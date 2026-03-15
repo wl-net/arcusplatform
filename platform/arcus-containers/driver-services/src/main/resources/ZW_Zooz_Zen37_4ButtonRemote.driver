@@ -105,6 +105,8 @@ instance 'button2', Button
 instance 'button3', Button
 instance 'button4', Button
 
+zwaveAssociation()
+
 
 @Field final String DEVICE_NAME = "Zooz ZEN37 4-Button Remote"
 

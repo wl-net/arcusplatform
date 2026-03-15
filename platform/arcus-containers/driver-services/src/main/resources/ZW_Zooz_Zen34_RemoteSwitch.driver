@@ -80,6 +80,8 @@ DevicePower {
 instance 'up', Button
 instance 'down', Button
 
+zwaveAssociation()
+
 
 @Field final String DEVICE_NAME = "Zooz ZEN34 Remote Switch"
 

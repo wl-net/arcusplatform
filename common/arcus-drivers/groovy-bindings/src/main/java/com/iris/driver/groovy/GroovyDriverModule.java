@@ -44,6 +44,7 @@ import com.iris.driver.groovy.devicesettings.DeviceSettingsPlugin;
 import com.iris.driver.groovy.pin.PinManagementPlugin;
 import com.iris.driver.groovy.plugin.GroovyDriverPlugin;
 import com.iris.driver.groovy.scheduler.SchedulerPlugin;
+import com.iris.driver.groovy.zwaveassociation.ZWaveAssociationPlugin;
 
 // TODO expose more compilation configuration options
 public class GroovyDriverModule extends AbstractIrisModule {
@@ -89,6 +90,9 @@ public class GroovyDriverModule extends AbstractIrisModule {
       bindSetOf(GroovyDriverPlugin.class)
          .addBinding()
          .to(DeviceSettingsPlugin.class);
+      bindSetOf(GroovyDriverPlugin.class)
+         .addBinding()
+         .to(ZWaveAssociationPlugin.class);
    }
 
    @Provides

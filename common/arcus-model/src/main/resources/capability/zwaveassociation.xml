@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:capability
+   name="ZWaveDirectAssociation"
+   namespace="zwda"
+   enhances="Device"
+   version="1.0"
+   xmlns:c="http://www.arcussmarthome.com/schema/capability/1.0.0">
+
+   <c:description>
+   Manages Z-Wave direct device-to-device associations. Allows configuring which
+   devices a Z-Wave node will directly control without hub intervention (e.g., a
+   button remote directly dimming a light via Association Group).
+   </c:description>
+
+   <c:attributes>
+      <c:attribute
+         name="maxGroups"
+         readwrite="r"
+         type="int"
+         optional="true"
+         description="Number of association groups supported by the device."/>
+      <c:attribute
+         name="associations"
+         readwrite="r"
+         type="string"
+         optional="true"
+         description="JSON map of group to node list, e.g. {&quot;2&quot;: [5, 7], &quot;3&quot;: [5]}."/>
+   </c:attributes>
+
+   <c:methods>
+      <c:method name="SetAssociation" description="Add a node to an association group.">
+         <c:parameter name="group" type="int" description="Association group number"/>
+         <c:parameter name="node" type="int" description="Z-Wave node ID to add"/>
+         <c:return name="status" type="string" description="PENDING or error"/>
+      </c:method>
+      <c:method name="RemoveAssociation" description="Remove a node from an association group.">
+         <c:parameter name="group" type="int" description="Association group number"/>
+         <c:parameter name="node" type="int" description="Z-Wave node ID to remove"/>
+         <c:return name="status" type="string" description="PENDING or error"/>
+      </c:method>
+      <c:method name="GetAssociation" description="Query the members of an association group.">
+         <c:parameter name="group" type="int" description="Association group number"/>
+         <c:return name="status" type="string" description="PENDING"/>
+      </c:method>
+      <c:method name="GetSupportedGroups" description="Query the number of association groups supported.">
+         <c:return name="status" type="string" description="PENDING"/>
+      </c:method>
+      <c:method name="ClearAssociation" description="Remove all nodes from an association group.">
+         <c:parameter name="group" type="int" description="Association group number"/>
+         <c:return name="status" type="string" description="PENDING"/>
+      </c:method>
+   </c:methods>
+</c:capability>

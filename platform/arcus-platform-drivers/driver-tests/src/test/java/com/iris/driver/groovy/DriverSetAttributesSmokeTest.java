@@ -51,6 +51,7 @@ import com.iris.driver.groovy.reflex.ReflexPlugin;
 import com.iris.driver.groovy.scheduler.SchedulerPlugin;
 import com.iris.driver.groovy.zigbee.ZigbeeProtocolPlugin;
 import com.iris.driver.groovy.zwave.ZWaveProtocolPlugin;
+import com.iris.driver.groovy.zwaveassociation.ZWaveAssociationPlugin;
 import com.iris.messages.MessageBody;
 import com.iris.messages.PlatformMessage;
 import com.iris.messages.capability.Capability;
@@ -80,7 +81,8 @@ public class DriverSetAttributesSmokeTest extends GroovyDriverTestCase {
          new MockProtocolPlugin(),
          new ReflexPlugin(),
          new PinManagementPlugin(),
-         new DeviceSettingsPlugin()
+         new DeviceSettingsPlugin(),
+         new ZWaveAssociationPlugin()
       );
    }
 

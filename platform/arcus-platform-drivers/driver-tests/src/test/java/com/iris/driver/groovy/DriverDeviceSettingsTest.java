@@ -53,6 +53,7 @@ import com.iris.driver.groovy.plugin.GroovyDriverPlugin;
 import com.iris.driver.groovy.reflex.ReflexPlugin;
 import com.iris.driver.groovy.scheduler.SchedulerPlugin;
 import com.iris.driver.groovy.zwave.ZWaveProtocolPlugin;
+import com.iris.driver.groovy.zwaveassociation.ZWaveAssociationPlugin;
 import com.iris.io.json.JSON;
 import com.iris.messages.address.Address;
 import com.iris.messages.capability.DeviceSettingsCapability;
@@ -92,6 +93,7 @@ public class DriverDeviceSettingsTest extends GroovyDriverTestCase {
          new ZWaveProtocolPlugin(),
          new ReflexPlugin(),
          new PinManagementPlugin(),
+         new ZWaveAssociationPlugin(),
          new DeviceSettingsPlugin() {
             @Override
             public void postProcessEnvironment(EnvironmentBinding binding) {

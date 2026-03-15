@@ -110,6 +110,7 @@ public class GroovyDriverBuilder extends GroovyBuilder {
    // Handlers that receive every protocol message the driver handles, before its own handlers
    private final List<ContextualEventHandler<? super ProtocolMessage>> protocolListeners = new ArrayList<>();
    private DeviceSettingsContext deviceSettingsContext;
+   private boolean zwaveAssociationEnabled = false;
    private long offlineTimeout = Long.MAX_VALUE;
    private List<String> defaultPopulations = ImmutableList.<String>of(Population.NAME_GENERAL);
 
@@ -419,6 +420,14 @@ public class GroovyDriverBuilder extends GroovyBuilder {
 
    public void setDeviceSettingsContext(DeviceSettingsContext deviceSettingsContext) {
       this.deviceSettingsContext = deviceSettingsContext;
+   }
+
+   public boolean isZWaveAssociationEnabled() {
+      return zwaveAssociationEnabled;
+   }
+
+   public void setZWaveAssociationEnabled(boolean zwaveAssociationEnabled) {
+      this.zwaveAssociationEnabled = zwaveAssociationEnabled;
    }
 
    //-------- Attribute Values (definitions are part of capabilities) ---------------
