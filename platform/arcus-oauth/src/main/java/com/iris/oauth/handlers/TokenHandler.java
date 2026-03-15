@@ -118,6 +118,11 @@ public class TokenHandler extends HttpResource {
       // app shouldn't be null here because the ApplicationAuth implementation would reject the call
       // if the application couldn't be found
       Application app = appRegistry.getApplication(appId);
+
+      if (redirect == null) {
+         redirect = app.getRedirect();
+      }
+
       if(!OAuthUtil.validateRedirect(redirect, app.getRedirect())) {
          OAuthMetrics.incAccessTokenInvalidRedirect();
          return OAuthUtil.badRequest();
