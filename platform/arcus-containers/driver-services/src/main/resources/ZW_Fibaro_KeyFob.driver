@@ -1,0 +1,268 @@
+/*
+ * Copyright 2019 Arcus Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Driver for a Fibaro KeyFob FGKF-601
+ *
+ * The FGKF-601 is a battery-powered Z-Wave Plus compact remote control with 6 buttons:
+ * Square, Circle, Cross (X), Triangle, Minus, and Plus.
+ * Each button supports single tap, double tap, triple tap, and hold actions
+ * via the Central Scene command class (up to 30 actions total).
+ *
+ * Powered by 1x CR2450 battery (estimated 2-year lifespan).
+ *
+ * FACTORY RESET:  Press and hold the Square and Circle buttons simultaneously for 5+ seconds.
+ *
+ * PAIR/INCLUDE:   Press any button 3 times quickly while the hub is in inclusion mode.
+ *                 The LED will confirm with green color.
+ * UNPAIR/EXCLUDE: Press any button 3 times quickly while the hub is in exclusion mode.
+ *
+ * Command Classes:
+ *   0x20   (32) Basic
+ *   0x56   (86) CRC16 Encapsulation
+ *   0x59   (89) Association Group Info
+ *   0x5A   (90) Device Reset Locally
+ *   0x5B   (91) Central Scene (V3)
+ *   0x5E   (94) Z-Wave+ Info
+ *   0x70  (112) Configuration (V1)
+ *   0x72  (114) Manufacturer_Specific
+ *   0x73  (115) Power Level
+ *   0x7A  (122) Firmware Update Meta Data
+ *   0x80 (-128) Battery
+ *   0x84 (-124) Wake_Up
+ *   0x85 (-123) Association (V2)
+ *   0x86 (-122) Version (V2)
+ *   0x8E (-114) Multi Channel Association
+ *   0x98 (-104) Security S0
+ */
+import groovy.transform.Field
+
+importCapability 'zwave/GenericZWaveBattery'
+importCapability 'zwave/GenericZWaveVersion'
+
+
+driver          "ZWFibaroKeyFobDriver"
+description     "Driver for a Fibaro KeyFob FGKF-601"
+version         "2.4"
+protocol        "ZWAV"
+deviceTypeHint  "Keyfob"
+productId       "fb0601"
+vendor          "Fibaro"
+model           "FGKF-601"
+
+matcher         'ZWAV:Manufacturer': 0x010F, 'ZWAV:ProductType': 0x1001, 'ZWAV:ProductId': 0x1000
+matcher         'ZWAV:Manufacturer': 0x010F, 'ZWAV:ProductType': 0x1001, 'ZWAV:ProductId': 0x2000
+matcher         'ZWAV:Manufacturer': 0x010F, 'ZWAV:ProductType': 0x1001, 'ZWAV:ProductId': 0x3000
+matcher         'ZWAV:Manufacturer': 0x010F, 'ZWAV:ProductType': 0x1001, 'ZWAV:ProductId': 0x4000
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Capability Declarations
+////////////////////////////////////////////////////////////////////////////////
+
+DevicePower.source               DevicePower.SOURCE_BATTERY
+DevicePower.linecapable          false
+DevicePower.backupbatterycapable false
+
+instance 'square',   Button
+instance 'circle',   Button
+instance 'cross',    Button
+instance 'triangle', Button
+instance 'minus',    Button
+instance 'plus',     Button
+
+
+@Field final String DEVICE_NAME = "Fibaro KeyFob FGKF-601"
+
+final int OFFLINE_TIMEOUT_SECS = 133200      // 37 hours
+final long RELEASE_DELAY_MSEC  = 1000        // simulate button RELEASED 1 second after PRESSED
+final int BATTERY_POLLING_SEC  = 86400       // Ask for battery level every 24 hours
+
+// Central Scene Key Attributes (bits 0-2 of properties1)
+@Field final byte KEY_PRESSED_1_TIME  = 0x00
+@Field final byte KEY_RELEASED        = 0x01
+@Field final byte KEY_HELD_DOWN       = 0x02
+@Field final byte KEY_PRESSED_2_TIMES = 0x03
+@Field final byte KEY_PRESSED_3_TIMES = 0x04
+
+// Scene Numbers
+@Field final byte SCENE_SQUARE   = 0x01
+@Field final byte SCENE_CIRCLE   = 0x02
+@Field final byte SCENE_CROSS    = 0x03
+@Field final byte SCENE_TRIANGLE = 0x04
+@Field final byte SCENE_MINUS    = 0x05
+@Field final byte SCENE_PLUS     = 0x06
+
+// Scene Number to instance name mapping
+@Field final Map SCENE_TO_INSTANCE = [
+    (SCENE_SQUARE):   'square',
+    (SCENE_CIRCLE):   'circle',
+    (SCENE_CROSS):    'cross',
+    (SCENE_TRIANGLE): 'triangle',
+    (SCENE_MINUS):    'minus',
+    (SCENE_PLUS):     'plus'
+]
+
+// Config Parameters
+// ----------------------------------------------------------------------------
+// Parameters 21-26: Scene activation for each button
+// Bitmask: bit 0=single press, bit 1=double press, bit 2=triple press, bit 3=hold
+// Default: 15 (0x0F) = all actions enabled
+@Field final byte CNFG_SCENE_SQUARE_PARAM_NO   = 21
+@Field final byte CNFG_SCENE_CIRCLE_PARAM_NO   = 22
+@Field final byte CNFG_SCENE_CROSS_PARAM_NO    = 23
+@Field final byte CNFG_SCENE_TRIANGLE_PARAM_NO = 24
+@Field final byte CNFG_SCENE_MINUS_PARAM_NO    = 25
+@Field final byte CNFG_SCENE_PLUS_PARAM_NO     = 26
+final byte CNFG_SCENE_SIZE                     = 1
+final byte CNFG_SCENE_ALL_ENABLED              = 15     // all actions: single + double + triple + hold
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Driver Lifecycle Callbacks
+////////////////////////////////////////////////////////////////////////////////
+
+onAdded {
+    SCENE_TO_INSTANCE.each { sceneNum, instanceName ->
+        Button.state."${instanceName}"        Button.STATE_RELEASED
+        Button.statechanged."${instanceName}" ((null != DeviceAdvanced.added.get()) ? DeviceAdvanced.added.get() : new Date())
+    }
+}
+
+onConnected {
+    ZWave.setOfflineTimeout( OFFLINE_TIMEOUT_SECS )
+
+    // set the wakeup interval to 1 hour (0x000E10 = 3600 seconds) for node 0x01
+    ZWave.wake_up.set((byte)0x00, (byte)0x0E, (byte)0x10, (byte)0x01)
+
+    // set Association to Group 1, Node 1
+    ZWave.association.set( 1, 1, 0, 0, 0);
+
+    // Note: Generic ZWave Battery capability file reads current battery level during onConnected
+    ZWave.poll(BATTERY_POLLING_SEC, ZWave.battery.get)
+
+    // enable all scene actions for all 6 buttons
+    ZWave.configuration.set( CNFG_SCENE_SQUARE_PARAM_NO,   CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+    ZWave.configuration.set( CNFG_SCENE_CIRCLE_PARAM_NO,   CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+    ZWave.configuration.set( CNFG_SCENE_CROSS_PARAM_NO,    CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+    ZWave.configuration.set( CNFG_SCENE_TRIANGLE_PARAM_NO, CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+    ZWave.configuration.set( CNFG_SCENE_MINUS_PARAM_NO,    CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+    ZWave.configuration.set( CNFG_SCENE_PLUS_PARAM_NO,     CNFG_SCENE_SIZE, CNFG_SCENE_ALL_ENABLED )
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Scheduled Event Callbacks
+////////////////////////////////////////////////////////////////////////////////
+
+onEvent( "ReleaseButton_square" ) {
+    Button.state.'square' Button.STATE_RELEASED
+    Button.statechanged.'square' new Date()
+}
+
+onEvent( "ReleaseButton_circle" ) {
+    Button.state.'circle' Button.STATE_RELEASED
+    Button.statechanged.'circle' new Date()
+}
+
+onEvent( "ReleaseButton_cross" ) {
+    Button.state.'cross' Button.STATE_RELEASED
+    Button.statechanged.'cross' new Date()
+}
+
+onEvent( "ReleaseButton_triangle" ) {
+    Button.state.'triangle' Button.STATE_RELEASED
+    Button.statechanged.'triangle' new Date()
+}
+
+onEvent( "ReleaseButton_minus" ) {
+    Button.state.'minus' Button.STATE_RELEASED
+    Button.statechanged.'minus' new Date()
+}
+
+onEvent( "ReleaseButton_plus" ) {
+    Button.state.'plus' Button.STATE_RELEASED
+    Button.statechanged.'plus' new Date()
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Protocol Message Callbacks
+////////////////////////////////////////////////////////////////////////////////
+
+onZWaveMessage.central_scene.notification {
+    def sequenceNumber = message.command.get('sequencenumber')
+    def properties1    = message.command.get('properties1')
+    def sceneNumber    = message.command.get('scenenumber')
+    def keyAttribute   = (properties1 & 0x07)
+
+    log.debug "Central Scene Notification - Sequence:{}, Scene:{}, KeyAttribute:{}", sequenceNumber, sceneNumber, keyAttribute
+
+    def instanceName = SCENE_TO_INSTANCE.get((byte) sceneNumber)
+    if (null == instanceName) {
+        log.warn "Unexpected scene number: {}", sceneNumber
+        return
+    }
+
+    if (KEY_RELEASED == keyAttribute) {
+        Button.state."${instanceName}" Button.STATE_RELEASED
+        Button.statechanged."${instanceName}" new Date()
+        log.trace "{}: RELEASED", instanceName
+    } else {
+        Button.state."${instanceName}" Button.STATE_PRESSED
+        Button.statechanged."${instanceName}" new Date()
+        Scheduler.scheduleIn "ReleaseButton_${instanceName}", RELEASE_DELAY_MSEC
+        log.trace "{}: PRESSED (keyAttribute:{})", instanceName, keyAttribute
+    }
+}
+
+onZWaveMessage.battery.report {
+    GenericZWaveBattery.handleBatteryReport(this, DEVICE_NAME, message)
+}
+
+onZWaveMessage.wake_up.notification {
+    log.trace "Wakeup Notification"
+    ZWave.battery.get()
+    ZWave.wake_up.no_more_information()
+}
+
+onZWaveMessage.configuration.report {
+    log.trace "Config Report: {}", message
+    byte[] bytes = message.command.recvBytes
+    int param = message.command.get('param') & 0xFF
+    int byteCnt = message.command.get('level') & 0xFF
+    long val1 = message.command.get('val1') & 0xFF
+    if (2 == byteCnt) {
+        long val2 = message.command.get('val2') & 0xFF
+        val1 = (val1*256) + val2
+    } else if (4 == byteCnt) {
+        long val2 = message.command.get('val2') & 0xFF
+        long val3 = message.command.get('val3') & 0xFF
+        long val4 = message.command.get('val4') & 0xFF
+        val1 = (val1*256*256*256) + (val2*256*256) + (val3*256) + val4
+    }
+    log.debug "Config Param:{}, Bytes: {}, Val: {}", param, byteCnt, val1
+}
+
+onZWaveMessage.zwaveplus_info.report {
+    def zwVer = message.command.get('zwaveversion')
+    def roleType = message.command.get('roletype')
+    def nodeType = message.command.get('nodetype')
+    log.info "ZWave Plus Info, ZWave Ver:{}, RoleType:{}, NodeType:{}", zwVer, roleType, nodeType
+}
+
+onZWaveMessage.device_reset_locally.notification {
+    log.info "Device Reset Locally Notification"
+}

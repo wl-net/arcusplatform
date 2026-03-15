@@ -14,6 +14,7 @@
     <brand name="EnergyHub"/>
     <brand name="EnergySmart"/>
     <brand name="Everspring"/>
+    <brand name="Fibaro"/>
     <brand name="First Alert"/>
     <brand name="FortrezZ"/>
     <brand name="Gatehouse"/>
@@ -4533,6 +4534,29 @@
       <reset>
         <step1 type="text" img="" text="Remove the back cover, then press and hold the Connect button for 10 seconds."/>
         <step2 type="text" img="" text="Press the Connect button 3 times quickly to enter pairing mode."/>
+      </reset>
+      <populations>
+        <population name="general"/>
+        <population name="qa"/>
+        <population name="beta"/>
+      </populations>
+    </product>
+    <product id="fb0601" name="KeyFob (FGKF-601)" shortname="KeyFob" screen="Button" description="" manufacturer="Fibaro" vendor="Fibaro" cert="none" canbrowse="true" cansearch="true" helpurl="" pairvideourl="" batteryprimsize="CR2450" batteryprimnum="1" keywords="fibaro,keyfob,remote,button,scene,controller,zwave,fgkf-601" ota="No" protofamily="Z-Wave" added="2026-03-02T12:00:00-0600" lastchanged="2026-03-02T12:00:00-0600">
+      <categories>
+        <category name="Buttons &amp; Fobs"/>
+      </categories>
+      <pair>
+        <step1 type="text" img="" text="Make sure the KeyFob has a CR2450 battery installed."/>
+        <step2 type="text" img="" text="Press any button 3 times quickly. The LED will flash green when pairing is complete."/>
+      </pair>
+      <removal>
+        <step0 type="text" img="" text="TIP: Do not use other Iris devices at this time to avoid removing them."/>
+        <step1 type="text" img="" text="Press any button 3 times quickly."/>
+        <step2 type="text" img="" text="The LED will confirm when the device is successfully removed."/>
+      </removal>
+      <reset>
+        <step1 type="text" img="" text="Press and hold the Square and Circle buttons simultaneously for 5+ seconds until the LED changes color."/>
+        <step2 type="text" img="" text="Press any button 3 times quickly to enter pairing mode."/>
       </reset>
       <populations>
         <population name="general"/>
