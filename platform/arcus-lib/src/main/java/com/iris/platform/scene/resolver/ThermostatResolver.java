@@ -130,12 +130,10 @@ public class ThermostatResolver extends BaseResolver {
       case ThermostatCapability.HVACMODE_HEAT:
          Preconditions.checkNotNull(action.getHeatSetPoint());
          attributes.put(ThermostatCapability.ATTR_HEATSETPOINT, action.getHeatSetPoint());
-         attributes.put(ThermostatCapability.ATTR_COOLSETPOINT, action.getHeatSetPoint() + 2);
          break;
       case ThermostatCapability.HVACMODE_COOL:
          Preconditions.checkNotNull(action.getCoolSetPoint());
          attributes.put(ThermostatCapability.ATTR_COOLSETPOINT, action.getCoolSetPoint());
-         attributes.put(ThermostatCapability.ATTR_HEATSETPOINT, action.getCoolSetPoint() - 2);
          break;
 
       }
