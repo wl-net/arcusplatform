@@ -721,6 +721,8 @@ public class ReflexJson {
          return convertLg((ReflexActionLog)action, context);
       } else if (action instanceof ReflexActionDebug) {
          return convertDb((ReflexActionDebug)action, context);
+      } else if (action instanceof ReflexActionSetAttributeFromVariable) {
+         return convertSv((ReflexActionSetAttributeFromVariable)action, context);
       } else {
          throw new RuntimeException("cannot convert unknown hub local reflex action: " + action);
       }
@@ -739,6 +741,7 @@ public class ReflexJson {
       case "ZZ": return convertZzAction(action,context);
       case "LG": return convertLg(action,context);
       case "DB": return convertDb(action,context);
+      case "SV": return convertSv(action,context);
       default: throw new RuntimeException("unknown action type: " + action);
       }
    }
@@ -961,6 +964,22 @@ public class ReflexJson {
 
    private static ReflexActionDebug convertDb(JsonObject db, JsonDeserializationContext context) {
       return new ReflexActionDebug();
+   }
+
+   private static JsonObject convertSv(ReflexActionSetAttributeFromVariable sv, JsonSerializationContext context) {
+      JsonObject json = new JsonObject();
+      json.addProperty("t", "SV");
+      json.addProperty("a", sv.getAttr());
+      json.addProperty("v", sv.getVariable());
+      json.addProperty("d", sv.getDivisor());
+      return json;
+   }
+
+   private static ReflexActionSetAttributeFromVariable convertSv(JsonObject sv, JsonDeserializationContext context) {
+      String attr = sv.get("a").getAsString();
+      String variable = sv.get("v").getAsString();
+      double divisor = sv.get("d").getAsDouble();
+      return new ReflexActionSetAttributeFromVariable(attr, variable, divisor);
    }
 
 }

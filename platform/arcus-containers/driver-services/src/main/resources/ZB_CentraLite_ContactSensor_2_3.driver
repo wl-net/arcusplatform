@@ -230,6 +230,15 @@ Zigbee {
         send zcl.pollcontrol.checkInResponse, startFastPolling: START_FAST_POLLING_DISABLED, fastPollTimeout: 0
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // Process Temperature Measurement locally on the hub.
+    /////////////////////////////////////////////////////////////////////////////
+
+    match reflex {
+        on endpoint: 1, cluster: Zcl.TemperatureMeasurement.CLUSTER_ID, attr: Zcl.TemperatureMeasurement.ATTR_MEASURED_VALUE, attr
+        setFrom Temperature.temperature, zigbeeValue, divisor: 100
+    }
+
 }
 
 

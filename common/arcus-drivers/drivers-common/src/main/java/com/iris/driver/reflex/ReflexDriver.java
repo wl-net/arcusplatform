@@ -76,7 +76,8 @@ public class ReflexDriver {
    public static final int V0 = 0;
    public static final int V1 = 1;
    public static final int V2 = 2;
-   public static final int CURRENT_VERSION = V2;
+   public static final int V3 = 3;
+   public static final int CURRENT_VERSION = V3;
 
    private final String driver;
    private final Version version;
@@ -373,6 +374,8 @@ public class ReflexDriver {
             min = Math.max(min, ForwardAction.getRequiredReflexVersion());
          } else if (action instanceof ReflexActionDebug) {
             min = Math.max(min, DebugAction.getRequiredReflexVersion());
+         } else if (action instanceof ReflexActionSetAttributeFromVariable) {
+            min = Math.max(min, SetAttrFromVariableAction.getRequiredReflexVersion());
          } else if (action instanceof ReflexActionBuiltin) {
             min = Math.max(min, V1);
          } else {
@@ -582,6 +585,8 @@ public class ReflexDriver {
          return new ForwardAction((ReflexActionForward)action);
       } else if (action instanceof ReflexActionDebug) {
          return new DebugAction((ReflexActionDebug)action);
+      } else if (action instanceof ReflexActionSetAttributeFromVariable) {
+         return new SetAttrFromVariableAction((ReflexActionSetAttributeFromVariable)action);
       } else if (action instanceof ReflexActionBuiltin) {
          log.trace("builtin reflex actions are not available on the platform: {}", action);
       } else {
@@ -1053,6 +1058,45 @@ public class ReflexDriver {
 
       public static int getRequiredReflexVersion() {
          return V1;
+      }
+
+      @Override
+      public int getReflexVersion() {
+         return getRequiredReflexVersion();
+      }
+   }
+
+   private static final class SetAttrFromVariableAction implements Action {
+      private final String attr;
+      private final String variable;
+      private final double divisor;
+
+      public SetAttrFromVariableAction(ReflexActionSetAttributeFromVariable action) {
+         this.attr = action.getAttr();
+         this.variable = action.getVariable();
+         this.divisor = action.getDivisor();
+      }
+
+      @Override
+      public void run(ReflexDriverContext ctx, Object _unused) {
+         Object rawValue = ctx.getVariable(variable);
+         if (rawValue instanceof ZclData) {
+            rawValue = ((ZclData)rawValue).getDataValue();
+         }
+
+         if (rawValue instanceof Number) {
+            double value = ((Number)rawValue).doubleValue();
+            if (divisor != 1.0) {
+               value = value / divisor;
+            }
+            ctx.setAttribute(attr, value);
+         } else if (rawValue != null) {
+            log.warn("cannot convert non-numeric value for {}: {}", attr, rawValue);
+         }
+      }
+
+      public static int getRequiredReflexVersion() {
+         return V3;
       }
 
       @Override
@@ -1875,7 +1919,9 @@ public class ReflexDriver {
             parseZigbeeAttrReport(ctx, protocol, parseCheckRead, parseCheckReport, ep, prh, prl, clh, cll, msh, msl, flg);
          }
 
-         if (matchesZigbeeAttributes(ctx, parseCheckRead, attr, value) != null) {
+         ZclData matched = matchesZigbeeAttributes(ctx, parseCheckRead, attr, value);
+         if (matched != null) {
+            ctx.setVariable(ReflexActionSetAttributeFromVariable.VAR_ZIGBEE_VALUE, matched);
             return actions;
          }
 

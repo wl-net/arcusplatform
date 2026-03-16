@@ -38,6 +38,7 @@ import com.iris.driver.groovy.reflex.ReflexMatchContext;
 import com.iris.driver.groovy.reflex.ReflexUtil;
 import com.iris.driver.reflex.ReflexActionAlertmeLifesign;
 import com.iris.driver.reflex.ReflexActionBuiltin;
+import com.iris.driver.reflex.ReflexActionSetAttributeFromVariable;
 import com.iris.driver.reflex.ReflexActionSendProtocol;
 import com.iris.driver.reflex.ReflexActionZigbeeIasZoneEnroll;
 import com.iris.driver.reflex.ReflexMatchAlertmeLifesign;
@@ -769,6 +770,8 @@ public class ZigbeeConfigContext extends GroovyObjectSupport {
             return ReflexMatchZigbeeIasZoneStatus.Type.BOTH;
          case "amlifesign":
             return AlertmeTypes.LIFESIGN;
+         case "zigbeeValue":
+            return ReflexActionSetAttributeFromVariable.VAR_ZIGBEE_VALUE;
          case "battery":
             return ReflexNames.BATTERY;
          case "signal":

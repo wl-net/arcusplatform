@@ -34,6 +34,7 @@ import com.iris.driver.reflex.ReflexActionLog;
 import com.iris.driver.reflex.ReflexActionOrdered;
 import com.iris.driver.reflex.ReflexActionSendPlatform;
 import com.iris.driver.reflex.ReflexActionSetAttribute;
+import com.iris.driver.reflex.ReflexActionSetAttributeFromVariable;
 import com.iris.driver.reflex.ReflexMatch;
 import com.iris.driver.reflex.ReflexMatchAttribute;
 import com.iris.driver.reflex.ReflexMatchMessage;
@@ -110,6 +111,18 @@ public class ReflexMatchContext extends ReflexLogContext {
 
    public void set(GroovyAttributeDefinition attr, Object value) {
       addAction(new ReflexActionSetAttribute(attr.getAttribute().getName(),value));
+   }
+
+   public void setFrom(GroovyAttributeDefinition attr, String variable) {
+      setFrom(ImmutableMap.<String,Object>of(), attr, variable);
+   }
+
+   public void setFrom(Map<String,Object> config, GroovyAttributeDefinition attr, String variable) {
+      double divisor = 1.0;
+      if (config.containsKey("divisor")) {
+         divisor = ((Number)config.get("divisor")).doubleValue();
+      }
+      addAction(new ReflexActionSetAttributeFromVariable(attr.getAttribute().getName(), variable, divisor));
    }
 
    /////////////////////////////////////////////////////////////////////////////
