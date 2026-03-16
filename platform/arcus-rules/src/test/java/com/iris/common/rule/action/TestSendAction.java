@@ -220,6 +220,7 @@ public class TestSendAction extends Assert {
       model.setAttribute("swit:state", "ON");
       model.setAttribute("dim:brightness", 100);
       context.putModel(model);
+      context.setVariable("filterUnchanged", Boolean.TRUE);
 
       SendAction action =
             Actions
@@ -245,6 +246,7 @@ public class TestSendAction extends Assert {
       model.setAttribute("swit:state", "ON");
       model.setAttribute("dim:brightness", 50);
       context.putModel(model);
+      context.setVariable("filterUnchanged", Boolean.TRUE);
 
       SendAction action =
             Actions
@@ -268,6 +270,8 @@ public class TestSendAction extends Assert {
    @Test
    public void testSetAttributesSendsAllWhenModelNotFound() throws Exception {
       // No model in context — should send all attributes
+      context.setVariable("filterUnchanged", Boolean.TRUE);
+
       SendAction action =
             Actions
                .buildSendAction(Capability.CMD_SET_ATTRIBUTES)
@@ -292,6 +296,7 @@ public class TestSendAction extends Assert {
       model.setAttribute(Capability.ATTR_ADDRESS, destination.getRepresentation());
       model.setAttribute("dim:brightness", Integer.valueOf(100));
       context.putModel(model);
+      context.setVariable("filterUnchanged", Boolean.TRUE);
 
       // Scene sends Double 100.0 but model stores Integer 100 — should match
       SendAction action =
@@ -315,6 +320,7 @@ public class TestSendAction extends Assert {
       model.setAttribute(Capability.ATTR_ADDRESS, destination.getRepresentation());
       // swit:state is not set (null) — should still send
       context.putModel(model);
+      context.setVariable("filterUnchanged", Boolean.TRUE);
 
       SendAction action =
             Actions
@@ -327,6 +333,56 @@ public class TestSendAction extends Assert {
 
       PlatformMessage message = context.getMessages().poll();
       assertNotNull("Expected message when current value is null", message);
+      assertEquals("ON", message.getValue().getAttributes().get("swit:state"));
+   }
+
+   @Test
+   public void testSetAttributesNotFilteredWhenFilterUnchangedNotSet() throws Exception {
+      // Without the filterUnchanged variable, all attributes should be sent
+      // even if they match current state (default behavior for rules)
+      SimpleModel model = new SimpleModel();
+      model.setAttribute(Capability.ATTR_TYPE, "dev");
+      model.setAttribute(Capability.ATTR_ID, destination.getId().toString());
+      model.setAttribute(Capability.ATTR_ADDRESS, destination.getRepresentation());
+      model.setAttribute("swit:state", "ON");
+      context.putModel(model);
+
+      SendAction action =
+            Actions
+               .buildSendAction(Capability.CMD_SET_ATTRIBUTES)
+               .withDestination(destination)
+               .withAttribute("swit:state", "ON")
+               .build();
+
+      action.execute(context);
+
+      PlatformMessage message = context.getMessages().poll();
+      assertNotNull("Expected message when filterUnchanged is not set", message);
+      assertEquals("ON", message.getValue().getAttributes().get("swit:state"));
+   }
+
+   @Test
+   public void testSetAttributesNotFilteredWhenFilterUnchangedFalse() throws Exception {
+      // With filterUnchanged explicitly false, all attributes should be sent
+      SimpleModel model = new SimpleModel();
+      model.setAttribute(Capability.ATTR_TYPE, "dev");
+      model.setAttribute(Capability.ATTR_ID, destination.getId().toString());
+      model.setAttribute(Capability.ATTR_ADDRESS, destination.getRepresentation());
+      model.setAttribute("swit:state", "ON");
+      context.putModel(model);
+      context.setVariable("filterUnchanged", Boolean.FALSE);
+
+      SendAction action =
+            Actions
+               .buildSendAction(Capability.CMD_SET_ATTRIBUTES)
+               .withDestination(destination)
+               .withAttribute("swit:state", "ON")
+               .build();
+
+      action.execute(context);
+
+      PlatformMessage message = context.getMessages().poll();
+      assertNotNull("Expected message when filterUnchanged is false", message);
       assertEquals("ON", message.getValue().getAttributes().get("swit:state"));
    }
 

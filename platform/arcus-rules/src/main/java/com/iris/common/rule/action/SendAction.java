@@ -140,8 +140,11 @@ public class SendAction implements Action {
       }
 
       // For SetAttributes commands, filter out attributes that already match
-      // the device's current state to avoid unnecessary device traffic
-      if(Capability.CMD_SET_ATTRIBUTES.equals(this.type) && attributes != null) {
+      // the device's current state to avoid unnecessary device traffic.
+      // Only applied when the context has filterUnchanged set to true
+      // (e.g. per-scene configuration via scene:filterUnchanged).
+      if(Capability.CMD_SET_ATTRIBUTES.equals(this.type) && attributes != null
+            && Boolean.TRUE.equals(context.getVariable("filterUnchanged", Boolean.class))) {
          attributes = filterUnchangedAttributes(context, to, attributes);
          if(attributes.isEmpty()) {
             context.logger().debug("Skipping action [{}] because device is already in desired state", this);
