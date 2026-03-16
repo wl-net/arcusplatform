@@ -685,6 +685,39 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
       }
    }
 
+   private void onKeypadArmPressed(Address addr, Address actor, MessageBody msg) {
+      if (LifeCycleService.isConnected()) {
+         // Online — let the platform handle it via the normal round-trip
+         log.trace("hub is online, ignoring local keypad arm press from {}", addr);
+         return;
+      }
+
+      String modeRaw = KeyPadCapability.ArmPressedEvent.getMode(msg);
+      AlarmEvents.Mode mode = "PARTIAL".equalsIgnoreCase(modeRaw) ? AlarmEvents.Mode.PARTIAL : AlarmEvents.Mode.ON;
+
+      Boolean bypassRaw = KeyPadCapability.ArmPressedEvent.getBypass(msg);
+      boolean bypass = bypassRaw != null && bypassRaw;
+
+      log.info("hub is offline, attempting local arm from keypad: mode={}, bypass={}, source={}", mode, bypass, addr);
+
+      AlarmSecurity security = (AlarmSecurity) alarms.get(AlarmSecurity.NAME);
+      AlarmEvents.ArmEvent armEvent = security.buildCachedArmEvent(addr, actor, mode);
+      if (armEvent == null) {
+         log.warn("no cached arm config available for mode {}, cannot arm offline", mode);
+         onArmFailed();
+         return;
+      }
+
+      try {
+         if (!dispatch(armEvent)) {
+            onArmFailed();
+         }
+      } catch (Exception e) {
+         log.warn("offline arm failed: {}", e.getMessage());
+         onArmFailed();
+      }
+   }
+
    @Override
    @Nullable
    public Object recv(Port port, PlatformMessage message) throws Exception {
@@ -719,6 +752,10 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
       switch (type) {
       case KeyPadCapability.PanicPressedEvent.NAME:
          dispatch(AlarmEvents.trigger(addr, actor, AlarmEvents.Trigger.PANIC, true));
+         break;
+
+      case KeyPadCapability.ArmPressedEvent.NAME:
+         onKeypadArmPressed(addr, actor, msg);
          break;
 
       case KeyPadCapability.DisarmPressedEvent.NAME:
