@@ -74,6 +74,34 @@ public class AlarmSecurity extends AbstractAlarm {
    private final HubAttributesService.Attribute<Set<String>> currActive = HubAttributesService.persistedSet(String.class, HubAlarmCapability.ATTR_SECURITYCURRENTACTIVE, new LinkedHashSet<>());
    private final HubAttributesService.Attribute<Long> prealertEnd = HubAttributesService.persisted(Long.class, HubAlarmCapability.ATTR_SECURITYPREALERTENDTIME, 0L);
 
+   // Persisted cached arm config for offline arming (ON mode)
+   private final HubAttributesService.Attribute<Integer> cachedOnEntranceDelay =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedOnEntranceDelay", 30);
+   private final HubAttributesService.Attribute<Integer> cachedOnExitDelay =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedOnExitDelay", 30);
+   private final HubAttributesService.Attribute<Integer> cachedOnSensitivity =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedOnSensitivity", 1);
+   private final HubAttributesService.Attribute<Boolean> cachedOnSoundsEnabled =
+      HubAttributesService.persisted(Boolean.class, "hubalarm:cachedOnSoundsEnabled", true);
+   private final HubAttributesService.Attribute<Boolean> cachedOnSilent =
+      HubAttributesService.persisted(Boolean.class, "hubalarm:cachedOnSilent", false);
+   private final HubAttributesService.Attribute<Set<String>> cachedOnActiveDevices =
+      HubAttributesService.persistedSet(String.class, "hubalarm:cachedOnActiveDevices", new LinkedHashSet<>());
+
+   // Persisted cached arm config for offline arming (PARTIAL mode)
+   private final HubAttributesService.Attribute<Integer> cachedPartialEntranceDelay =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedPartialEntranceDelay", 30);
+   private final HubAttributesService.Attribute<Integer> cachedPartialExitDelay =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedPartialExitDelay", 30);
+   private final HubAttributesService.Attribute<Integer> cachedPartialSensitivity =
+      HubAttributesService.persisted(Integer.class, "hubalarm:cachedPartialSensitivity", 1);
+   private final HubAttributesService.Attribute<Boolean> cachedPartialSoundsEnabled =
+      HubAttributesService.persisted(Boolean.class, "hubalarm:cachedPartialSoundsEnabled", true);
+   private final HubAttributesService.Attribute<Boolean> cachedPartialSilent =
+      HubAttributesService.persisted(Boolean.class, "hubalarm:cachedPartialSilent", false);
+   private final HubAttributesService.Attribute<Set<String>> cachedPartialActiveDevices =
+      HubAttributesService.persistedSet(String.class, "hubalarm:cachedPartialActiveDevices", new LinkedHashSet<>());
+
    private @Nullable UUID lastArmId;
    private @Nullable UUID lastEntryDelayId;
    private @Nullable String lastArmedByTmp;
@@ -129,6 +157,19 @@ public class AlarmSecurity extends AbstractAlarm {
       this.currActive.setReportedOnConnect(false);
       this.prealertEnd.setReportedOnConnect(false);
 
+      this.cachedOnEntranceDelay.setReportedOnConnect(false);
+      this.cachedOnExitDelay.setReportedOnConnect(false);
+      this.cachedOnSensitivity.setReportedOnConnect(false);
+      this.cachedOnSoundsEnabled.setReportedOnConnect(false);
+      this.cachedOnSilent.setReportedOnConnect(false);
+      this.cachedOnActiveDevices.setReportedOnConnect(false);
+      this.cachedPartialEntranceDelay.setReportedOnConnect(false);
+      this.cachedPartialExitDelay.setReportedOnConnect(false);
+      this.cachedPartialSensitivity.setReportedOnConnect(false);
+      this.cachedPartialSoundsEnabled.setReportedOnConnect(false);
+      this.cachedPartialSilent.setReportedOnConnect(false);
+      this.cachedPartialActiveDevices.setReportedOnConnect(false);
+
       this.securityMode.setReportedOnValueChange(false);
       this.securityArmTime.setReportedOnValueChange(false);
       this.lastArmedTime.setReportedOnValueChange(false);
@@ -144,6 +185,19 @@ public class AlarmSecurity extends AbstractAlarm {
       this.sensitivity.setReportedOnValueChange(false);
       this.currActive.setReportedOnValueChange(false);
       this.prealertEnd.setReportedOnValueChange(false);
+
+      this.cachedOnEntranceDelay.setReportedOnValueChange(false);
+      this.cachedOnExitDelay.setReportedOnValueChange(false);
+      this.cachedOnSensitivity.setReportedOnValueChange(false);
+      this.cachedOnSoundsEnabled.setReportedOnValueChange(false);
+      this.cachedOnSilent.setReportedOnValueChange(false);
+      this.cachedOnActiveDevices.setReportedOnValueChange(false);
+      this.cachedPartialEntranceDelay.setReportedOnValueChange(false);
+      this.cachedPartialExitDelay.setReportedOnValueChange(false);
+      this.cachedPartialSensitivity.setReportedOnValueChange(false);
+      this.cachedPartialSoundsEnabled.setReportedOnValueChange(false);
+      this.cachedPartialSilent.setReportedOnValueChange(false);
+      this.cachedPartialActiveDevices.setReportedOnValueChange(false);
 
       // TODO: need to decide what the policy for moving out of ARMING after reboot is
       if (HubAlarmCapability.SECURITYALERTSTATE_ARMING.equals(alertState.get())) {
@@ -556,7 +610,73 @@ public class AlarmSecurity extends AbstractAlarm {
       soundsEnabled = event.isSoundsEnabled();
 
       transitionTo(HubAlarmCapability.SECURITYALERTSTATE_ARMING);
+      cacheArmConfig(event);
       return true;
+   }
+
+   private void cacheArmConfig(ArmEvent event) {
+      switch (event.getMode()) {
+         case ON:
+            cachedOnEntranceDelay.set(event.getEntranceDelaySecs());
+            cachedOnExitDelay.set(event.getExitDelaySecs());
+            cachedOnSensitivity.set(event.getAlarmSensitivityDeviceCount() > 0 ? event.getAlarmSensitivityDeviceCount() : 1);
+            cachedOnSoundsEnabled.set(event.isSoundsEnabled());
+            cachedOnSilent.set(event.isSilent());
+            cachedOnActiveDevices.set(new LinkedHashSet<>(event.getActiveDevices()));
+            log.debug("cached ON arm config: entranceDelay={}, exitDelay={}, sensitivity={}, activeDevices={}",
+               event.getEntranceDelaySecs(), event.getExitDelaySecs(), event.getAlarmSensitivityDeviceCount(), event.getActiveDevices().size());
+            break;
+         case PARTIAL:
+            cachedPartialEntranceDelay.set(event.getEntranceDelaySecs());
+            cachedPartialExitDelay.set(event.getExitDelaySecs());
+            cachedPartialSensitivity.set(event.getAlarmSensitivityDeviceCount() > 0 ? event.getAlarmSensitivityDeviceCount() : 1);
+            cachedPartialSoundsEnabled.set(event.isSoundsEnabled());
+            cachedPartialSilent.set(event.isSilent());
+            cachedPartialActiveDevices.set(new LinkedHashSet<>(event.getActiveDevices()));
+            log.debug("cached PARTIAL arm config: entranceDelay={}, exitDelay={}, sensitivity={}, activeDevices={}",
+               event.getEntranceDelaySecs(), event.getExitDelaySecs(), event.getAlarmSensitivityDeviceCount(), event.getActiveDevices().size());
+            break;
+         default:
+            log.warn("not caching arm config for unknown mode: {}", event.getMode());
+            break;
+      }
+   }
+
+   @Nullable
+   public ArmEvent buildCachedArmEvent(Address source, @Nullable Address actor, Mode mode) {
+      Set<String> activeDevs;
+      int entrDelay, extDelay, sens;
+      boolean sounds, sil;
+
+      switch (mode) {
+         case ON:
+            activeDevs = cachedOnActiveDevices.get();
+            entrDelay = cachedOnEntranceDelay.get();
+            extDelay = cachedOnExitDelay.get();
+            sens = cachedOnSensitivity.get();
+            sounds = cachedOnSoundsEnabled.get();
+            sil = cachedOnSilent.get();
+            break;
+         case PARTIAL:
+            activeDevs = cachedPartialActiveDevices.get();
+            entrDelay = cachedPartialEntranceDelay.get();
+            extDelay = cachedPartialExitDelay.get();
+            sens = cachedPartialSensitivity.get();
+            sounds = cachedPartialSoundsEnabled.get();
+            sil = cachedPartialSilent.get();
+            break;
+         default:
+            log.warn("no cached arm config for unknown mode: {}", mode);
+            return null;
+      }
+
+      if (activeDevs == null || activeDevs.isEmpty()) {
+         log.info("no cached arm config for mode {}, never armed before", mode);
+         return null;
+      }
+
+      log.info("building cached arm event for offline arm: mode={}, activeDevices={}", mode, activeDevs.size());
+      return new ArmEvent(source, actor, mode, false, entrDelay, extDelay, sens, sil, sounds, activeDevs);
    }
 
    private boolean hasSufficientDevices(int sensitivity) {
