@@ -72,8 +72,6 @@ public class TestHubRegistry extends IrisMockTestCase {
       HubRegistryConfig config = new HubRegistryConfig();
       // effectively disable the background task
       config.setTimeoutIntervalSec(Integer.MAX_VALUE);
-      // effectively disable connected state recheck in tests
-      config.setConnectedCheckIntervalMin(Integer.MAX_VALUE);
       return config;
    }
    
@@ -180,9 +178,7 @@ public class TestHubRegistry extends IrisMockTestCase {
    public void testTimeout() throws Exception {
       EasyMock.expect(mockClock.millis()).andReturn(1000L).once();
       EasyMock.expect(mockClock.millis()).andReturn(2000L).once(); // not expired
-      EasyMock.expect(mockClock.millis()).andReturn(2000L).once(); // recheckConnectedState
       EasyMock.expect(mockClock.millis()).andReturn(1000000L).once(); // expired
-      EasyMock.expect(mockClock.millis()).andReturn(1000000L).once(); // recheckConnectedState
       expectStreamPartitionAndReturn(0, ImmutableList.of(hub1, hub2));
       expectGetHubByIdAndReturn(hub1);
       expectDisconnected(hub1.getId());
@@ -221,7 +217,6 @@ public class TestHubRegistry extends IrisMockTestCase {
       EasyMock.expect(mockClock.millis()).andReturn(1000L).once();
       EasyMock.expect(mockClock.millis()).andReturn(1000000L).once(); // heartbeat
       EasyMock.expect(mockClock.millis()).andReturn(1000010L).once(); // expired
-      EasyMock.expect(mockClock.millis()).andReturn(1000010L).once(); // recheckConnectedState
       expectStreamPartitionAndReturn(0, ImmutableList.of(hub1, hub2));
       expectGetHubByIdAndReturn(hub2);
       expectDisconnected(hub2.getId());
@@ -278,12 +273,9 @@ public class TestHubRegistry extends IrisMockTestCase {
    public void testOnlineThenTimeout() throws Exception {
       expectConnected(hub1.getId());
       EasyMock.expect(mockClock.millis()).andReturn(1000L).once(); // partitions assigned
-      EasyMock.expect(mockClock.millis()).andReturn(2000L).once(); // connected() HubState
       EasyMock.expect(mockClock.millis()).andReturn(2000L).once(); // heartbeat
       EasyMock.expect(mockClock.millis()).andReturn(3000L).once(); // timeout 1
-      EasyMock.expect(mockClock.millis()).andReturn(3000L).once(); // recheckConnectedState
       EasyMock.expect(mockClock.millis()).andReturn(1000000L).once(); // timeout 2
-      EasyMock.expect(mockClock.millis()).andReturn(1000000L).once(); // recheckConnectedState
       expectStreamPartitionAndReturn(0, ImmutableList.of());
       expectGetHubByIdAndReturn(hub1);
       expectDisconnected(hub1.getId());
@@ -349,8 +341,7 @@ public class TestHubRegistry extends IrisMockTestCase {
    @Test
    public void testSwitchHubBridges() throws Exception {
       expectConnected(hub1.getId()); // initial online
-      EasyMock.expect(mockClock.millis()).andReturn(1000L); // connected() HubState
-      EasyMock.expect(mockClock.millis()).andReturn(1000L); // updateHeartbeat
+      EasyMock.expect(mockClock.millis()).andReturn(1000L);
       EasyMock.expect(mockClock.millis()).andReturn(2000L);
       EasyMock.expect(mockClock.millis()).andReturn(3000L);
       EasyMock.expect(mockClock.millis()).andReturn(4000L);
@@ -390,9 +381,8 @@ public class TestHubRegistry extends IrisMockTestCase {
    @Test
    public void testTimeoutWhileSwitchingHubBridges() throws Exception {
       HubRegistryConfig config = new HubRegistryConfig();
-
-      EasyMock.expect(mockClock.millis()).andReturn(1000L); // connected() HubState
-      EasyMock.expect(mockClock.millis()).andReturn(1000L); // updateHeartbeat
+      
+      EasyMock.expect(mockClock.millis()).andReturn(1000L);
       EasyMock.expect(mockClock.millis()).andReturn(2000L);
       EasyMock.expect(mockClock.millis()).andReturn(TimeUnit.MINUTES.toMillis(config.getOfflineTimeoutMin()) + 1500);
       expectConnected(hub1.getId());
