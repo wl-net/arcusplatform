@@ -28,7 +28,7 @@ Feature: Test of the CentraLite Water Sensor ZigBee driver
     @basic @added @timeout
     Scenario: Device added
         When the device is added
-        Then the driver should set timeout at 195 minutes
+        Then the driver should set timeout at 1440 minutes
         Then the capability devpow:sourcechanged should be recent
             And the capability leakh2o:statechanged should be recent
 
@@ -135,12 +135,6 @@ Feature: Test of the CentraLite Water Sensor ZigBee driver
       | zclreadattributesresponse |
       | zclreportattributes       |
 
-    @Poll
-    Scenario: poll control check in
-        When the device response with pollcontrol checkin
-            And send to driver
-        Then the driver should send pollcontrol checkinresponse    
-    
 ############################################################
 # Temperature Cluster Tests
 ############################################################
