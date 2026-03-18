@@ -193,11 +193,13 @@ class GatewayHandler extends SimpleChannelInboundHandler<Object> {
    public boolean send(PlatformMessage msg, boolean checkAuth) {
       Address address = msg.getDestination();
       if (address.isHubAddress() && !address.isBroadcast()) {
+         log.info("skipping hub-addressed message: {}", address);
          return true;
       }
-   
+
       ChannelHandlerContext c = ctx;
       if (c == null || c.channel() == null || (checkAuth && !authorized.get())) {
+         log.warn("cannot send, ctx={}, checkAuth={}, authorized={}", c != null, checkAuth, authorized.get());
          return false;
       }
 
@@ -207,9 +209,14 @@ class GatewayHandler extends SimpleChannelInboundHandler<Object> {
          ByteBufOutputStream out = new ByteBufOutputStream(buffer);
          hubSerializer.serialize(HubMessage.createPlatform(payload), out);
          IOUtils.closeQuietly(out);
-   
+
          BinaryWebSocketFrame frame = new BinaryWebSocketFrame(buffer);
-         c.writeAndFlush(frame);
+         log.info("sending {} byte WebSocket frame, type={}", buffer.readableBytes(), msg.getMessageType());
+         c.writeAndFlush(frame).addListener(f -> {
+            if (!f.isSuccess()) {
+               log.warn("WebSocket frame send failed", f.cause());
+            }
+         });
          lastHubMsg = System.nanoTime();
 
          return true;

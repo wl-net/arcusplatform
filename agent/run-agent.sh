@@ -17,7 +17,7 @@ if [ ! -f "$MFG_DIR/config/hubID" ]; then
    mkdir -p "$HUB_SIMULATED_DIR/data/iris/data" "$HUB_SIMULATED_DIR/data/iris/db"
 
    # Hub identity - override HUB_ID and HUB_MAC before running if desired
-   HUB_ID="${HUB_ID:-SIM-0001}"
+   HUB_ID="${HUB_ID:-KKK-4602}"
    HUB_MAC="${HUB_MAC:-00:11:22:33:44:55}"
 
    printf '%s' "$HUB_ID"       > "$MFG_DIR/config/hubID"
@@ -50,6 +50,13 @@ export IRIS_AGENT_GATEWAY_ALLOW_LOCAL=true
 #   export IRIS_GATEWAY_URI=wss://hub.dev.arcus.wl-net.net/hub/1.0
 export IRIS_GATEWAY_URI="${IRIS_GATEWAY_URI:-wss://localhost:8082/hub/1.0}"
 export IRIS_AGENT_LOGTYPE=dev
+
+# If local TLS certs exist (from tools/setup-local-tls.sh), use the merged
+# truststore that includes the local dev CA.
+LOCAL_TLS_DIR="${HOME}/.arcus/tls"
+if [ -f "$LOCAL_TLS_DIR/truststore.jks" ]; then
+   export IRIS_AGENT_EXTRA_CLASSPATH="$LOCAL_TLS_DIR"
+fi
 
 # Disable Z-Wave support. If you need to run Z-Wave support in a
 # local manner then get a Z-Wave controller USB dongle and update

@@ -43,7 +43,8 @@ run.dependsOn "run-hub-v2"
 // Run the agent. This feels like the wrong place to put this, but the original run task references run-hub-v2 which wasn't defined anywhere.
 task('run-hub-v2', type:JavaExec) {
    description "Runs an Iris Agent using the arcus-hal-hub-v2 settings."
-   classpath = files("$projectDir/src/dist/conf") + sourceSets.main.runtimeClasspath
+   def extraCp = System.env['IRIS_AGENT_EXTRA_CLASSPATH']
+   classpath = (extraCp ? files(extraCp) : files()) + files("$projectDir/src/dist/conf") + sourceSets.main.runtimeClasspath
    group "Application"
    mainClass = 'com.iris.agent.IrisAgent'
    args '~/.hub-simulated/' // Store files in ~/.hub-simulated
