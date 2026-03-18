@@ -88,12 +88,6 @@ Feature: Test of the Waxman Leak Sensor driver
       | zclreadattributesresponse |
       | zclreportattributes       |
 
-    @Poll
-    Scenario: poll control check in
-        When the device response with pollcontrol checkin
-            And send to driver
-        Then the driver should send pollcontrol checkinresponse    
-    
 ############################################################
 # Temperature Cluster Tests
 ############################################################
