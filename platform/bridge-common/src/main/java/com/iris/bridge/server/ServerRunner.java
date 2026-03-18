@@ -118,7 +118,7 @@ public class ServerRunner implements Runnable {
       if (serverConfig.getBossAcceptRate() > 0  && serverConfig.getBossAcceptCapacity() > 0) {
          logger.info("rate limiting incoming connections: capacity={}, rate={}", serverConfig.getBossAcceptCapacity(), serverConfig.getBossAcceptRate());
          RateLimiter rateLimit = RateLimiters.tokenBucket(
-            serverConfig.getBossAcceptCapacity(), 
+            serverConfig.getBossAcceptCapacity(),
             serverConfig.getBossAcceptRate()
          ).build();
 

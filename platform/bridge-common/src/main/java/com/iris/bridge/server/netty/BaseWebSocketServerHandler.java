@@ -50,6 +50,7 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -204,6 +205,7 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
 
    @Override
    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+      logger.info("channelRead0: {}", msg.getClass().getSimpleName());
       if (msg instanceof FullHttpRequest) {
          FullHttpRequest req = (FullHttpRequest)msg;
          if (serverConfig.isAllowForwardedFor()) {
@@ -230,6 +232,7 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
             timerContext.stop();
          }
       } else {
+         logger.warn("Received unknown frame type: {}", msg.getClass().getName());
          metrics.incUnknownFrameReceivedCounter();
       }
    }
@@ -256,7 +259,9 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
             (cause instanceof SocketException);
 
       if (!isExpected) {
-         logger.debug("closing connection abnormally due to exception [{}]:", ctx, cause);
+         logger.warn("closing connection abnormally due to exception [{}]:", ctx, cause);
+      } else {
+         logger.warn("closing connection due to {}: {}", cause.getClass().getSimpleName(), cause.getMessage());
       }
 
       // For HTTP connections that haven't been upgraded to WebSocket,
@@ -311,18 +316,22 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
          }
 
          if (webSocketUpgradeHandler.matches(req)) {
+            logger.info("WebSocket upgrade matched for [{} {}]", req.getMethod(), req.getUri());
             webSocketUpgradeHandler.handleRequest(req, ctx);
             return;
+         } else {
+            logger.warn("WebSocket upgrade NOT matched for [{} {}], Upgrade header: [{}]", req.getMethod(), req.getUri(), req.headers().get("Upgrade"));
          }
 
          for (RequestHandler handler : handlers) {
             if (handler.matches(req)) {
+               logger.info("Matched handler [{}] for [{} {}]", handler, req.getMethod(), req.getUri());
                handler.handleRequest(req, ctx);
                return;
             }
          }
 
-         logger.debug("[{} {}] 404 - Not Found", req.getMethod(), req.getUri());
+         logger.warn("[{} {}] 404 - Not Found", req.getMethod(), req.getUri());
          metrics.incNotFoundHttpRequestCounter();
          metrics.incErrorHttpRequestCounter();
          httpSender.sendError(ctx, HttpSender.STATUS_NOT_FOUND, req);
@@ -425,10 +434,9 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
          } else {
             handshaker.handshake(ctx.channel(), req);
 
-            // The chunked write handler interferes with large websocket messages
-            // so it needs to be removed from the pipeline since we are setting up
-            // a websocket here.
+            // Remove HTTP-only handlers that interfere with WebSocket frames
             ctx.pipeline().remove(Bridge10ChannelInitializer.CHUNKED_WRITE_HANDLER);
+            ctx.pipeline().remove(Bridge10ChannelInitializer.FILTER_DECOMPRESSOR);
 
             // Only create the session after the handshake.
             // at this point the session is not fully initialized
@@ -436,6 +444,21 @@ public class BaseWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
             // can identify it. We only put the session in the registry when it
             // is initialized
             metrics.incSocketCounter();
+            logger.info("WebSocket upgrade complete for client [{}], pipeline: {}", client.getPrincipalName(), ctx.pipeline().names());
+            logger.info("channel autoRead={}, isActive={}, isWritable={}", ctx.channel().config().isAutoRead(), ctx.channel().isActive(), ctx.channel().isWritable());
+            ctx.channel().read();
+            // Debug: log raw inbound messages before wsdecoder
+            ctx.pipeline().addBefore("wsdecoder", "ws-debug", new ChannelInboundHandlerAdapter() {
+               @Override
+               public void channelRead(ChannelHandlerContext c, Object msg) throws Exception {
+                  if (msg instanceof io.netty.buffer.ByteBuf) {
+                     logger.info("ws-debug: received ByteBuf {} bytes", ((io.netty.buffer.ByteBuf) msg).readableBytes());
+                  } else {
+                     logger.info("ws-debug: received {}", msg.getClass().getSimpleName());
+                  }
+                  c.fireChannelRead(msg);
+               }
+            });
             Session socketSession = createAndSetSocketSession(client, ctx.channel(), metrics);
             updateClientInfo(req, socketSession);
             try(MdcContextReference ref = BridgeMdcUtil.captureAndInitializeContext(socketSession)) {

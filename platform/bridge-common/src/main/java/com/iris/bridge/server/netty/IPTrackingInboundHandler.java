@@ -29,8 +29,13 @@ public class IPTrackingInboundHandler extends ChannelInboundHandlerAdapter {
       }
    }
 
+   private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(IPTrackingInboundHandler.class);
+
    @Override
    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+      if (msg instanceof io.netty.buffer.ByteBuf) {
+         logger.info("raw inbound: {} bytes", ((io.netty.buffer.ByteBuf) msg).readableBytes());
+      }
       try (AutoCloseable context = IPTrackingUtil.captureAndInitializeContext(ctx)) {
          super.channelRead(ctx, msg);
       }
