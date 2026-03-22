@@ -66,6 +66,7 @@ public class SceneEditorForm extends FormView {
                .named(Scene.ATTR_FILTERUNCHANGED)
                .build()
       );
+      setValue(Scene.ATTR_FILTERUNCHANGED, Boolean.TRUE);
       addSeparator();
       addField(actions, LabelLocation.NONE);
    }
