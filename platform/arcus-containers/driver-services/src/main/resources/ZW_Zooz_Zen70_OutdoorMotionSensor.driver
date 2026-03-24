@@ -131,6 +131,11 @@ onConnected {
     // set the wakeup interval to 1 hour (0x000E10 = 3600 seconds) for node 0x01
     ZWave.wake_up.set((byte)0x00, (byte)0x0E, (byte)0x10, (byte)0x01)
 
+    // Associate hub with Group 2 (On/Off control) so it receives Basic Set for motion events.
+    // The 800-series ZSE70 Supervision-wraps Notification Reports on the Lifeline, and the
+    // platform cannot unwrap them, so we rely on Basic Set from Group 2 for real-time motion.
+    ZWave.association.set( 2, 1)
+
     ZWave.basic.get()
     ZWave.poll(POLLING_INTERVAL_SEC, ZWave.basic.get)
 

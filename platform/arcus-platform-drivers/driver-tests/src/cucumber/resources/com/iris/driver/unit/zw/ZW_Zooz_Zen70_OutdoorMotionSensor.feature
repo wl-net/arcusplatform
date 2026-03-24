@@ -118,6 +118,38 @@ These scenarios test the functionality of the ZWave Zooz ZSE70 Outdoor Motion Se
 
 
 ############################################################
+# Motion Tests via basic set (Association Group 2)
+############################################################
+
+    @motion
+    Scenario Outline: Device reports motion detected via a 'basic' set
+        Given the capability mot:motion is <prev_state>
+        When the device response with basic set
+            And with parameter value <value>
+            And send to driver
+        Then the platform attribute mot:motion should change to <new_state>
+            And the capability mot:motionchanged should be recent
+            And the driver should place a base:ValueChange message on the platform bus
+
+        Examples:
+          | prev_state | value | new_state  |
+          | NONE       |  -1   | DETECTED   |
+
+    @motion
+    Scenario Outline: Device reports NO motion detected via a 'basic' set
+        Given the capability mot:motion is <prev_state>
+        When the device response with basic set
+            And with parameter value <value>
+            And send to driver
+        Then the platform attribute mot:motion should change to <new_state>
+            And the driver should place a base:ValueChange message on the platform bus
+
+        Examples:
+          | prev_state | value | new_state  |
+          | DETECTED   |   0   | NONE       |
+
+
+############################################################
 # Motion Tests via alarm/notification report
 ############################################################
 
