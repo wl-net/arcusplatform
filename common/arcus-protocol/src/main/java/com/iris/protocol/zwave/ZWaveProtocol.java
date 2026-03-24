@@ -114,9 +114,21 @@ public enum ZWaveProtocol implements com.iris.protocol.Protocol<ZWaveMessage>, Z
          .create();
 	}
 
+	// Z-Wave Supervision command class (0x6C)
+	private static final byte SUPERVISION_CC = 0x6C;
+	private static final byte SUPERVISION_GET = 0x01;
+
 	private static ZWaveCommandMessage deserializeCommand(Protocol.Message msg) throws IOException {
       Protocol.Command pcmd = Protocol.Command.serde().nettySerDe()
 	      .decode(Unpooled.wrappedBuffer(msg.getPayload()));
+
+	   // Handle Supervision encapsulation (command class 0x6C).
+	   // 800-series Z-Wave devices wrap commands in Supervision Get. Extract
+	   // the encapsulated command and process it directly so drivers don't
+	   // need to be aware of the wrapping.
+	   if (pcmd.rawCommandClassId() == SUPERVISION_CC && pcmd.rawCommandId() == SUPERVISION_GET) {
+	      return deserializeSupervisionGet(pcmd);
+	   }
 
 	   ZWaveCommandClass cc = ZWaveAllCommandClasses.allClasses.get(pcmd.rawCommandClassId());
 	   if (cc == null) {
@@ -135,6 +147,57 @@ public enum ZWaveProtocol implements com.iris.protocol.Protocol<ZWaveMessage>, Z
 	   ZWaveNode node = new ZWaveNode(pcmd.rawNodeId());
       return new ZWaveCommandMessage(node, command);
    }
+
+	/**
+	 * Unwrap a Supervision Get (0x6C, 0x01) and deserialize the encapsulated command.
+	 *
+	 * Supervision Get payload format:
+	 *   byte 0: properties1 (bits 7-6 reserved, bit 5 more-status-updates, bits 4-0 session ID)
+	 *   byte 1: encapsulated command length
+	 *   byte 2: encapsulated command class ID
+	 *   byte 3: encapsulated command ID
+	 *   byte 4+: encapsulated command payload
+	 */
+	private static ZWaveCommandMessage deserializeSupervisionGet(Protocol.Command pcmd) throws IOException {
+	   byte[] payload = pcmd.getPayload();
+	   if (payload == null || payload.length < 4) {
+	      throw new IOException("malformed Supervision Get: payload too short");
+	   }
+
+	   int encapLength = payload[1] & 0xFF;
+	   if (encapLength < 2 || payload.length < 2 + encapLength) {
+	      throw new IOException("malformed Supervision Get: encapsulated length mismatch");
+	   }
+
+	   byte encapCcId = payload[2];
+	   byte encapCmdId = payload[3];
+
+	   log.debug("unwrapping Supervision Get: encapsulated cc=0x{}, cmd=0x{}",
+	      String.format("%02X", encapCcId & 0xFF), String.format("%02X", encapCmdId & 0xFF));
+
+	   ZWaveCommandClass cc = ZWaveAllCommandClasses.allClasses.get(encapCcId);
+	   if (cc == null) {
+	      throw new IOException("unknown encapsulated command class in Supervision Get: " + (encapCcId & 0xFF));
+	   }
+
+	   ZWaveCommand command = cc.get(encapCmdId);
+	   if (command == null) {
+	      throw new IOException("unknown encapsulated command " + (encapCmdId & 0xFF) + " in Supervision Get cc " + (encapCcId & 0xFF));
+	   }
+
+	   // Extract and parse just the encapsulated command payload (after cc and cmd bytes)
+	   int encapPayloadLength = encapLength - 2;
+	   byte[] encapPayload = new byte[encapPayloadLength];
+	   if (encapPayloadLength > 0) {
+	      System.arraycopy(payload, 4, encapPayload, 0, encapPayloadLength);
+	   }
+	   if (!command.parsePayload(encapPayload)) {
+	      throw new IOException("could not parse encapsulated command in Supervision Get");
+	   }
+
+	   ZWaveNode node = new ZWaveNode(pcmd.rawNodeId());
+	   return new ZWaveCommandMessage(node, command);
+	}
 
 	private static Protocol.Message serializeOrderedCommands(ZWaveOrderedCommandsMessage cmd) throws IOException {
 	   List<ZWaveMessage> zcmds = cmd.getCommands();
