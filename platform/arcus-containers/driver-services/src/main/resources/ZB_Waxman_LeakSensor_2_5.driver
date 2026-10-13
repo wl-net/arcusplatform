@@ -18,10 +18,12 @@
  * 
  *    08/07/17 - Version 2.5 for Reflexes.
  *
- *    02/22/26 - Removed Poll Control check-in response and poll interval
- *               configuration to fix disconnect/reconnect cycling.
+ *    02/22/26 - Removed poll interval configuration to fix disconnect/reconnect cycling.
  *               Offline timeout increased to 1440 minutes (24 hours).
  *               See: https://github.com/Koenkk/zigbee2mqtt/issues/16183
+ *               The check-in response is kept: this device's check-in interval cannot be
+ *               configured, so it checks in regardless and an unanswered check-in leaves it
+ *               fast polling until it times out.
  *
  *    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  *    IMPORTANT:
@@ -78,6 +80,7 @@ import static java.util.concurrent.TimeUnit.*    // needed when running Unit Tes
 import static com.iris.protocol.zigbee.zcl.Constants.*
 import static com.iris.protocol.zigbee.zcl.General.*
 import static com.iris.protocol.zigbee.zcl.ApplianceAlerts.*
+import static com.iris.protocol.zigbee.zcl.PollControl.CheckInResponse.*
 
 uses "zigbee.GenericZigbeeDeviceOta"
 
@@ -234,6 +237,15 @@ Zigbee {
         set LeakH2O.state, LeakH2O.STATE_SAFE
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // Process Poll Control Check-Ins locally on the hub.
+    /////////////////////////////////////////////////////////////////////////////
+
+    match reflex {
+        on zcl.pollcontrol.checkIn
+        // tell device to resume without short polling
+        send zcl.pollcontrol.checkInResponse, startFastPolling: START_FAST_POLLING_DISABLED, fastPollTimeout: 0
+    }
 }
 
 

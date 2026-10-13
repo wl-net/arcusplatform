@@ -28,6 +28,13 @@
  *               worst-case battery reporting interval (12h) with 2x buffer.
  *               See: https://github.com/Koenkk/zigbee2mqtt/issues/16183
  *
+ *    10/12/26 - Restored the check-in response and added a write of Check-In Interval = 0
+ *               to it.  Devices paired under older versions of this driver keep the
+ *               60 minute check-in interval and Poll Control binding they were given, and
+ *               the hub does not re-run the 'connected' reflex when a driver is updated.
+ *               A check-in is the one time the device is known to be awake, so the next
+ *               check-in after this driver reaches the hub turns check-ins off.
+ *
  * FACTORY RESET
  *  - Hold down the "connect" button (tamper switch) while inserting the battery and when LED glows amber release button.
  *
@@ -72,6 +79,7 @@ import static java.util.concurrent.TimeUnit.*    // needed when running Unit Tes
 import static com.iris.protocol.zigbee.zcl.Constants.*
 import static com.iris.protocol.zigbee.zcl.General.*
 import static com.iris.protocol.zigbee.zcl.IasZone.ZoneEnrollResponse.*
+import static com.iris.protocol.zigbee.zcl.PollControl.CheckInResponse.*
 
 uses "zigbee.GenericZigbeeDeviceOta"
 
@@ -196,6 +204,18 @@ Zigbee {
         send zcl.iaszone.zoneEnrollResponse, zoneId: 0xFF, enrollResponseCode: REPONSE_CODE_SUCCESS
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+    // Process Poll Control Check-Ins locally on the hub.  This driver no longer
+    // configures Poll Control, so check-ins only come from devices paired under
+    // older driver versions; disable further check-ins (interval 0) on those.
+    /////////////////////////////////////////////////////////////////////////////
+
+    match reflex {
+        on zcl.pollcontrol.checkIn
+        // tell device to resume without short polling
+        send zcl.pollcontrol.checkInResponse, startFastPolling: START_FAST_POLLING_DISABLED, fastPollTimeout: 0
+        write endpoint: 1, cluster: Zcl.PollControl.CLUSTER_ID, attr:Zcl.PollControl.ATTR_CHECKIN_INTERVAL, value: Data.encode32BitUnsigned(0)
+    }
 }
 
 

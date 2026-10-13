@@ -134,6 +134,13 @@ Feature: Test of the SmartThings Water Leak Sensor ZigBee driver
       | zclreadattributesresponse |
       | zclreportattributes       |
 
+    @Poll
+    Scenario: poll control check in
+        When the device response with pollcontrol checkin
+            And send to driver
+        Then the driver should send pollcontrol checkinresponse
+            And the driver should send pollcontrol zclWriteAttributes
+
 ############################################################
 # Temperature Cluster Tests
 ############################################################
