@@ -37,7 +37,8 @@ import com.iris.bootstrap.annotations.Modules;
       CassandraInvitationDAOModule.class,
       CassandraPersonPlaceAssocDAOModule.class,
       CassandraPreferencesDAOModule.class,
-      CassandraApiKeyDAOModule.class
+      CassandraApiKeyDAOModule.class,
+      CassandraPasskeyDAOModule.class
 })
 public class CassandraDAOModule extends AbstractModule {
    @Override

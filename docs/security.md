@@ -102,6 +102,32 @@ Authentication uses Apache Shiro with `GuicedIrisRealm` as the primary realm:
 
 A secondary `AppHandoffRealm` handles app-to-app handoff (e.g., mobile app to web). It accepts an `AppHandoffToken` validated against the `app_handoff_token` Cassandra table rather than by credential matching.
 
+### Passkeys
+
+client-bridge supports passkey (WebAuthn) login alongside passwords, using Yubico's `webauthn-server-core`. Passkeys are discoverable and require user verification, so a login needs no username and the passkey covers both factors. Password login and password reset are unchanged and remain the recovery path.
+
+Passkeys are off unless `passkey.rp.id` is set:
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `passkey.rp.id` | (unset: disabled) | Domain passkeys are bound to, e.g. `example.com`. The web app and client-bridge must be served from it or a subdomain. |
+| `passkey.rp.name` | `Arcus` | Name shown by the browser and authenticator |
+| `passkey.origins` | `https://{rp.id}` | Comma-separated origins allowed to use passkeys |
+| `passkey.request.ttl.secs` | `300` | How long the browser has to answer a request |
+
+Each ceremony is two POSTs with JSON bodies. The `*Options` responses are `{"requestId": ..., "publicKey": {...}}`: pass `publicKey` to `PublicKeyCredential.parseCreationOptionsFromJSON()` or `parseRequestOptionsFromJSON()`, then send the resulting credential's `toJSON()` back as `credential` with the `requestId`. Requests are single-use and expire.
+
+| Endpoint | Session | Body | Result |
+|----------|---------|------|--------|
+| `/passkey/LoginOptions` | no | `{}` | login options |
+| `/passkey/Login` | no | `{requestId, credential, public}` | session cookie, as for `/login` |
+| `/passkey/RegisterOptions` | yes | `{}` | registration options for the logged-in person |
+| `/passkey/Register` | yes | `{requestId, credential, name}` | `{id, name, created}` |
+| `/passkey/List` | yes | `{}` | `{passkeys: [{id, name, created, lastUsed}]}` |
+| `/passkey/Delete` | yes | `{id}` | `{}`, or 404 for an unknown id |
+
+`PasskeyRealm` verifies the WebAuthn response itself, so a `PasskeyToken` only authenticates with a valid signature. Credentials are stored in the `passkey` and `passkey_by_credential` tables; in-progress requests in `passkey_request` with a TTL.
+
 ## Password Storage
 
 Passwords are hashed using **SHA-256 with a random salt and 1024 iterations**, Base64-encoded.
@@ -142,6 +168,8 @@ PINs are stored per-place in `person.pinPerPlace` (a map of `placeId` to encrypt
 | `platform/arcus-security/.../credentials/Sha256CredentialsHashingStrategy.java` | Password hashing (SHA-256, 1024 iterations) |
 | `platform/arcus-security/.../GuicedIrisRealm.java` | Primary Shiro realm (username + password) |
 | `platform/arcus-security/.../handoff/AppHandoffRealm.java` | Secondary Shiro realm (app handoff) |
+| `platform/arcus-containers/client-bridge/.../passkey/PasskeyService.java` | Passkey registration and login (WebAuthn) |
+| `platform/arcus-containers/client-bridge/.../passkey/PasskeyRealm.java` | Shiro realm for passkey login |
 | `platform/arcus-security/.../SecurityModule.java` | Guice wiring of Shiro components |
 | `platform/arcus-security/.../authz/AuthorizationContext.java` | Per-session permission cache |
 | `platform/arcus-security/.../authz/RoleAuthorizer.java` | Coarse-grained role/ownership checks |
