@@ -113,7 +113,9 @@ Passkeys are off unless `passkey.rp.id` is set:
 | `passkey.rp.id` | (unset: disabled) | Domain passkeys are bound to, e.g. `example.com`. The web app and client-bridge must be served from it or a subdomain. |
 | `passkey.rp.name` | `Arcus` | Name shown by the browser and authenticator |
 | `passkey.origins` | `https://{rp.id}` | Comma-separated origins allowed to use passkeys |
-| `passkey.request.ttl.secs` | `300` | How long the browser has to answer a request |
+| `passkey.request.ttl.secs` | `300` | How long the browser has to answer a request (at most 3600) |
+| `passkey.ratelimit.capacity` | `20` | Login requests a client address can make in a burst; `0` turns limiting off |
+| `passkey.ratelimit.rate` | `0.2` | Login requests per second a client address earns back |
 
 Each ceremony is two POSTs with JSON bodies. The `*Options` responses are `{"requestId": ..., "publicKey": {...}}`: pass `publicKey` to `PublicKeyCredential.parseCreationOptionsFromJSON()` or `parseRequestOptionsFromJSON()`, then send the resulting credential's `toJSON()` back as `credential` with the `requestId`. Requests are single-use and expire.
 
@@ -127,6 +129,8 @@ Each ceremony is two POSTs with JSON bodies. The `*Options` responses are `{"req
 | `/passkey/Delete` | yes | `{id}` | `{}`, or 404 for an unknown id |
 
 `PasskeyRealm` verifies the WebAuthn response itself, so a `PasskeyToken` only authenticates with a valid signature. Credentials are stored in the `passkey` and `passkey_by_credential` tables; in-progress requests in `passkey_request` with a TTL.
+
+Anyone can call `/passkey/LoginOptions` and `/passkey/Login`, and each call writes to Cassandra, so they share a token bucket per client address and answer `429` with `Retry-After` when it's empty. IPv6 addresses count per /64. The address is the socket's unless `allow.forwardedfor` is set, in which case it's the last `X-Forwarded-For` hop. Behind a proxy such as Traefik, set `allow.forwardedfor=true`, or every client shares the proxy's bucket. Only do that if clients can't reach client-bridge without going through the proxy, since a client that connects directly can send any `X-Forwarded-For` it likes. `passkey_request` keeps tombstones for an hour rather than 10 days and uses time-window compaction, so a flood of requests is gone from disk soon after it stops.
 
 ## Password Storage
 

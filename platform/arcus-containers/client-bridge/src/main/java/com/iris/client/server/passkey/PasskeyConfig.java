@@ -50,9 +50,26 @@ public class PasskeyConfig {
    @Inject(optional = true) @Named("passkey.origins")
    private String origins = "";
 
+   /**
+    * The longest a request can live: passkey_request's gc_grace_seconds. A used request
+    * has to expire before the tombstone that deleted it can be dropped.
+    */
+   static final int MAX_REQUEST_TTL_SECS = 3600;
+
    /** How long a browser has to answer a registration or login request. */
    @Inject(optional = true) @Named("passkey.request.ttl.secs")
    private int requestTtlSecs = 300;
+
+   /**
+    * How many login requests a client address can make at once. 0 turns rate limiting
+    * off.
+    */
+   @Inject(optional = true) @Named("passkey.ratelimit.capacity")
+   private int rateLimitCapacity = 20;
+
+   /** Login requests per second a client address earns back after using its burst. */
+   @Inject(optional = true) @Named("passkey.ratelimit.rate")
+   private double rateLimitRate = 0.2;
 
    public boolean isEnabled() {
       return StringUtils.isNotBlank(rpId);
@@ -91,10 +108,26 @@ public class PasskeyConfig {
    }
 
    public int getRequestTtlSecs() {
-      return requestTtlSecs;
+      return Math.min(requestTtlSecs, MAX_REQUEST_TTL_SECS);
    }
 
    public void setRequestTtlSecs(int requestTtlSecs) {
       this.requestTtlSecs = requestTtlSecs;
+   }
+
+   public int getRateLimitCapacity() {
+      return rateLimitCapacity;
+   }
+
+   public void setRateLimitCapacity(int rateLimitCapacity) {
+      this.rateLimitCapacity = rateLimitCapacity;
+   }
+
+   public double getRateLimitRate() {
+      return rateLimitRate;
+   }
+
+   public void setRateLimitRate(double rateLimitRate) {
+      this.rateLimitRate = rateLimitRate;
    }
 }

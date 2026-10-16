@@ -28,6 +28,7 @@ import com.iris.bridge.server.http.HttpSender;
 import com.iris.bridge.server.http.RequestAuthorizer;
 import com.iris.bridge.server.http.impl.HttpResource;
 import com.iris.bridge.server.netty.BridgeHeaders;
+import com.iris.client.server.passkey.PasskeyRateLimiter;
 import com.iris.client.server.passkey.PasskeyService;
 import com.iris.client.server.passkey.PasskeyService.PendingRequest;
 import com.iris.core.dao.PersonDAO;
@@ -51,16 +52,32 @@ import io.netty.util.CharsetUtil;
  */
 abstract class PasskeyResource extends HttpResource {
    protected final PasskeyService passkeyService;
+   @Nullable
+   private final PasskeyRateLimiter rateLimiter;
 
    PasskeyResource(RequestAuthorizer authorizer, Class<?> type, BridgeMetrics metrics, PasskeyService passkeyService) {
+      this(authorizer, type, metrics, passkeyService, null);
+   }
+
+   /** For endpoints that don't need a session: requests are limited per client address. */
+   PasskeyResource(RequestAuthorizer authorizer, Class<?> type, BridgeMetrics metrics, PasskeyService passkeyService, @Nullable PasskeyRateLimiter rateLimiter) {
       super(authorizer, new HttpSender(type, metrics));
       this.passkeyService = passkeyService;
+      this.rateLimiter = rateLimiter;
    }
 
    @Override
    public FullHttpResponse respond(FullHttpRequest request, ChannelHandlerContext ctx) throws Exception {
       if (!passkeyService.isEnabled()) {
          return error(HttpResponseStatus.NOT_FOUND, "Passkeys aren't enabled");
+      }
+      if (rateLimiter != null) {
+         long waitNs = rateLimiter.tryAcquire(ctx.channel());
+         if (waitNs > 0) {
+            FullHttpResponse response = error(HttpResponseStatus.TOO_MANY_REQUESTS, "Too many passkey requests, try again later");
+            response.headers().set(HttpHeaderNames.RETRY_AFTER, (long) Math.ceil(waitNs / 1e9));
+            return response;
+         }
       }
       JsonObject body;
       try {

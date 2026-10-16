@@ -35,6 +35,12 @@
       </cl:cql>
    </cl:changeset>
 
+   <!--
+      Anyone can start a login, so this table takes writes from unauthenticated clients.
+      Every row expires (USING TTL, at most an hour) and is usually deleted when used, so
+      tombstones only need to outlive the rows they shadow, not the default 10 days, and
+      time windows let whole expired SSTables be dropped instead of compacted.
+   -->
    <cl:changeset identifier="createPasskeyRequestTable" author="arcus">
       <cl:description>Create passkey_request table for in-progress registration and login challenges (rows are written with a TTL)</cl:description>
       <cl:tracking>PASSKEY-003</cl:tracking>
@@ -44,7 +50,9 @@
             personId uuid,
             request text,
             PRIMARY KEY (requestId)
-         )</cl:update>
+         ) WITH default_time_to_live = 3600
+           AND gc_grace_seconds = 3600
+           AND compaction = {'class': 'TimeWindowCompactionStrategy', 'compaction_window_unit': 'HOURS', 'compaction_window_size': '1'}</cl:update>
          <cl:rollback>DROP TABLE passkey_request</cl:rollback>
       </cl:cql>
    </cl:changeset>

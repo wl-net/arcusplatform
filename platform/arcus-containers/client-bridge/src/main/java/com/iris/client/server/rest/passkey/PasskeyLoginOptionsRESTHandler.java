@@ -21,6 +21,7 @@ import com.google.inject.Singleton;
 import com.iris.bridge.metrics.BridgeMetrics;
 import com.iris.bridge.server.http.annotation.HttpPost;
 import com.iris.bridge.server.http.impl.auth.AlwaysAllow;
+import com.iris.client.server.passkey.PasskeyRateLimiter;
 import com.iris.client.server.passkey.PasskeyService;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -35,8 +36,8 @@ import io.netty.handler.codec.http.FullHttpResponse;
 public class PasskeyLoginOptionsRESTHandler extends PasskeyResource {
 
    @Inject
-   public PasskeyLoginOptionsRESTHandler(AlwaysAllow alwaysAllow, BridgeMetrics metrics, PasskeyService passkeyService) {
-      super(alwaysAllow, PasskeyLoginOptionsRESTHandler.class, metrics, passkeyService);
+   public PasskeyLoginOptionsRESTHandler(AlwaysAllow alwaysAllow, BridgeMetrics metrics, PasskeyService passkeyService, PasskeyRateLimiter rateLimiter) {
+      super(alwaysAllow, PasskeyLoginOptionsRESTHandler.class, metrics, passkeyService, rateLimiter);
    }
 
    @Override

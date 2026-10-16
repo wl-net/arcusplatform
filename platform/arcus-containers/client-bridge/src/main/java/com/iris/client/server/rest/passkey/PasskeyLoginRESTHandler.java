@@ -24,6 +24,7 @@ import com.iris.bridge.metrics.BridgeMetrics;
 import com.iris.bridge.server.http.annotation.HttpPost;
 import com.iris.bridge.server.http.impl.auth.AlwaysAllow;
 import com.iris.bridge.server.netty.Authenticator;
+import com.iris.client.server.passkey.PasskeyRateLimiter;
 import com.iris.client.server.passkey.PasskeyService;
 import com.iris.security.passkey.PasskeyToken;
 
@@ -43,8 +44,8 @@ public class PasskeyLoginRESTHandler extends PasskeyResource {
    private final Authenticator authenticator;
 
    @Inject
-   public PasskeyLoginRESTHandler(AlwaysAllow alwaysAllow, BridgeMetrics metrics, PasskeyService passkeyService, Authenticator authenticator) {
-      super(alwaysAllow, PasskeyLoginRESTHandler.class, metrics, passkeyService);
+   public PasskeyLoginRESTHandler(AlwaysAllow alwaysAllow, BridgeMetrics metrics, PasskeyService passkeyService, PasskeyRateLimiter rateLimiter, Authenticator authenticator) {
+      super(alwaysAllow, PasskeyLoginRESTHandler.class, metrics, passkeyService, rateLimiter);
       this.authenticator = authenticator;
    }
 
