@@ -1,10 +1,27 @@
 name: Tests
 on:
+  # Our own branches live on the wl-net fork, so a cross-fork pull request
+  # gets its push run over there and never reports a check here, which makes
+  # an upstream PR look untested. pull_request covers that.
+  #
+  # Dependabot's branches live on this repo, so they are the only ones that
+  # would get both a push run and a pull_request run for the same commit;
+  # branches-ignore drops the duplicate. ('branches' and 'branches-ignore'
+  # cannot both be used for one event, so this replaces the '**' allowlist.)
   push:
     tags-ignore:
       - '**'
-    branches:
-      - '**'
+    branches-ignore:
+      - 'dependabot/**'
+  pull_request:
+
+# A pull_request run from a fork executes that PR's own build scripts and
+# tests. GitHub already forces the token read-only and withholds secrets for
+# fork events, and this workflow reads no secrets; stating it here keeps that
+# true for the same-repo runs too, where the repository default would apply.
+permissions:
+  contents: read
+
 jobs:
   Test:
     runs-on: ubuntu-latest
@@ -28,6 +45,10 @@ jobs:
           # Terms of Use rather than the MIT License. 'basic' is a thin
           # wrapper over actions/cache and stays open source.
           cache-provider: basic
+          # Load-bearing for untrusted code, not just a cache-hit-rate knob:
+          # github.ref is 'refs/pull/N/merge' on a pull_request, so this keeps
+          # a fork's PR from writing a cache that a later master run reads.
+          # Only master may populate it.
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
       - name: Run tests
         run: ./gradlew test --no-daemon
