@@ -67,6 +67,7 @@ class DeviceSettingsUtil {
 
    /**
     * Publishes the current values and asks the device for every parameter it has.
+    * Local settings are only published, since the device has nothing to report for them.
     */
    static void readAll(DeviceDriverContext context, DeviceSettingsContext settingsContext) {
       DeviceSettingsContext settings = forDevice(context, settingsContext);
@@ -77,7 +78,9 @@ class DeviceSettingsUtil {
       emitParamsValueChange(context, settingsContext);
 
       for (DeviceSettingsParamDefinition param : settings.getParams()) {
-         sendConfigurationGet(context, param.getZwaveParamNo());
+         if (!param.isLocal()) {
+            sendConfigurationGet(context, param.getZwaveParamNo());
+         }
       }
    }
 

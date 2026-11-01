@@ -51,8 +51,9 @@ public class DeviceSettingsBlockContext extends GroovyObjectSupport {
          throw new IllegalArgumentException("deviceSettings param requires a 'name'");
       }
 
+      boolean local = Boolean.TRUE.equals(args.get("local"));
       Number id = (Number) args.get("id");
-      if (id == null) {
+      if (id == null && !local) {
          throw new IllegalArgumentException("deviceSettings param '" + name + "' requires an 'id' (Z-Wave parameter number)");
       }
 
@@ -72,8 +73,12 @@ public class DeviceSettingsBlockContext extends GroovyObjectSupport {
 
       DeviceSettingsParamDefinition.Builder builder = DeviceSettingsParamDefinition.builder()
             .withParamId(name)
-            .withZwaveParamNo(id.intValue())
+            .withLocal(local)
             .withType(type);
+
+      if (id != null) {
+         builder.withZwaveParamNo(id.intValue());
+      }
 
       if (size != null) {
          builder.withZwaveParamSize(size.intValue());

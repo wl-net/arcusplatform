@@ -245,6 +245,38 @@ public class DeviceSettingsProductFilterTest {
       block.build();
    }
 
+   @Test
+   public void localParamsNeedNoNumberOfTheirOwn() {
+      DeviceSettingsBlockContext block = new DeviceSettingsBlockContext();
+      block.param(local("chimeTone", 0, 255));
+      block.param(local("chimeVolume", 10, 100));
+      block.param(param("beeper", 0, 1, 0, 1, null));
+      DeviceSettingsContext ctx = block.build();
+
+      assertEquals("beeper", ctx.getByZwaveParamNo(0).getParamId());
+      assertEquals(names("chimeTone", "chimeVolume", "beeper"), names(ctx));
+   }
+
+   @Test
+   public void localParamIsNeverDecodedAsDeviceBytes() {
+      DeviceSettingsBlockContext block = new DeviceSettingsBlockContext();
+      block.param(local("offset", -500, 500));
+      DeviceSettingsContext ctx = block.build();
+
+      assertFalse(ctx.getByParamId("offset").isSigned());
+      assertEquals(200L, ctx.getByParamId("offset").decodeStored(200L));
+   }
+
+   private static Map<String, Object> local(String name, int min, int max) {
+      Map<String, Object> args = new HashMap<>();
+      args.put("name", name);
+      args.put("local", true);
+      args.put("type", "range");
+      args.put("min", min);
+      args.put("max", max);
+      return args;
+   }
+
    private void expectProduct(int type, int id) {
       AttributeMap attrs = AttributeMap.newMap();
       attrs.set(AttributeKey.create(ZwaveConstants.ATTR_PRODUCTTYPE, Integer.class), type);

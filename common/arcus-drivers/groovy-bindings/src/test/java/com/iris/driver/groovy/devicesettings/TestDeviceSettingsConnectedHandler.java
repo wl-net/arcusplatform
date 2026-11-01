@@ -122,4 +122,29 @@ public class TestDeviceSettingsConnectedHandler {
       assertFalse(handler.handleEvent(context, new DeviceConnectedEvent(null)));
       verify(context);
    }
+
+   @Test
+   public void testLocalParamsAreNotReadFromTheDevice() throws Exception {
+      DeviceSettingsParamDefinition onDevice = DeviceSettingsParamDefinition.builder()
+            .withParamId("sirenVolume")
+            .withZwaveParamNo(6)
+            .build();
+      DeviceSettingsParamDefinition local = DeviceSettingsParamDefinition.builder()
+            .withParamId("chimeTone")
+            .withLocal(true)
+            .build();
+      handler = new DeviceSettingsConnectedHandler(new DeviceSettingsContext(Arrays.asList(onDevice, local)));
+
+      Capture<ZWaveCommandMessage> sent = Capture.newInstance(CaptureType.ALL);
+      expect(context.getProtocolAddress())
+            .andReturn(com.iris.messages.address.Address.protocolAddress("ZWAV", new byte[]{0x02}))
+            .anyTimes();
+      context.sendToDevice(eq(ZWaveProtocol.INSTANCE), capture(sent), eq(-1));
+      expectLastCall().anyTimes();
+      replay(context);
+
+      handler.handleEvent(context, new Object());
+
+      assertEquals(1, sent.getValues().size());
+   }
 }
