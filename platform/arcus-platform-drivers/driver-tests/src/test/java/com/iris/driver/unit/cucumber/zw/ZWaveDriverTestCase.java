@@ -50,7 +50,28 @@ public class ZWaveDriverTestCase extends AbstractDriverTestCase implements Drive
 	
 	
 	private ZWaveCommand command;
-	
+	private byte[] sentPayload;
+
+	/**
+	 * Checks the whole payload of the last command the driver sent, after its
+	 * command class and command bytes, against a list of decimal or 0x bytes.
+	 * Named send variables only cover fixed-layout commands; this is for the
+	 * rest, such as an Indicator Set V3 with its list of objects.
+	 */
+	public void validatePayload(String[] actualStrings) {
+		assert sentPayload != null : "No Z-Wave command has been validated yet";
+		byte[] expected = new byte[actualStrings.length];
+		for (int i = 0; i < actualStrings.length; i++) {
+			expected[i] = DataTypeUtilities.byteValueOf(actualStrings[i].trim());
+		}
+		assert sentPayload.length == expected.length
+			: "Expected " + expected.length + " payload bytes but found " + sentPayload.length + ": " + java.util.Arrays.toString(sentPayload);
+		for (int i = 0; i < expected.length; i++) {
+			assert sentPayload[i] == expected[i]
+				: "Payload byte " + i + " expected " + (expected[i] & 0xFF) + " but found " + (sentPayload[i] & 0xFF);
+		}
+	}
+
     public ZWaveDriverTestCase() {
         node = new ZWaveNode((byte)10);
     }
@@ -87,6 +108,7 @@ public class ZWaveDriverTestCase extends AbstractDriverTestCase implements Drive
 				   assert false: "unknown command " + pcmd.getCommandId() + " in command class " + pcmd.getCommandClassId();
 				}
 				logger.trace("Command "+pcmd);
+				sentPayload = pcmd.getPayload();
 				try{
 					command.set(pcmd.getPayload());
 				} catch (Exception e){}
