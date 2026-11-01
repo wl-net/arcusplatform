@@ -119,8 +119,11 @@ public class ZigbeeController implements PortHandler, LifeCycleListener, ZBEvent
       // Create driver and bootstrap
       new ZBLEDsAndSounds();
       driver = driverFactory.create();
-      ZBBootstrapper.INSTANCE.bootstrap(driver);
+
+      // BOOTSTRAPPED fires inside bootstrap(), and anything that hears about
+      // the device provider it registers can ask for the nodes right away
       zbNetwork = ZBServices.INSTANCE.getNetwork();
+      ZBBootstrapper.INSTANCE.bootstrap(driver);
 
       // Wire OTA progress reporting
       ZBServices.INSTANCE.getOtaService().setProgressCallback((ieeeAddr, status, percent) -> {
