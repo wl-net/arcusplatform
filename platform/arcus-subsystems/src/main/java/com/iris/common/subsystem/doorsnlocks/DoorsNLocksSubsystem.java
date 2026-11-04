@@ -57,6 +57,7 @@ import com.iris.messages.capability.DoorLockCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.AuthorizePeopleRequest;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.SynchAuthorizationRequest;
+import com.iris.messages.capability.HubChimeCapability;
 import com.iris.messages.capability.HubConnectionCapability;
 import com.iris.messages.capability.MotorizedDoorCapability;
 import com.iris.messages.capability.NotificationCapability;
@@ -149,9 +150,14 @@ public class DoorsNLocksSubsystem extends BaseSubsystem<DoorsNLocksSubsystemMode
       DoorsNLocksContextAdapter adapter = new DoorsNLocksContextAdapter(context);
       syncPeople(adapter);
       syncDevices(adapter);
+      Set<Map<String,Object>> chimeConfigBefore = context.model().getChimeConfig();
       syncChimeConfig(adapter);
       adapter.updateAvailable();
-      adapter.pushChimeConfigToHub();
+      // If the sync changed chimeConfig, onChimeConfigChanged pushes it once the
+      // change commits, so only push here when nothing changed.
+      if (Objects.equals(chimeConfigBefore, context.model().getChimeConfig())) {
+         adapter.pushChimeConfigToHub();
+      }
    }
 
    @OnAdded(query=DoorsNLocksPredicates.QUERY_DOORLOCK_DEVICES)
@@ -394,6 +400,16 @@ public class DoorsNLocksSubsystem extends BaseSubsystem<DoorsNLocksSubsystemMode
       if (HubConnectionCapability.STATE_ONLINE.equals(event.getAttributeValue())) {
          DoorsNLocksContextAdapter adapter = new DoorsNLocksContextAdapter(context);
          adapter.logger().info("hub reconnected, pushing chime config");
+         adapter.pushChimeConfigToHub();
+      }
+   }
+
+   // A hub reports supportsLocalChime when it connects. That report and the
+   // hubconn:state change can arrive in either order, so push on both.
+   @OnValueChanged(attributes={HubChimeCapability.ATTR_SUPPORTSLOCALCHIME})
+   public void onHubLocalChimeChanged(ModelChangedEvent event, SubsystemContext<DoorsNLocksSubsystemModel> context) {
+      if (Boolean.TRUE.equals(event.getAttributeValue())) {
+         DoorsNLocksContextAdapter adapter = new DoorsNLocksContextAdapter(context);
          adapter.pushChimeConfigToHub();
       }
    }
@@ -673,7 +689,7 @@ public class DoorsNLocksSubsystem extends BaseSubsystem<DoorsNLocksSubsystemMode
       }
 
       for(Model chimeDev : adapter.getChimeDevices()) {
-         adapter.chime(chimeDev);
+         adapter.chime(chimeDev, m);
       }
    }
 

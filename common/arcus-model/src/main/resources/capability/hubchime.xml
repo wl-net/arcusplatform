@@ -14,14 +14,20 @@
          name="supportsLocalChime"
          readwrite="r"
          type="boolean"
-         optional="false"
-         description="True if the hub supports local offline door chime. Updated hubs set this to true on startup."/>
+         optional="true"
+         description="True if the hub chimes on its own for chime-enabled contact sensors and accepts SyncChimeConfig. Hubs set this on startup; older hubs do not report it."/>
    </c:attributes>
 
    <c:methods>
       <c:method
          name="chime"
-         description="Causes the hub to play the chime sound."/>
+         description="Causes the hub to play the chime sound.">
+         <c:parameter
+            name="device"
+            type="string"
+            description="The protocol:protocolid of the contact sensor that triggered the chime. A hub that already chimed for that sensor on its own drops the request. Older hubs ignore it."
+            optional="true"/>
+      </c:method>
       <c:method
          name="SyncChimeConfig"
          description="Pushes the set of chime-enabled contact sensor protocol addresses to the hub for offline chime support.">

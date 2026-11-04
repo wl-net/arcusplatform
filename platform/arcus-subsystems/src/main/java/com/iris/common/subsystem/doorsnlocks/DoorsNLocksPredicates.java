@@ -37,6 +37,7 @@ import com.iris.messages.model.dev.DeviceConnectionModel;
 import com.iris.messages.model.dev.DevicePowerModel;
 import com.iris.messages.model.dev.DoorLockModel;
 import com.iris.messages.model.dev.MotorizedDoorModel;
+import com.iris.messages.model.hub.HubChimeModel;
 import com.iris.model.query.expression.ExpressionCompiler;
 
 class DoorsNLocksPredicates {
@@ -144,6 +145,14 @@ class DoorsNLocksPredicates {
       @Override
       public boolean apply(Model arg0) {
          return arg0.getCapabilities().contains(HubChimeCapability.NAMESPACE);
+      }
+   };
+
+   // Hubs that chime on their own and accept hubchime:SyncChimeConfig.
+   static final Predicate<Model> IS_LOCAL_CHIME_HUB = new Predicate<Model>() {
+      @Override
+      public boolean apply(Model arg0) {
+         return IS_HUB_CHIME.apply(arg0) && Boolean.TRUE.equals(HubChimeModel.getSupportsLocalChime(arg0));
       }
    };
 

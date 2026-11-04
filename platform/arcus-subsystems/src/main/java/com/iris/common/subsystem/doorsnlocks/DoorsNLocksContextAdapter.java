@@ -36,7 +36,6 @@ import com.iris.common.subsystem.SubsystemContext;
 import com.iris.common.subsystem.SubsystemUtils;
 import com.iris.messages.MessageBody;
 import com.iris.messages.address.Address;
-import com.iris.messages.capability.DeviceAdvancedCapability;
 import com.iris.messages.capability.DoorLockCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability;
 import com.iris.messages.capability.DoorsNLocksSubsystemCapability.PersonAuthorizedEvent;
@@ -159,14 +158,27 @@ class DoorsNLocksContextAdapter {
       context.request(lock.getAddress(), DoorLockCapability.ClearAllPinsRequest.instance());
    }
 
-   void chime(Model chime) {
-      if (DoorsNLocksPredicates.IS_HUB_CHIME.apply(chime)) {
-         Boolean supportsLocal = (Boolean) chime.getAttribute(HubChimeCapability.ATTR_SUPPORTSLOCALCHIME);
-         if (Boolean.TRUE.equals(supportsLocal)) {
-            return;
-         }
+   /**
+    * Asks a hub or keypad to chime because {@code trigger} opened. The hub is
+    * always asked, because only drivers whose hub reflex sets cont:contact can
+    * chime on the hub by themselves. The request names the sensor so a hub that
+    * already chimed for it drops the request.
+    */
+   void chime(Model chime, Model trigger) {
+      context.request(chime.getAddress(), getChimeMessage(chime, trigger));
+   }
+
+   /**
+    * The name the hub knows a device by, protocol:protocolid, or null when the
+    * device has no protocol address (for example a cloud device).
+    */
+   static String hubChimeKey(Model device) {
+      String protocol = DeviceAdvancedModel.getProtocol(device);
+      String protocolid = DeviceAdvancedModel.getProtocolid(device);
+      if (StringUtils.isEmpty(protocol) || StringUtils.isEmpty(protocolid)) {
+         return null;
       }
-      context.request(chime.getAddress(), getChimeMessage(chime));
+      return protocol + ":" + protocolid;
    }
 
    void clear() {
@@ -445,10 +457,19 @@ class DoorsNLocksContextAdapter {
       }
    }
 
+   /**
+    * Tells hubs that chime on their own which sensors have chime enabled.
+    * Hubs that don't report hubchime:supportsLocalChime don't understand
+    * SyncChimeConfig, so they are skipped.
+    */
    void pushChimeConfigToHub() {
+      if (Iterables.isEmpty(context.models().getModels(DoorsNLocksPredicates.IS_LOCAL_CHIME_HUB))) {
+         return;
+      }
+
       Set<String> enabledDevices = new HashSet<>();
       for (DoorChimeConfig config : getChimeConfig()) {
-         if (!config.getEnabled()) {
+         if (!Boolean.TRUE.equals(config.getEnabled())) {
             continue;
          }
 
@@ -457,20 +478,17 @@ class DoorsNLocksContextAdapter {
             continue;
          }
 
-         String protocol = DeviceAdvancedModel.getProtocol(device);
-         String protocolid = DeviceAdvancedModel.getProtocolid(device);
-         if (protocol == null || protocolid == null) {
-            continue;
+         String key = hubChimeKey(device);
+         if (key != null) {
+            enabledDevices.add(key);
          }
-
-         enabledDevices.add(protocol + ":" + protocolid);
       }
 
       logger().info("pushing chime config to hub: {} enabled devices", enabledDevices.size());
       MessageBody syncMsg = HubChimeCapability.SyncChimeConfigRequest.builder()
          .withEnabledDevices(enabledDevices)
          .build();
-      SubsystemUtils.sendToHub(context, syncMsg);
+      SubsystemUtils.sendTo(context, DoorsNLocksPredicates.IS_LOCAL_CHIME_HUB, syncMsg);
    }
 
    private boolean addToAddressSet(String attribute, Address address) {
@@ -545,9 +563,13 @@ class DoorsNLocksContextAdapter {
       throw new IllegalStateException("Doors & Locks does not support " + m);
    }
 
-   private MessageBody getChimeMessage(Model m) {
+   private MessageBody getChimeMessage(Model m, Model trigger) {
       if(DoorsNLocksPredicates.IS_HUB_CHIME.apply(m)) {
-         return HubChimeCapability.chimeRequest.instance();
+         // device stays null for a sensor the hub has no address for, and
+         // the hub then just chimes.
+         return HubChimeCapability.chimeRequest.builder()
+               .withDevice(hubChimeKey(trigger))
+               .build();
       }
       return KeyPadCapability.ChimeRequest.instance();
    }

@@ -176,6 +176,12 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
 
    private volatile Set<String> chimeEnabledDevices = Collections.emptySet();
 
+   // The platform still sends hubchime:chime for every chime-enabled contact,
+   // because many contact drivers (most Z-Wave ones, IPCD) never set cont:contact
+   // on the hub. Each local chime cancels the platform request for the same sensor.
+   private static final LocalChimeTracker localChimes =
+      new LocalChimeTracker(LocalChimeTracker.DEFAULT_EXPIRY_NANOS, false);
+
    private Map<String,UUID> pinToUser;
    private Map<UUID,String> userToPin;
 
@@ -217,6 +223,18 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
       this.processors = new HashMap<>();
    }
 
+   /**
+    * Called for each hubchime:chime request from the platform.
+    *
+    * @param device the protocol:protocolid of the sensor that triggered the
+    *        chime, or null when the platform did not say
+    * @return true if the hub already chimed for that sensor and the request
+    *         should be dropped
+    */
+   public static boolean consumeLocalChime(@Nullable String device) {
+      return localChimes.consumeLocalChime(device, System.nanoTime());
+   }
+
    public static void updateChimeEnabledDevices(Set<String> devices) {
       ReflexController instance = INSTANCE;
       if (instance != null) {
@@ -238,6 +256,7 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
       log.info("starting hub reflex controller...");
       localProcessing.setReflexController(this);
       LifeCycleService.addListener(this);
+      localChimes.connectionChanged(LifeCycleService.isAuthorized(), System.nanoTime());
 
       port.queue(new Runnable() {
          @Override
@@ -865,6 +884,8 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
 
    @Override
    public void lifeCycleStateChanged(LifeCycle oldState, LifeCycle newState) {
+      localChimes.connectionChanged(LifeCycleService.isAuthorizedState(newState), System.nanoTime());
+
       if (oldState != LifeCycle.AUTHORIZED && newState == LifeCycle.AUTHORIZED) {
          log.info("hub became authorized, should sync hub reflexes...");
          port.queue(new DoReflexSyncTask());
@@ -1054,7 +1075,7 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
       if (processor != null) {
          Object contactBefore = null;
          boolean checkChime = !chimeEnabledDevices.isEmpty()
-            && processor.getCapabilities().contains(ContactCapability.NAMESPACE);
+            && processor.getCapabilities().contains(ContactCapability.NAME);
          if (checkChime) {
             contactBefore = processor.getAttribute(ContactCapability.ATTR_CONTACT);
          }
@@ -1106,6 +1127,7 @@ public class ReflexController implements SnoopingPortHandler, LifeCycleListener 
             String key = dpa.getProtocolName() + ":" + dpa.getProtocolDeviceId().getRepresentation();
             if (chimeEnabledDevices.contains(key)) {
                log.info("local chime triggered by contact open on {}", device);
+               localChimes.localChimePlayed(key, System.nanoTime());
                IrisHal.setSounderMode(SounderMode.CHIME);
             }
          }

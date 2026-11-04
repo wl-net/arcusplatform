@@ -58,7 +58,7 @@ enum SoundHandler implements PortHandler {
       String type = message.getMessageType();
       switch (type) {
       case HubChimeCapability.chimeRequest.NAME:
-         return handleChimeRequest();
+         return handleChimeRequest(message);
 
       case HubChimeCapability.SyncChimeConfigRequest.NAME:
          return handleSyncChimeConfig(message);
@@ -83,7 +83,13 @@ enum SoundHandler implements PortHandler {
    public void recv(Port port, Object message) {
    }
 
-   private Object handleChimeRequest() {
+   private Object handleChimeRequest(PlatformMessage message) {
+      String device = HubChimeCapability.chimeRequest.getDevice(message.getValue());
+      if (ReflexController.consumeLocalChime(device)) {
+         log.debug("dropping platform chime request for {}, hub already chimed for it", device);
+         return HubChimeCapability.chimeResponse.instance();
+      }
+
       IrisHal.setSounderMode(SounderMode.CHIME);
       return HubChimeCapability.chimeResponse.instance();
    }
