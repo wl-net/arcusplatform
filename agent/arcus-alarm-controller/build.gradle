@@ -22,7 +22,5 @@ dependencies {
 
    api project(':common:arcus-common')
    api project(':common:arcus-model:platform-messages')
-
-   testImplementation project(':agent:arcus-test-agent')
 }
 

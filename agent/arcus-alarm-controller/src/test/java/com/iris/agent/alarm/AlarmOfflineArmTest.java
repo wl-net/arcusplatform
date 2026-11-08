@@ -32,11 +32,8 @@ import com.iris.messages.capability.KeyPadCapability;
 
 /**
  * Tests for offline arm event construction and the ArmEvent class behavior
- * used by the offline arming feature.
- *
- * Note: Full integration tests of AlarmSecurity.cacheArmConfig/buildCachedArmEvent
- * require the agent system stack (SQLite, ConfigService, HubAttributesService) and
- * are covered by hub-level system testing.
+ * used by the offline arming feature. The persisted cache itself is covered by
+ * OfflineArmCacheTest.
  */
 @RunWith(JUnit4.class)
 public class AlarmOfflineArmTest {
@@ -124,21 +121,6 @@ public class AlarmOfflineArmTest {
    }
 
    @Test
-   public void testArmEventNoBypassForOfflineArm() {
-      // Offline arm events should always have bypass=false since we can't
-      // evaluate bypass conditions without platform involvement
-      Address source = Address.broadcastAddress();
-      Set<String> devices = ImmutableSet.of("DRIV:dev:d1", "DRIV:dev:d2");
-
-      AlarmEvents.ArmEvent event = new AlarmEvents.ArmEvent(
-         source, null, AlarmEvents.Mode.ON,
-         false, 30, 30, 1, false, true, devices
-      );
-
-      Assert.assertFalse("Offline arm events should not have bypass set", event.isBypass());
-   }
-
-   @Test
    public void testArmRequestParsing() {
       // Verify the arm() factory method correctly parses a MessageBody
       MessageBody armRequest = HubAlarmCapability.ArmRequest.builder()
@@ -208,14 +190,9 @@ public class AlarmOfflineArmTest {
    }
 
    @Test
-   public void testArmPressedModeToAlarmMode() {
-      // Test the mode conversion logic used in onKeypadArmPressed
-      String modeOnRaw = "ON";
-      AlarmEvents.Mode modeOn = "PARTIAL".equalsIgnoreCase(modeOnRaw) ? AlarmEvents.Mode.PARTIAL : AlarmEvents.Mode.ON;
-      Assert.assertEquals(AlarmEvents.Mode.ON, modeOn);
-
-      String modePartialRaw = "PARTIAL";
-      AlarmEvents.Mode modePartial = "PARTIAL".equalsIgnoreCase(modePartialRaw) ? AlarmEvents.Mode.PARTIAL : AlarmEvents.Mode.ON;
-      Assert.assertEquals(AlarmEvents.Mode.PARTIAL, modePartial);
+   public void testKeypadArmMode() {
+      Assert.assertEquals(AlarmEvents.Mode.ON, AlarmController.keypadArmMode(KeyPadCapability.ArmPressedEvent.MODE_ON));
+      Assert.assertEquals(AlarmEvents.Mode.PARTIAL, AlarmController.keypadArmMode(KeyPadCapability.ArmPressedEvent.MODE_PARTIAL));
+      Assert.assertEquals(AlarmEvents.Mode.ON, AlarmController.keypadArmMode(null));
    }
 }

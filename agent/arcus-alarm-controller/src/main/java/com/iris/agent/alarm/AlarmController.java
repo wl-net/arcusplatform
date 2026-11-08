@@ -75,6 +75,7 @@ import com.iris.messages.capability.LeakH2OCapability;
 import com.iris.messages.capability.MotionCapability;
 import com.iris.messages.capability.MotorizedDoorCapability;
 import com.iris.messages.capability.SmokeCapability;
+import com.iris.messages.errors.ErrorEventException;
 import com.iris.messages.errors.Errors;
 import com.iris.protocol.ProtocolMessage;
 import com.iris.protocol.reflex.ReflexProtocol;
@@ -124,6 +125,7 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
    private final Router router;
 
    private final Map<String,Alarm> alarms;
+   private final KeypadBypassWindow keypadBypass = new KeypadBypassWindow();
    private Port port;
 
    private @Nullable Boolean isAlertingDevices;
@@ -686,22 +688,24 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
    }
 
    private void onKeypadArmPressed(Address addr, Address actor, MessageBody msg) {
-      if (LifeCycleService.isConnected()) {
-         // Online — let the platform handle it via the normal round-trip
+      if (LifeCycleService.isAuthorized()) {
+         // Online — let the platform handle it via the normal round-trip. Until the hub is authorized,
+         // hub-bridge drops its messages, so a connected but unauthorized hub must arm locally too.
          log.trace("hub is online, ignoring local keypad arm press from {}", addr);
          return;
       }
 
-      String modeRaw = KeyPadCapability.ArmPressedEvent.getMode(msg);
-      AlarmEvents.Mode mode = "PARTIAL".equalsIgnoreCase(modeRaw) ? AlarmEvents.Mode.PARTIAL : AlarmEvents.Mode.ON;
+      AlarmEvents.Mode mode = keypadArmMode(KeyPadCapability.ArmPressedEvent.getMode(msg));
 
+      // Keypads always report bypass=false; a second press inside the bypass window arms with bypass,
+      // matching what the platform does when it handles the press (see KeypadBypassWindow).
       Boolean bypassRaw = KeyPadCapability.ArmPressedEvent.getBypass(msg);
-      boolean bypass = bypassRaw != null && bypassRaw;
+      boolean bypass = (bypassRaw != null && bypassRaw) || keypadBypass.isOpen(addr);
 
       log.info("hub is offline, attempting local arm from keypad: mode={}, bypass={}, source={}", mode, bypass, addr);
 
       AlarmSecurity security = (AlarmSecurity) alarms.get(AlarmSecurity.NAME);
-      AlarmEvents.ArmEvent armEvent = security.buildCachedArmEvent(addr, actor, mode);
+      AlarmEvents.ArmEvent armEvent = security.buildCachedArmEvent(addr, actor, mode, bypass);
       if (armEvent == null) {
          log.warn("no cached arm config available for mode {}, cannot arm offline", mode);
          onArmFailed();
@@ -709,13 +713,31 @@ public class AlarmController implements SnoopingPortHandler, LifeCycleListener {
       }
 
       try {
-         if (!dispatch(armEvent)) {
+         if (dispatch(armEvent)) {
+            keypadBypass.close(addr);
+         } else {
+            onArmFailed();
+         }
+      } catch (ErrorEventException e) {
+         if (AlarmSecurity.ERR_TRIGGERED_DEVICES.equals(e.getCode()) && !bypass) {
+            log.info("offline arm blocked by tripped or offline devices [{}], press arm again to bypass", e.getDescription());
+            keypadBypass.open(addr);
+            onArmFailed();
+         } else if (AlarmSecurity.ERR_INSUFFICIENT_DEVICES.equals(e.getCode())) {
+            // AlarmSecurity has already signalled the failure to the keypads
+            log.warn("offline arm failed: {}", e.getDescription());
+         } else {
+            log.warn("offline arm failed: {} {}", e.getCode(), e.getDescription());
             onArmFailed();
          }
       } catch (Exception e) {
          log.warn("offline arm failed: {}", e.getMessage());
          onArmFailed();
       }
+   }
+
+   static AlarmEvents.Mode keypadArmMode(@Nullable String mode) {
+      return KeyPadCapability.ArmPressedEvent.MODE_PARTIAL.equalsIgnoreCase(mode) ? AlarmEvents.Mode.PARTIAL : AlarmEvents.Mode.ON;
    }
 
    @Override
