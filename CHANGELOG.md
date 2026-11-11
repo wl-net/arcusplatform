@@ -1,12 +1,188 @@
 # Arcus Platform Changelog
 
-## v2026.3.3 (unreleased)
+Pull request numbers refer to [arcus-smart-home/arcusplatform](https://github.com/arcus-smart-home/arcusplatform/pulls?q=is%3Apr+is%3Amerged).
+
+## v2026.11.1 (unreleased)
+
+### Security
+- Check who sends a device add, and the place it lands in (#518)
+- Let an instance switch off hub backups (#515)
+
+### Hub
+- Start hub reflexes when a radio registers late (#513)
+- Pass a repeated pairing request on to ZigBee too (#517)
+- Keep Z-Wave ids unsigned when decoding them (#516)
+- Reduce Hub Agent shutdown time (#511)
+- Stop building a class data sharing archive before the agent starts (#512)
+
+### Device Drivers
+- Ring Alarm Keypad (2nd gen) (#505)
+- Give device settings short labels and units (#510)
+
+## v2026.11.0 (2026-11-08)
+
+### Security
+- Passkey (WebAuthn) login in client-bridge (#479)
+- Remove the deprecated `ChangePin` REST handler (#480)
+- Escape user-entered names in email HTML (#482)
+- Tests for place checks no test exercised (#497), and JaCoCo 0.8.15 (#478)
+
+### Z-Wave and ZigBee
+- Enter the S2 PIN when pairing a Z-Wave device (#502)
+- Put Z-Wave leak sensors in the hub's water alarm (#507)
+- Start a ZigBee device's hub reflexes over when it is added again (#493)
+- Keep every message in `ZigbeeContext` `sendOrdered` and `sendDelayed` (#494)
+- Add an `onStarted` driver event, and stop Z-Wave dimmers resending a reported ON (#492)
+
+### Device Drivers
+- New: Minoston MP21ZD plug-in dimmer (#483), Zooz ZEN72 dimmer (#490)
+- Device settings for the BE469, the 40A outdoor switch, the Ring extender and the plug-in dimmer; signed parameters decoded (#485)
+- Fix Minoston MP22ZD settings, and stop it writing configuration on connect (#486)
+- Stop forcing scene control on for ZEN77 dimmers (#481), and fix its swapped paddle buttons (#488)
+- Stop the ZEN32, ZEN27 and ZEN34 writing configuration on connect (#489)
+- Let a T6 Pro moved from another driver turn the fan on (#487)
+
+### Oculus
+- Sort the device list by name (#484)
+
+### Removed
+- The leftover Sercomm camera code (#504)
+- The Travis and Jenkins CI configs (#503)
+
+### Build and Dependencies
+- Groovy 4.0.30 → 5.1.3, keeping drivers behaving the same (#506)
+- Netty group (#499) and Google group (#500) updates
+- Retry infrastructure downloads, and stop the khakis build at the first failure (#496)
+- Correct the serialization guidance and stale build docs (#495)
+
+## v2026.10.5 (2026-11-02)
+
+### Security
+- Scope client requests to the objects' places (#476)
+- Add a switch to disable risky operations (#475)
+- Apache Shiro 1.13.0 → 2.2.1 (#467)
+- kafka-clients 2.8.2 → 3.9.2, with producer `acks` pinned to 1 (#466)
+
+### Features
+- Device settings editor in Oculus (#472)
+- Replace SmartyStreets address validation with a local ZIP code check (#468)
 
 ### Bug Fixes
-- Fix Oculus `DefaultRowSorter` `ArrayIndexOutOfBoundsException` on column sort
-- Fix place selection dialog not closing on "Login as a New User"
-- Guard `ApiKeyController` and `SceneController` against null `placeId`
-- Add confirmation dialogs to destructive Oculus actions
+- Use the configured Cassandra datacenter in modelmanager (#474)
+- Fix the JDK setup instructions for macOS (#473)
+
+### Dependencies
+- Gson 2.15.0 (#464), joda-time 2.15.1 (#471), logback 1.6.6 (#470)
+
+## v2026.10.4 (2026-10-28)
+
+### Changes
+- Merge alarm-service into subsystem-service (#446)
+
+### Dependencies
+- Lucene 8.11.4 → 9.12.3, following the artifact rename (#462)
+- Move versions hardcoded in subprojects into `ext.libraries` (#463)
+- validation-api 2.0.1 (#459), hibernate-validator 8.0.6 (#453), curator-test 5.9.0 (#452), xbean-finder 5.0.0 (#450), servlet-api 4.0.1 (#457)
+
+### Bug Fixes
+- Stop `TestActionList` depending on the wall clock (#465)
+
+## v2026.10.3 (2026-10-25)
+
+### Removed
+- Video services and camera code paths (#438)
+- The unused Azure resource factory and azure-storage (#439)
+- The analytics tagging pipeline (#440)
+
+### Bug Fixes
+- Decode the full Z-Wave meter scale in the energy drivers (#443), and accept power reports whatever their rate type (#444)
+- Fix Kafka client properties the client never recognized (#447)
+
+### Build and Dependencies
+- Build releases on a schedule, not only on a tag (#383)
+- handlebars 2.2.2 → 4.3.1 and antlr4 4.13.2 (#448, #460)
+- pushy 0.15.6 (#427), oshi-core 7.7.2 (#445)
+
+## v2026.10.2 (2026-10-24)
+
+### Security and Reliability
+- Alertable security and reliability metrics (#397)
+- Log `RoleAuthorizer` denials at WARN (#436)
+- Report hub firmware upgrade failures that used to go silent (#381)
+- Record thermostat fan mode, emergency heat and API key changes in history (#379)
+
+### Bug Fixes
+- Send a device's whole pairing state so its pairing device can't get stuck (#375)
+- Log the new active place in client-bridge's `place.setactive` session line (#437)
+
+### Removed
+- Billing infrastructure (Recurly) (#378)
+- The unused MediaPlayer and HubAV capability stubs (#377)
+- The GCM XMPP transport, keeping the provider as a skeleton (#432)
+
+### Build and Infrastructure
+- Infrastructure images on Debian trixie (#373)
+- Dependabot for Gradle, GitHub Actions and Docker base images (#382, #396, #414)
+- Ignore the root project's build directory (#420)
+
+### Dependencies
+- Netty 4.1.139 (#399) → 4.2.19 (#434), dropping two pins that never took effect (#398)
+- Jackson 2.22.4 (#394), Twilio SDK 13.1.0 (#395), JAXB 4.0 / `jakarta.xml.bind` (#428), Mailgun 2.4.2 (#429)
+- jna 5.19.1 (#426), oshi-core 7.7.1 (#430), jdt.annotation 2.4.100 (#425)
+- Guava 33.7.2 and Gson 2.14.0 (#411), Dropwizard metrics 4.2.40 (#410), easymock 5.7.0 (#408)
+- Apache Commons (#409), minor and patch (#412) and logging (#387) groups, GitHub Actions (#393)
+- Depend on kafka-clients instead of the Scala broker jar (#417), and port kafka-stream to the modern consumer (#423)
+- Drop jctools and guice-servlet, neither of which was used (#413)
+
+## v2026.10.1 (release candidates only, 2026-10-16)
+
+Never released on its own; these changes shipped in v2026.10.2.
+
+### Security
+- Bump dependencies to patch known CVEs (#356)
+- Randomize the low bits of session ids (#357)
+
+### Hub
+- Write reflex driver state in order so the hub database can't keep an old value (#366)
+- Pass literal baud rates to termios on glibc 2.42+ (#369)
+- Drop JDK 8 and target Java 11 for hub code (#368)
+
+### Bug Fixes
+- Fix `hubconn:state` sticking at HANDSHAKE after a hub reconnects (#362)
+- Fix the bridge session gauge and counters drifting upwards (#361)
+- Clear mispaired state when a device moves from a fallback driver to a real one (#371)
+- Stop Poll Control check-ins on water leak sensors (#358)
+- Fix the battery type for the Iris v3 security keypad (IL021) (#365)
+- Fix flaky `TestAES.testAesGcmManipulated` (#355)
+
+### Dependencies
+- ZooKeeper 3.9.6 and Cassandra 4.0.21 (#359)
+
+## v2026.3.3 (2026-03-31)
+
+### Features
+- TLS 1.3 for hub-bridge, with TLS 1.2 fallback (#343)
+- Let client-bridge REST handlers be disabled by configuration (#340)
+- Lazy driver loading to reduce driver-services heap use, as an experiment (#341)
+- Leave `devadv:protocolAttrs` out of internal device model loading (#345)
+
+### Device Drivers
+- Minoston MR40Z 4-button remote (#344), EnergyHub Socket SK-ZP ZigBee plug (#352)
+- Samjin water leak sensor in the SmartThings leak driver (#348)
+- Instanced (multi-outlet) Zooz devices (#353)
+
+### Bug Fixes
+- Periodically re-assert hub connected state to fix stale writes (#350)
+- Fix Oculus `DefaultRowSorter` `ArrayIndexOutOfBoundsException` on column sort (#337)
+- Fix place selection dialog not closing on "Login as a New User" (#337)
+- Guard `ApiKeyController` and `SceneController` against null `placeId` (#337)
+- Add confirmation dialogs to destructive Oculus actions (#337)
+- Fix flaky scheduler tests (#349, #351)
+
+### Build
+- CI caching with setup-gradle v4 and the Gradle build cache (#346)
+- Driver `setAttributes` smoke test (#347)
+- OpenCSV 3.4 → 5.10 (#339)
 
 ## v2026.3.2 (2026-03-15, RC)
 
