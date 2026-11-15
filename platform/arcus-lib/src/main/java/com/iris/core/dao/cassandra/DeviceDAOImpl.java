@@ -976,7 +976,7 @@ public class DeviceDAOImpl extends BaseCassandraCRUDDao<UUID, Device> implements
    }
 
    @SuppressWarnings("rawtypes")
-   private boolean isStrictColumn(AttributeKey attributeKey) {
+   static boolean isStrictColumn(AttributeKey attributeKey) {
       // instances goes in the untyped attribute bag
       if(Capability.ATTR_INSTANCES.equals(attributeKey.getName())) {
          return false;
@@ -987,6 +987,9 @@ public class DeviceDAOImpl extends BaseCassandraCRUDDao<UUID, Device> implements
       } else if(DeviceAdvancedCapability.ATTR_ERRORS.equals(attributeKey.getName())) {
          return false;
       } else if (DeviceAdvancedCapability.ATTR_FIRMWAREVERSION.equals(attributeKey.getName())){
+         return false;
+      } else if (DeviceAdvancedCapability.ATTR_ZWAVEGET.equals(attributeKey.getName())) {
+         // Every driver writes it, for devadv:SendZWaveGet and its answer
          return false;
       }
       String namespace = attributeKey.getNamespace();
