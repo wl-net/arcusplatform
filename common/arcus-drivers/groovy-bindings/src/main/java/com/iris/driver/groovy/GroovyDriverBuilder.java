@@ -56,6 +56,8 @@ import com.iris.driver.groovy.context.RequestHandlerDefinition;
 import com.iris.driver.groovy.context.SetAttributesHandlerDefinition;
 import com.iris.driver.groovy.handler.RequestEventHandler;
 import com.iris.driver.groovy.handler.SetAttributesDefinitionConsumer;
+import com.iris.driver.groovy.zwave.ZWaveGetHandler;
+import com.iris.driver.groovy.zwave.ZWaveGetReplyListener;
 import com.iris.driver.handler.AttributeBindingHandler;
 import com.iris.driver.handler.ContextualEventHandler;
 import com.iris.driver.handler.ContextualEventHandlers;
@@ -554,6 +556,10 @@ public class GroovyDriverBuilder extends GroovyBuilder {
          builder.addHandler(
                NamespacedKey.parse(com.iris.messages.capability.DeviceAdvancedCapability.GetReflexesRequest.NAME),
                createGetReflexesHandler(def));
+         // Every driver, so a device that isn't Z-Wave is told so instead of getting no answer
+         builder.addHandler(
+               NamespacedKey.parse(com.iris.messages.capability.DeviceAdvancedCapability.SendZWaveGetRequest.NAME),
+               new ZWaveGetHandler());
 
          Map<NamedKey,List<RequestHandlerDefinition>> reqHandlers = new LinkedHashMap<>();
          for (RequestHandlerDefinition rhdef : requestDefinitions) {
@@ -605,8 +611,11 @@ public class GroovyDriverBuilder extends GroovyBuilder {
 
    @Override
    protected ContextualEventHandler<ProtocolMessage> createProtocolMessageHandler() {
-      // listeners first, so the driver's own handlers see what they record
-      List<ContextualEventHandler<? super ProtocolMessage>> handlers = new ArrayList<>(protocolListeners);
+      // listeners first, so the driver's own handlers see what they record; the answer to a
+      // devadv:SendZWaveGet is recorded whether or not the driver handles it
+      List<ContextualEventHandler<? super ProtocolMessage>> handlers = new ArrayList<>();
+      handlers.add(new ZWaveGetReplyListener());
+      handlers.addAll(protocolListeners);
       if (configurationStateMachine != null) {
          IrisCollections.addIfNotNull(handlers, configurationStateMachine.createProtocolMessageHandler());
       }

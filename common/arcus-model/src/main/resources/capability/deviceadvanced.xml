@@ -110,6 +110,12 @@
          type="map&lt;string&gt;"
          optional="true"
          description="A read-only map of protocol-specific fingerprint attributes for the device. Keys are namespaced protocol attribute names (e.g. ZWAV:Manufacturer, ZWAV:ProductType, ZWAV:ProductId for Z-Wave; ZIGB:manufacturer, ZIGB:vendor, ZIGB:model for Zigbee)."/>
+      <c:attribute
+         name="zwaveGet"
+         readwrite="r"
+         type="map&lt;string&gt;"
+         optional="true"
+         description="The last SendZWaveGet to a Z-Wave device and its answer. commandClass, command and args are what was sent. status is PENDING until the device answers, then REPLIED, or EXPIRED once 48 hours pass without an answer. requested and replied are ISO-8601 times. reply is the command the device answered with, values its named values where the command model names them, and bytes its payload in hex."/>
    </c:attributes>
 
    <c:methods>
@@ -124,6 +130,13 @@
          <c:return name="reflexes" type="any" description="The JSON representation of the device's reflexes." />
       </c:method>
       <c:method name="Reconfigure" description="Attempts to re-apply initial configuration for the device, this may leave it in an unusable state if it fails." />
+      <c:method name="SendZWaveGet" description="Sends one Z-Wave Get to a Z-Wave device, to read something its driver doesn't, such as its wake-up interval. Only Gets are sent, never a command that changes the device, and not Security, Firmware Update Meta Data or User Code Gets. The hub holds it for a sleeping device until the device wakes, so the answer can come hours later. The answer is recorded in devadv:zwaveGet.">
+         <c:parameter name="commandClass" type="string" description="The command class by the name drivers use, such as wake_up, battery or configuration." optional="false"/>
+         <c:parameter name="command" type="string" description="The Get to send in that command class, by the name drivers use, such as get or interval_capabilities_get." optional="false"/>
+         <c:parameter name="args" type="map&lt;int&gt;" description="Values the Get sends, by name, such as param 3 for a configuration get." optional="true"/>
+         <c:return name="status" type="enum" values="SENT" description="SENT once the Get is on its way to the hub, which holds it for a sleeping device until it wakes." optional="false"/>
+         <c:return name="expectedReply" type="string" description="The command the answer is expected as, such as wake_up report." optional="false"/>
+      </c:method>
    </c:methods>
    
    <c:events>
