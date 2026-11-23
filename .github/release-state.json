@@ -1,0 +1,6 @@
+{
+  "base_image": "debian:trixie",
+  "base_digest": "sha256:9c6e381421d0f48d1b8133e573f33c185ee16cbf505eda9c4a8a4791b25ea8a6",
+  "last_build": "2026-11-23T21:39:01Z",
+  "last_version": "2026.11.3"
+}
